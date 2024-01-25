@@ -1,15 +1,50 @@
-<!-- YOU CAN DELETE EVERYTHING IN THIS PAGE -->
+<script lang="ts">
+	// import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import { Icon } from "@steeze-ui/svelte-icon";
+	import { ClipboardPaste, ArrowRightCircle } from "@steeze-ui/lucide-icons";
+	import { goto } from "$app/navigation";
+	import { ProgressBar } from '@skeletonlabs/skeleton';
 
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-5">
-		<h1 class="h1">Let's get cracking bones!</h1>
-		<p>Start by exploring:</p>
-		<ul>
-			<li><code class="code">/src/routes/+layout.svelte</code> - barebones layout</li>
-			<li><code class="code">/src/app.postcss</code> - app wide css</li>
-			<li>
-				<code class="code">/src/routes/+page.svelte</code> - this page, you can replace the contents
-			</li>
-		</ul>
-	</div>
+	import { tweened } from "svelte/motion";
+	import { cubicOut } from "svelte/easing";
+	import { fly, slide } from "svelte/transition";
+
+	let key = "";
+
+	function paste() {
+		navigator.clipboard.readText().then((text) => {
+			key = text;
+		});
+	}
+
+	function search() {
+		console.log(key)
+		loadingValue.set(100)
+		goto("/" + key);
+	}
+
+	const loadingValue = tweened(0, {
+		duration: 500,
+		// easing: cubicOut,
+	});
+</script>
+
+<div class="flex h-full w-full flex-col">
+	<container class="flex justify-center items-center h-full flex-col">
+		<form class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit mb-6" on:submit|preventDefault={search}>
+			<button class="variant-filled-tetriary" on:click={paste}>
+				<Icon src={ClipboardPaste} size="1.5rem" />
+			</button>
+			<input type="search" placeholder="Paste Support key..." class="w-96" bind:value={key} />
+			<button class="variant-filled-secondary">
+				<Icon src={ArrowRightCircle} size="1.5rem" />
+			</button>
+		</form>
+		<ProgressBar
+			meter="bg-primary-500"
+			class={$loadingValue === 0 ? "invisible " : "" + "w-80"} 
+			value={$loadingValue} 
+			max={100} 
+		/>
+	</container>
 </div>
