@@ -29,8 +29,8 @@
 	});
 </script>
 
-<div class="flex h-full w-full flex-col">
-	<container class="flex justify-center items-center h-full flex-col">
+<div class="flex h-full w-full flex-col items-center">
+	<container class="flex justify-center items-center h-full flex-col w-96">
 		<form class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-fit mb-6" on:submit|preventDefault={search}>
 			<button class="variant-filled-tetriary" on:click={paste}>
 				<Icon src={ClipboardPaste} size="1.5rem" />
@@ -42,7 +42,7 @@
 		</form>
 		<ProgressBar
 			meter="bg-primary-500"
-			class={$loadingValue === 0 ? "invisible " : "" + "w-80"} 
+			class={$loadingValue === 0 ? "invisible " : ""} 
 			value={$loadingValue} 
 			max={100} 
 		/>
