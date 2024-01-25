@@ -42,6 +42,13 @@ function extractProblem(data: string): string | null {
     return match ? match[1].trim() : null;
 }
 
+function extractDump(data: string): string | null {
+	// match everything between "# dump master" and "batch end"
+	const match = data.match(/# dump master([\s\S]*?)batch end/);
+
+	return match ? match[1].trim() : null;
+}
+
 export const load = (async ({params, fetch}) => {
 	const key = params.key as string;
 	let isBuildKey: boolean = false;
@@ -119,8 +126,9 @@ export const load = (async ({params, fetch}) => {
 
 		const status = extractStatus(supportText);
 		const problem = extractProblem(supportText);
+		const dump = extractDump(supportText);
 
-		return {build, support: supportText, status, problem};
+		return {build, support: supportText, status, problem, dump};
 	}
 
 	const buildResponse = await fetch(buildUrl);
