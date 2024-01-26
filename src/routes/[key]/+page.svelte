@@ -22,9 +22,9 @@
 	}
 </script>
 
-<div class="flex flex-col h-full w-full p-16 pb-6 2xl:px-80 gap-6" in:fly={{x: 500, duration: 400}}>
-	<div class="flex flex-row gap-6">
-		<div class="flex flex-col w-1/2 gap-6">
+<div class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6" in:fly={{x: 500, duration: 400}}>
+	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
+		<div class="flex flex-col w-full gap-6">
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
 				<section class="p-4 text-lg">
