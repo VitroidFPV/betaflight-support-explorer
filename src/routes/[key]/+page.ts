@@ -49,6 +49,71 @@ function extractDump(data: string): string | null {
 	return match ? match[1].trim() : null;
 }
 
+function extractDma(data: string): {[key: string]: {[key: string]: string}} | null {
+    // match everything between "# dma show" and "# timer show"
+    const match = data.match(/# dma show([\s\S]*?)# timer show/);
+
+    if (match) {
+        const dmaLines = match[1].trim().split('\n');
+        const dmaObject: {[key: string]: {[key: string]: string}} = {};
+
+        let currentDma = '';
+
+        dmaLines.forEach((line) => {
+            const dmaMatch = line.match(/(DMA\d) Channel (\d): (.*)/);
+
+            if (dmaMatch) {
+                currentDma = dmaMatch[1];
+                const channel = `Channel ${dmaMatch[2]}`;
+                const target = dmaMatch[3];
+                if (!dmaObject[currentDma]) {
+                    dmaObject[currentDma] = {};
+                }
+                dmaObject[currentDma][channel] = target;
+            }
+        });
+
+        return dmaObject;
+    } else {
+        return null;
+    }
+}
+
+function extractTimer(data: string): {[key: string]: {[key: string]: string} | string} | null {
+    // match everything between "# timer show" and "#"
+    const match = data.match(/# timer show([\s\S]*?)#/);
+
+    if (match) {
+        const timerLines = match[1].trim().split('\n');
+        const timerObject: {[key: string]: {[key: string]: string} | string} = {};
+
+        let currentTimer = '';
+
+        timerLines.forEach((line) => {
+            const timerMatch = line.match(/(TIM\d+):(.*)/);
+            const channelMatch = line.match(/(CH\d) : (.*)/);
+
+            if (timerMatch) {
+                currentTimer = timerMatch[1];
+                const status = timerMatch[2].trim();
+                if (status === 'FREE') {
+                    timerObject[currentTimer] = 'FREE';
+                } else {
+                    timerObject[currentTimer] = {};
+                }
+            } else if (channelMatch && timerObject[currentTimer] !== 'FREE') {
+                const channel = channelMatch[1];
+                const target = channelMatch[2];
+                (timerObject[currentTimer] as {[key: string]: string})[channel] = target;
+            }
+        });
+
+        return timerObject;
+    } else {
+        return null;
+    }
+}
+
 export const load = (async ({params, fetch}) => {
 	const key = params.key as string;
 	let isBuildKey: boolean = false;
@@ -60,59 +125,6 @@ export const load = (async ({params, fetch}) => {
 
 	const buildUrl = `https://build.betaflight.com/api/builds/${key}/json`;
 	const supportUrl = `https://build.betaflight.com/api/support/${key}`;
-
-	// # IP: 109.81.126.123
-	// # X-Amz-Cf-Id: 6apceAn9uMcZ6ih0nK-44gfsrEafBUmzr4GH1pXKW8CesiHy_UYjrg==
-	// # X-Cfg-Ver: 10.10.0-debug-ad3520b
-	// # X-Envoy-Expected-Rq-Timeout-Ms: 120000
-	// # X-Envoy-External-Address: 109.81.126.123
-	// # X-Forwarded-For: 109.81.126.123,130.176.143.72
-	// # X-Forwarded-Proto: https
-	// # X-Request-Id: 307f1a28-2a40-4b49-aedd-51d883bc87c8
-
-	// ###
-
-	// # # Problem description
-
-	// # # bidirectinal dshot error
-
-	// # ###
-
-	// # version
-	// # Betaflight / AT32F435M (A435) 4.5.0 Sep 19 2023 / 16:46:51 (1856d6f7e) MSP API: 1.46
-	// # config rev: 8dbe16c
-	// # board: manufacturer_id: AIRB, board_name: AIRBOTF435
-
-	// # status
-	// MCU AT32F435 Clock=288MHz, Vref=3.29V, Core temp=42degC
-	// Stack size: 2048, Stack address: 0x2002fff0
-	// Configuration: CONFIGURED, size: 3757, max available: 16384
-	// Devices detected: SPI:1, I2C:1
-	// Gyros detected: gyro 1 locked dma
-	// GYRO=ICM42688P, ACC=ICM42688P, BARO=DPS310
-	// OSD: MAX7456 (30 x 13)
-	// BUILD KEY: 24452661cf65e9f33f55404fc5dcea75 (4.5.0-zulu)
-	// System Uptime: 70 seconds, Current Time: 2024-01-24T19:47:01.120+00:00
-	// CPU:22%, cycle time: 125, GYRO rate: 8000, RX rate: 15, System rate: 9
-	// Voltage: 25 * 0.01V (0S battery - NOT PRESENT)
-	// I2C Errors: 0
-	// FLASH: JEDEC ID=0x00ef4018 16M
-	// GPS: NOT ENABLED
-	// Arming disable flags: RXLOSS CLI MSP
-
-	// # flash_info
-	// Flash sectors=256, sectorSize=65536, pagesPerSector=256, pageSize=256, totalSize=16777216 JEDEC ID=0x00ef4018
-	// Partitions:
-	//   0: FLASHFS   0 255
-	// FlashFS size=16777216, usedSize=0
-
-	// # dump master
-	// ...
-	// example start of support response
-
-	// if only build key is provided, return {build}
-	// if support key is provided, find build key from support response and return {build, support}
-	// support is not json, it's text
 
 	if (!isBuildKey) {
 		const supportResponse = await fetch(supportUrl);
@@ -127,8 +139,10 @@ export const load = (async ({params, fetch}) => {
 		const status = extractStatus(supportText);
 		const problem = extractProblem(supportText);
 		const dump = extractDump(supportText);
+		const dma = extractDma(supportText);
+		const timer = extractTimer(supportText);
 
-		return {build, support: supportText, status, problem, dump};
+		return {build, support: supportText, status, problem, dump, dma, timer};
 	}
 
 	const buildResponse = await fetch(buildUrl);

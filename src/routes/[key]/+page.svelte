@@ -10,7 +10,7 @@
 	// const build = data.build;
 	// const status = data.status;
 	// const problem = data.problem;
-	const { support, build, status, problem, dump } = data;
+	const { support, build, status, problem, dump, dma, timer } = data;
 	const { Config: config, Request: request } = build;
 
 	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
@@ -25,6 +25,7 @@
 <div class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6" in:fly={{x: 500, duration: 400}}>
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
+
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
 				<section class="p-4 text-lg">
@@ -62,6 +63,7 @@
 					</div>
 				</section>
 			</div>
+
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Build</header>
 				<section class="p-4 text-lg">
@@ -93,6 +95,7 @@
 					</div>
 				</section>
 			</div>
+
 			{#if status}
 				<div class="card">
 					<!-- problem description -->
@@ -115,9 +118,38 @@
 						</div>
 					</section>
 				</div>
+				<div class="card">
+					<header class="card-header text-primary-500 h3 font-bold">DMA</header>
+
+					<section class="p-4 text-lg">
+						<div class="grid grid-cols-2 gap-4">
+							{#if dma}
+								{#each Object.keys(dma) as dmaKey}
+									<div class="flex flex-col gap-2">
+										<header class="text-primary-500 h6 font-medium">{dmaKey}:</header>
+										{#each Object.keys(dma[dmaKey]) as channelKey}
+											<div class="flex flex-row">
+												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
+												{#if dma[dmaKey][channelKey] === "FREE"}
+													<span class="badge variant-ghost-tertiary">{dma[dmaKey][channelKey]}</span>
+												{:else}
+													<span class="badge variant-ghost-success">{dma[dmaKey][channelKey]}</span>
+												{/if}
+											</div>
+										{/each}
+									</div>
+								{/each}
+							{/if}
+						</div>
+					</section>				
+					
+				</div>
+
 			{/if}
 		</div>
-		<div class="flex flex-col w-1/2 gap-6">
+
+		<div class="flex flex-col w-full gap-6">
+
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
 				<section class="p-4 text-lg">
@@ -128,6 +160,7 @@
 					</div>
 				</section>
 			</div>
+
 			{#if status}
 				<div class="card">
 					<header class="card-header text-primary-500 h3 font-bold">Hardware</header>
@@ -202,7 +235,34 @@
 						</div>
 					</section>
 				</div>
+				<div class="card">
+					<header class="card-header text-primary-500 h3 font-bold">Timers</header>
+					<section class="p-4 text-lg flex flex-col flex-wrap gap-1">
+						{#if timer}
+							{#each Object.keys(timer) as timerKey}
+								<div class="flex flex-col">
+									<header class="h6 font-medium flex items-center">
+										<span>{timerKey}:</span>
+										{#if typeof timer[timerKey] === 'string' && timer[timerKey] === "FREE"}
+											<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+										{/if}
+									</header>
+									{#if typeof timer[timerKey] !== 'string'}
+										{#each Object.keys(timer[timerKey]) as channelKey}
+											<div class="flex flex-row">
+												<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
+												<!-- @ts-ignore -->
+												<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
+											</div>
+										{/each}
+									{/if}
+								</div>
+							{/each}
+						{/if}
+					</section>
+				</div>
 			{/if}
+
 		</div>
 	</div>
 
