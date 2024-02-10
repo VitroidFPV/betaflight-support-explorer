@@ -36,7 +36,7 @@
 
 <svelte:head>
 	<meta property="og:title" content="Betaflight Support Explorer" />
-	<meta property="og:image" content="%sveltekit.assets%/favicon.svg" />
+	<meta property="og:image" content="https://betaflight-support-explorer.netlify.app/favicon.svg" />
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="Betaflight Support Explorer" />
