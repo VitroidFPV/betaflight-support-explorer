@@ -1,11 +1,11 @@
 <script lang="ts">
-    import type { PageData } from './$types';
+	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
 	import { Download, BookOpen, Code } from "@steeze-ui/lucide-icons";
-	import { CodeBlock } from '@skeletonlabs/skeleton';
-	import { fly } from 'svelte/transition';
-    
-    export let data: PageData;
+	import { CodeBlock } from "@skeletonlabs/skeleton";
+	import { fly } from "svelte/transition";
+
+	export let data: PageData;
 
 	// const build = data.build;
 	// const status = data.status;
@@ -19,33 +19,38 @@
 	const timerHalf = Math.ceil(timerKeys.length / 2);
 	// const timer1 = timerKeys.slice(0, timerHalf);
 	// const timer2 = timerKeys.slice(timerHalf, timerKeys.length);
-	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)]
+	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
 
-	console.log(data)
+	console.log(data);
 
 	function formatTime(time: string) {
-		return time.slice(8, 10) + '.' + time.slice(5, 7) + '.' + time.slice(0, 4) + ' ' + time.slice(11, 23);
+		return (
+			time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23)
+		);
 	}
 </script>
 
-<div class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6" in:fly={{x: 500, duration: 400}}>
+<div
+	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6"
+	in:fly={{ x: 500, duration: 400 }}
+>
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
-
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
 				<section class="p-4 text-lg">
 					<div class="flex flex-col">
 						<div class="flex justify-between">
 							<div>
-								<span class="text-neutral-400 mr-1 text-base">{config.Manufacturer}/</span>{config.Target}
+								<span class="text-neutral-400 mr-1 text-base">{config.Manufacturer}/</span
+								>{config.Target}
 							</div>
 							<a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>Wiki</span>
 							</a>
 						</div>
-						<hr>
+						<hr />
 						<div class="flex justify-between items-center">
 							<div>
 								<div class="flex flex-row">
@@ -57,7 +62,11 @@
 									<span class="text-base">{request.Tag}</span>
 								</div>
 							</div>
-							<a href="https://github.com/betaflight/betaflight/releases/tag/{request.Release}" target="_blank" class="btn variant-filled-secondary btn-sm">
+							<a
+								href="https://github.com/betaflight/betaflight/releases/tag/{request.Release}"
+								target="_blank"
+								class="btn variant-filled-secondary btn-sm"
+							>
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>Changelog</span>
 							</a>
@@ -78,12 +87,16 @@
 							<span><Icon src={Download} size="1rem" /></span>
 							<span>Download .hex</span>
 						</button> -->
-						<a href="https://build.betaflight.com/api/builds/{build.Identifier}/hex" target="_blank" class="btn variant-filled-primary btn-sm">
+						<a
+							href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
+							target="_blank"
+							class="btn variant-filled-primary btn-sm"
+						>
 							<span><Icon src={Download} size="1rem" /></span>
 							<span>Download .hex</span>
 						</a>
 					</div>
-					<hr>
+					<hr />
 					<div class="flex flex-col">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
@@ -109,7 +122,6 @@
 			{/if}
 
 			{#if ArmingDisableFlags.length > 0}
-
 				<div class="card">
 					<!-- arming disable flags -->
 					<header class="card-header text-primary-500 h3 font-bold">Arming Disable Flags</header>
@@ -140,7 +152,8 @@
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
 												{#if dma[dmaKey][channelKey] === "FREE"}
-													<span class="badge variant-ghost-tertiary">{dma[dmaKey][channelKey]}</span>
+													<span class="badge variant-ghost-tertiary">{dma[dmaKey][channelKey]}</span
+													>
 												{:else}
 													<span class="badge variant-ghost-success">{dma[dmaKey][channelKey]}</span>
 												{/if}
@@ -153,11 +166,9 @@
 					</section>
 				</div>
 			{/if}
-
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
-
 			<div class="card">
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
 				<section class="p-4 text-lg">
@@ -237,7 +248,7 @@
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">MCU Clock:</span>
 							<!-- match for key "* clock" -->
-							{#each Object.keys(status).filter(key => key.includes("Clock")) as key}
+							{#each Object.keys(status).filter((key) => key.includes("Clock")) as key}
 								<span class="text-base">{status[key]}</span>
 							{/each}
 						</div>
@@ -255,15 +266,17 @@
 									<div class="flex flex-col">
 										<header class="h6 font-medium flex items-center">
 											<span>{timerKey}:</span>
-											{#if typeof timer[timerKey] === 'string' && timer[timerKey] === "FREE"}
+											{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
 												<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
 											{/if}
 										</header>
-										{#if typeof timer[timerKey] !== 'string'}
+										{#if typeof timer[timerKey] !== "string"}
 											{#each Object.keys(timer[timerKey]) as channelKey}
 												<div class="flex flex-row">
 													<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
-													<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
+													<span class="badge variant-ghost-success"
+														>{timer[timerKey][channelKey]}</span
+													>
 												</div>
 											{/each}
 										{/if}
@@ -274,12 +287,11 @@
 					</section>
 				</div>
 			{/if}
-
 		</div>
 	</div>
 
 	{#if dump}
-		<hr>
+		<hr />
 		<header class="text-primary-500 h2 font-bold">Dump</header>
 
 		<div class="flex flex-col">

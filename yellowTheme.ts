@@ -1,12 +1,12 @@
-
-import type { CustomThemeConfig } from '@skeletonlabs/tw-plugin';
+import type { CustomThemeConfig } from "@skeletonlabs/tw-plugin";
 
 export const yellowTheme: CustomThemeConfig = {
-    name: 'yellow-theme',
-    properties: {
+	name: "yellow-theme",
+	properties: {
 		// =~= Theme Properties =~=
 		"--theme-font-family-base": `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace`,
-		"--theme-font-family-heading": `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,		"--theme-font-color-base": "0 0 0",
+		"--theme-font-family-heading": `Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`,
+		"--theme-font-color-base": "0 0 0",
 		"--theme-font-color-dark": "255 255 255",
 		"--theme-rounded-base": "9999px",
 		"--theme-rounded-container": "16px",
@@ -20,7 +20,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--on-error": "255 255 255",
 		"--on-surface": "255 255 255",
 		// =~= Theme Colors  =~=
-		// primary | #ffbb00 
+		// primary | #ffbb00
 		"--color-primary-50": "255 245 217", // #fff5d9
 		"--color-primary-100": "255 241 204", // #fff1cc
 		"--color-primary-200": "255 238 191", // #ffeebf
@@ -31,7 +31,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-primary-700": "191 140 0", // #bf8c00
 		"--color-primary-800": "153 112 0", // #997000
 		"--color-primary-900": "125 92 0", // #7d5c00
-		// secondary | #292929 
+		// secondary | #292929
 		"--color-secondary-50": "223 223 223", // #dfdfdf
 		"--color-secondary-100": "212 212 212", // #d4d4d4
 		"--color-secondary-200": "202 202 202", // #cacaca
@@ -42,7 +42,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-secondary-700": "31 31 31", // #1f1f1f
 		"--color-secondary-800": "25 25 25", // #191919
 		"--color-secondary-900": "20 20 20", // #141414
-		// tertiary | #2e2e2e 
+		// tertiary | #2e2e2e
 		"--color-tertiary-50": "224 224 224", // #e0e0e0
 		"--color-tertiary-100": "213 213 213", // #d5d5d5
 		"--color-tertiary-200": "203 203 203", // #cbcbcb
@@ -53,7 +53,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-tertiary-700": "35 35 35", // #232323
 		"--color-tertiary-800": "28 28 28", // #1c1c1c
 		"--color-tertiary-900": "23 23 23", // #171717
-		// success | #84cc16 
+		// success | #84cc16
 		"--color-success-50": "237 247 220", // #edf7dc
 		"--color-success-100": "230 245 208", // #e6f5d0
 		"--color-success-200": "224 242 197", // #e0f2c5
@@ -64,7 +64,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-success-700": "99 153 17", // #639911
 		"--color-success-800": "79 122 13", // #4f7a0d
 		"--color-success-900": "65 100 11", // #41640b
-		// warning | #ff851a 
+		// warning | #ff851a
 		"--color-warning-50": "255 237 221", // #ffeddd
 		"--color-warning-100": "255 231 209", // #ffe7d1
 		"--color-warning-200": "255 225 198", // #ffe1c6
@@ -75,7 +75,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-warning-700": "191 100 20", // #bf6414
 		"--color-warning-800": "153 80 16", // #995010
 		"--color-warning-900": "125 65 13", // #7d410d
-		// error | #d21956 
+		// error | #d21956
 		"--color-error-50": "248 221 230", // #f8dde6
 		"--color-error-100": "246 209 221", // #f6d1dd
 		"--color-error-200": "244 198 213", // #f4c6d5
@@ -86,7 +86,7 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-error-700": "158 19 65", // #9e1341
 		"--color-error-800": "126 15 52", // #7e0f34
 		"--color-error-900": "103 12 42", // #670c2a
-		// surface | #1f1f1f 
+		// surface | #1f1f1f
 		"--color-surface-50": "221 221 221", // #dddddd
 		"--color-surface-100": "210 210 210", // #d2d2d2
 		"--color-surface-200": "199 199 199", // #c7c7c7
@@ -96,7 +96,6 @@ export const yellowTheme: CustomThemeConfig = {
 		"--color-surface-600": "28 28 28", // #1c1c1c
 		"--color-surface-700": "23 23 23", // #171717
 		"--color-surface-800": "19 19 19", // #131313
-		"--color-surface-900": "15 15 15", // #0f0f0f
-		
+		"--color-surface-900": "15 15 15" // #0f0f0f
 	}
-}
+};

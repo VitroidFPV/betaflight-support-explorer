@@ -1,36 +1,36 @@
-import type { PageLoad } from './$types';
-import { error } from '@sveltejs/kit';
+import type { PageLoad } from "./$types";
+import { error } from "@sveltejs/kit";
 
 interface StatusObject {
-[key: string]: string | number | boolean | null;
+	[key: string]: string | number | boolean | null;
 }
 
 function extractStatus(data: string): StatusObject {
 	const statusSection = data.match(/# status([\s\S]*?)(?=#|$)/);
-	const statusLines = statusSection ? statusSection[1].trim().split('\n') : [];
+	const statusLines = statusSection ? statusSection[1].trim().split("\n") : [];
 
 	const statusObject: StatusObject = {};
 
 	statusLines.forEach((line) => {
-		const properties = line.split(',');
+		const properties = line.split(",");
 		properties.forEach((property) => {
-		const match = property.match(/^\s*([^:=]+)\s*[:=]\s*(.+)\s*$/);
-		if (match) {
-			const key = match[1].trim();
-			let value: string | number | boolean | null = match[2].trim();
+			const match = property.match(/^\s*([^:=]+)\s*[:=]\s*(.+)\s*$/);
+			if (match) {
+				const key = match[1].trim();
+				let value: string | number | boolean | null = match[2].trim();
 
-			// Convert value to number if possible
-			if (!isNaN(Number(value))) {
-			value = Number(value);
+				// Convert value to number if possible
+				if (!isNaN(Number(value))) {
+					value = Number(value);
+				}
+
+				// Convert boolean strings to boolean
+				if (value === "true" || value === "false") {
+					value = value === "true";
+				}
+
+				statusObject[key] = value;
 			}
-
-			// Convert boolean strings to boolean
-			if (value === 'true' || value === 'false') {
-			value = value === 'true';
-			}
-
-			statusObject[key] = value;
-		}
 		});
 	});
 
@@ -38,9 +38,9 @@ function extractStatus(data: string): StatusObject {
 }
 
 function extractProblem(data: string): string | null {
-    const match = data.match(/# Problem description\s*#\s*#\s*(.*)\s*#\s*#/);
+	const match = data.match(/# Problem description\s*#\s*#\s*(.*)\s*#\s*#/);
 
-    return match ? match[1].trim() : null;
+	return match ? match[1].trim() : null;
 }
 
 function extractDump(data: string): string | null {
@@ -50,72 +50,72 @@ function extractDump(data: string): string | null {
 	return match ? match[1].trim() : null;
 }
 
-function extractDma(data: string): {[key: string]: {[key: string]: string}} | null {
-    // match everything between "# dma show" and "# timer show"
-    const match = data.match(/# dma show([\s\S]*?)# timer show/);
+function extractDma(data: string): { [key: string]: { [key: string]: string } } | null {
+	// match everything between "# dma show" and "# timer show"
+	const match = data.match(/# dma show([\s\S]*?)# timer show/);
 
-    if (match) {
-        const dmaLines = match[1].trim().split('\n');
-        const dmaObject: {[key: string]: {[key: string]: string}} = {};
+	if (match) {
+		const dmaLines = match[1].trim().split("\n");
+		const dmaObject: { [key: string]: { [key: string]: string } } = {};
 
-        let currentDma = '';
+		let currentDma = "";
 
-        dmaLines.forEach((line) => {
-            const dmaMatch = line.match(/(DMA\d) Channel (\d): (.*)/);
+		dmaLines.forEach((line) => {
+			const dmaMatch = line.match(/(DMA\d) Channel (\d): (.*)/);
 
-            if (dmaMatch) {
-                currentDma = dmaMatch[1];
-                const channel = `Channel ${dmaMatch[2]}`;
-                const target = dmaMatch[3];
-                if (!dmaObject[currentDma]) {
-                    dmaObject[currentDma] = {};
-                }
-                dmaObject[currentDma][channel] = target;
-            }
-        });
+			if (dmaMatch) {
+				currentDma = dmaMatch[1];
+				const channel = `Channel ${dmaMatch[2]}`;
+				const target = dmaMatch[3];
+				if (!dmaObject[currentDma]) {
+					dmaObject[currentDma] = {};
+				}
+				dmaObject[currentDma][channel] = target;
+			}
+		});
 
-        return dmaObject;
-    } else {
-        return null;
-    }
+		return dmaObject;
+	} else {
+		return null;
+	}
 }
 
-function extractTimer(data: string): {[key: string]: {[key: string]: string} | string} | null {
-    // match everything between "# timer show" and "#"
-    const match = data.match(/# timer show([\s\S]*?)#/);
+function extractTimer(data: string): { [key: string]: { [key: string]: string } | string } | null {
+	// match everything between "# timer show" and "#"
+	const match = data.match(/# timer show([\s\S]*?)#/);
 
-    if (match) {
-        const timerLines = match[1].trim().split('\n');
-        const timerObject: {[key: string]: {[key: string]: string} | string} = {};
+	if (match) {
+		const timerLines = match[1].trim().split("\n");
+		const timerObject: { [key: string]: { [key: string]: string } | string } = {};
 
-        let currentTimer = '';
+		let currentTimer = "";
 
-        timerLines.forEach((line) => {
-            const timerMatch = line.match(/(TIM\d+):(.*)/);
-            const channelMatch = line.match(/(CH\d) : (.*)/);
+		timerLines.forEach((line) => {
+			const timerMatch = line.match(/(TIM\d+):(.*)/);
+			const channelMatch = line.match(/(CH\d) : (.*)/);
 
-            if (timerMatch) {
-                currentTimer = timerMatch[1];
-                const status = timerMatch[2].trim();
-                if (status === 'FREE') {
-                    timerObject[currentTimer] = 'FREE';
-                } else {
-                    timerObject[currentTimer] = {};
-                }
-            } else if (channelMatch && timerObject[currentTimer] !== 'FREE') {
-                const channel = channelMatch[1];
-                const target = channelMatch[2];
-                (timerObject[currentTimer] as {[key: string]: string})[channel] = target;
-            }
-        });
+			if (timerMatch) {
+				currentTimer = timerMatch[1];
+				const status = timerMatch[2].trim();
+				if (status === "FREE") {
+					timerObject[currentTimer] = "FREE";
+				} else {
+					timerObject[currentTimer] = {};
+				}
+			} else if (channelMatch && timerObject[currentTimer] !== "FREE") {
+				const channel = channelMatch[1];
+				const target = channelMatch[2];
+				(timerObject[currentTimer] as { [key: string]: string })[channel] = target;
+			}
+		});
 
-        return timerObject;
-    } else {
-        return null;
-    }
+		return timerObject;
+	} else {
+		return null;
+	}
 }
 
-export const load = (async ({params, fetch}) => {
+export const load = (async ({ params, fetch }) => {
 	const key = params.key as string;
 	let isBuildKey: boolean = false;
 
@@ -125,14 +125,11 @@ export const load = (async ({params, fetch}) => {
 	isBuildKey = key.length === 32;
 
 	// Check if the key is correctly formatted
-    if (!isBuildKey && !/^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(key)) {
-		error(
-			400,
-			{
-				message: 'Invalid key format! Check the key and try again.',
-			}
-		)
-    }
+	if (!isBuildKey && !/^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(key)) {
+		error(400, {
+			message: "Invalid key format! Check the key and try again."
+		});
+	}
 
 	const buildUrl = `https://build.betaflight.com/api/builds/${key}/json`;
 	const supportUrl = `https://build.betaflight.com/api/support/${key}`;
@@ -144,7 +141,9 @@ export const load = (async ({params, fetch}) => {
 		const supportBuildKeyMatch = supportText.match(/BUILD KEY: ([a-z0-9]+)/i);
 
 		const supportBuildKey = supportBuildKeyMatch ? supportBuildKeyMatch[1] : null;
-		const buildResponse = await fetch(`https://build.betaflight.com/api/builds/${supportBuildKey}/json`);
+		const buildResponse = await fetch(
+			`https://build.betaflight.com/api/builds/${supportBuildKey}/json`
+		);
 		const build = await buildResponse.json();
 
 		const status = extractStatus(supportText);
@@ -153,11 +152,10 @@ export const load = (async ({params, fetch}) => {
 		const dma = extractDma(supportText);
 		const timer = extractTimer(supportText);
 
-		return {build, support: supportText, status, problem, dump, dma, timer};
+		return { build, support: supportText, status, problem, dump, dma, timer };
 	}
 
 	const buildResponse = await fetch(buildUrl);
 	const build = await buildResponse.json();
-	return {build};
-	
+	return { build };
 }) satisfies PageLoad;
