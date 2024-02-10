@@ -15,6 +15,12 @@
 
 	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
 
+	const timerKeys = timer ? Object.keys(timer) : [];
+	const timerHalf = Math.ceil(timerKeys.length / 2);
+	// const timer1 = timerKeys.slice(0, timerHalf);
+	// const timer2 = timerKeys.slice(timerHalf, timerKeys.length);
+	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)]
+
 	console.log(data)
 
 	function formatTime(time: string) {
@@ -39,10 +45,6 @@
 								<span>Wiki</span>
 							</a>
 						</div>
-						<!-- <div class="flex flex-row">
-							<span class="text-neutral-400 mr-1 text-base">MCU:</span>
-							<span class="text-base">{config.MCU}</span>
-						</div> -->
 						<hr>
 						<div class="flex justify-between items-center">
 							<div>
@@ -96,7 +98,7 @@
 				</section>
 			</div>
 
-			{#if status}
+			{#if problem}
 				<div class="card">
 					<!-- problem description -->
 					<header class="card-header text-primary-500 h3 font-bold">Problem Description</header>
@@ -104,6 +106,10 @@
 						<blockquote class="blockquote text-base">{problem}</blockquote>
 					</section>
 				</div>
+			{/if}
+
+			{#if ArmingDisableFlags.length > 0}
+
 				<div class="card">
 					<!-- arming disable flags -->
 					<header class="card-header text-primary-500 h3 font-bold">Arming Disable Flags</header>
@@ -118,6 +124,9 @@
 						</div>
 					</section>
 				</div>
+			{/if}
+
+			{#if dma && Object.keys(dma).length > 0}
 				<div class="card">
 					<header class="card-header text-primary-500 h3 font-bold">DMA</header>
 
@@ -141,11 +150,10 @@
 								{/each}
 							{/if}
 						</div>
-					</section>				
-					
+					</section>
 				</div>
-
 			{/if}
+
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
@@ -235,30 +243,34 @@
 						</div>
 					</section>
 				</div>
+			{/if}
+
+			{#if timer}
 				<div class="card">
 					<header class="card-header text-primary-500 h3 font-bold">Timers</header>
-					<section class="p-4 text-lg flex flex-col flex-wrap gap-1">
-						{#if timer}
-							{#each Object.keys(timer) as timerKey}
-								<div class="flex flex-col">
-									<header class="h6 font-medium flex items-center">
-										<span>{timerKey}:</span>
-										{#if typeof timer[timerKey] === 'string' && timer[timerKey] === "FREE"}
-											<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+					<section class="p-4 text-lg flex gap-1 w-full justify-between">
+						{#each splitTimer as timerHalf}
+							<div class="flex flex-col w-full">
+								{#each timerHalf as timerKey}
+									<div class="flex flex-col">
+										<header class="h6 font-medium flex items-center">
+											<span>{timerKey}:</span>
+											{#if typeof timer[timerKey] === 'string' && timer[timerKey] === "FREE"}
+												<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+											{/if}
+										</header>
+										{#if typeof timer[timerKey] !== 'string'}
+											{#each Object.keys(timer[timerKey]) as channelKey}
+												<div class="flex flex-row">
+													<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
+													<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
+												</div>
+											{/each}
 										{/if}
-									</header>
-									{#if typeof timer[timerKey] !== 'string'}
-										{#each Object.keys(timer[timerKey]) as channelKey}
-											<div class="flex flex-row">
-												<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
-												<!-- @ts-ignore -->
-												<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
-											</div>
-										{/each}
-									{/if}
-								</div>
-							{/each}
-						{/if}
+									</div>
+								{/each}
+							</div>
+						{/each}
 					</section>
 				</div>
 			{/if}
@@ -266,11 +278,10 @@
 		</div>
 	</div>
 
-	<hr>
-
-	<header class="text-primary-500 h2 font-bold">Dump</header>
-
 	{#if dump}
+		<hr>
+		<header class="text-primary-500 h2 font-bold">Dump</header>
+
 		<div class="flex flex-col">
 			<CodeBlock class="card max-h-[88vh] overflow-y-scroll" language="nim" code={dump} />
 		</div>
