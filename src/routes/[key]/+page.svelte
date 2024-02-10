@@ -28,7 +28,21 @@
 			time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23)
 		);
 	}
+
+	const description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(
+		build.Submitted
+	)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`;
 </script>
+
+<svelte:head>
+	<meta property="og:title" content="Betaflight Support Explorer" />
+	<meta property="og:image" content="%sveltekit.assets%/favicon.svg" />
+	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Betaflight Support Explorer" />
+	<meta name="theme-color" content="#ffbb00" />
+	<meta name="description" content={description} />
+</svelte:head>
 
 <div
 	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6"
