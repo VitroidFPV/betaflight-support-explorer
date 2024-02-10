@@ -1,4 +1,5 @@
 import type { PageLoad } from './$types';
+import { error } from '@sveltejs/kit';
 
 interface StatusObject {
 [key: string]: string | number | boolean | null;
@@ -122,6 +123,16 @@ export const load = (async ({params, fetch}) => {
 	// 24452661cf65e9f33f55404fc5dcea75 = build key
 
 	isBuildKey = key.length === 32;
+
+	// Check if the key is correctly formatted
+    if (!isBuildKey && !/^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(key)) {
+		error(
+			400,
+			{
+				message: 'Invalid key format! Check the key and try again.',
+			}
+		)
+    }
 
 	const buildUrl = `https://build.betaflight.com/api/builds/${key}/json`;
 	const supportUrl = `https://build.betaflight.com/api/support/${key}`;
