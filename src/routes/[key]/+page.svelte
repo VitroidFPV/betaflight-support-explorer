@@ -2,15 +2,16 @@
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
 	import { Download, BookOpen, Code } from "@steeze-ui/lucide-icons";
-	import { CodeBlock } from "@skeletonlabs/skeleton";
+	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
 	import { fly } from "svelte/transition";
+	import Ports from "$components/Ports.svelte";
 
 	export let data: PageData;
 
 	// const build = data.build;
 	// const status = data.status;
 	// const problem = data.problem;
-	const { support, build, status, problem, dump, dma, timer } = data;
+	const { support, build, status, problem, dump, dma, timer, serial } = data;
 	const { Config: config, Request: request } = build;
 
 	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
@@ -46,7 +47,7 @@
 </svelte:head>
 
 <div
-	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6"
+	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-40 gap-6"
 	in:fly={{ x: 500, duration: 400 }}
 >
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
@@ -289,9 +290,7 @@
 											{#each Object.keys(timer[timerKey]) as channelKey}
 												<div class="flex flex-row">
 													<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
-													<span class="badge variant-ghost-success"
-														>{timer[timerKey][channelKey]}</span
-													>
+													<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
 												</div>
 											{/each}
 										{/if}
@@ -304,6 +303,19 @@
 			{/if}
 		</div>
 	</div>
+
+	{#if serial}
+		<Accordion>
+			<AccordionItem class="card">
+				<svelte:fragment slot="summary">
+					<header class="card-header text-primary-500 h2 font-bold mb-4">Ports</header>
+				</svelte:fragment>
+				<svelte:fragment slot="content">
+					<Ports {serial} />
+				</svelte:fragment>
+			</AccordionItem>
+		</Accordion>
+	{/if}
 
 	{#if dump}
 		<hr />
