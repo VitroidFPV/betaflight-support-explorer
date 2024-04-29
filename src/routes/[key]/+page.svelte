@@ -49,7 +49,7 @@
 </svelte:head>
 
 <div
-	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-40 gap-6"
+	class="flex flex-col h-full w-full md:p-16 p-4 pb-6 2xl:px-40 gap-6"
 	in:fly={{ x: 500, duration: 400 }}
 >
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
@@ -161,7 +161,7 @@
 					<header class="card-header text-primary-500 h3 font-bold">DMA</header>
 
 					<section class="p-4 text-lg">
-						<div class="grid grid-cols-2 gap-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if dma}
 								{#each Object.keys(dma) as dmaKey}
 									<div class="flex flex-col gap-2">
@@ -206,12 +206,12 @@
 							<span class="text-neutral-400 mr-1 text-base">MCU:</span>
 							<span class="text-base">{config.MCU}</span>
 						</div>
-						<div class="flex flex-row">
+						<div class="flex flex-col md:flex-row">
 							<div class="flex flex-row">
 								<span class="text-neutral-400 mr-1 text-base">Gyro:</span>
 								<span class="text-base">{status.GYRO}</span>
 							</div>
-							<span class="divider-vertical ml-4 mr-4"></span>
+							<span class="hidden md:block divider-vertical ml-4 mr-4"></span>
 							<div class="flex flex-row">
 								<span class="text-neutral-400 mr-1 text-base">Accelerometer:</span>
 								<span class="text-base">{status.ACC}</span>
@@ -277,29 +277,33 @@
 			{#if timer}
 				<div class="card">
 					<header class="card-header text-primary-500 h3 font-bold">Timers</header>
-					<section class="p-4 text-lg flex gap-1 w-full justify-between">
-						{#each splitTimer as timerHalf}
-							<div class="flex flex-col w-full">
-								{#each timerHalf as timerKey}
-									<div class="flex flex-col">
-										<header class="h6 font-medium flex items-center">
-											<span>{timerKey}:</span>
-											{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
-												<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
-											{/if}
-										</header>
-										{#if typeof timer[timerKey] !== "string"}
-											{#each Object.keys(timer[timerKey]) as channelKey}
-												<div class="flex flex-row">
-													<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
-													<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
-												</div>
-											{/each}
-										{/if}
+					<section class="p-4 text-lg">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							{#if timer}
+								{#each splitTimer as timerHalf}
+									<div class="flex flex-col w-full">
+										{#each timerHalf as timerKey}
+											<div class="flex flex-col">
+												<header class="h6 font-medium flex items-center">
+													<span>{timerKey}:</span>
+													{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
+														<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+													{/if}
+												</header>
+												{#if typeof timer[timerKey] !== "string"}
+													{#each Object.keys(timer[timerKey]) as channelKey}
+														<div class="flex flex-row">
+															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
+															<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
+														</div>
+													{/each}
+												{/if}
+											</div>
+										{/each}
 									</div>
 								{/each}
-							</div>
-						{/each}
+							{/if}
+						</div>
 					</section>
 				</div>
 			{/if}
