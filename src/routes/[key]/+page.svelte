@@ -306,16 +306,8 @@
 	</div>
 
 	{#if serial}
-		<Accordion>
-			<AccordionItem class="card">
-				<svelte:fragment slot="summary">
-					<header class="card-header text-primary-500 h2 font-bold mb-4">Ports</header>
-				</svelte:fragment>
-				<svelte:fragment slot="content">
-					<Ports {serial} />
-				</svelte:fragment>
-			</AccordionItem>
-		</Accordion>
+	{#if modes}
+		<Modes {modes} />
 	{/if}
 
 	{#if dump}

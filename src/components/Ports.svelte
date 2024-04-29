@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Accordion, AccordionItem } from "@skeletonlabs/skeleton"
+
 	export let serial: { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | [] = [];
 
 // object: [
@@ -82,6 +84,12 @@
 	const peripheralNames = ["Lidar TF", "Blackbox", "VTX SmartAudio", "VTX Tramp", "FrSky OSD", "VTX MSP"];
 </script>
 
+<Accordion>
+	<AccordionItem class="card">
+		<svelte:fragment slot="summary">
+			<header class="card-header text-primary-500 h2 font-bold mb-4">Ports</header>
+		</svelte:fragment>
+		<svelte:fragment slot="content">
 <div>
 	<section class="p-4 text-lg">
 		<div class="grid grid-cols-6 row-auto justify-items-center gap-y-2">
@@ -161,3 +169,6 @@
 		</div>
 	</section>
 </div>
+		</svelte:fragment>
+	</AccordionItem>
+</Accordion>
