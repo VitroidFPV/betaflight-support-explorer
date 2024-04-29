@@ -22,7 +22,7 @@
 	// const timer2 = timerKeys.slice(timerHalf, timerKeys.length);
 	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
 
-	console.log(data);
+	// console.log(data.build);
 
 	function formatTime(time: string) {
 		return (
@@ -30,9 +30,10 @@
 		);
 	}
 
-	const description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(
-		build.Submitted
-	)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`;
+	let description = "";
+	if (config) {
+		description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`
+	}
 </script>
 
 <svelte:head>

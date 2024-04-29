@@ -136,7 +136,7 @@ function extractSerial(data: string): { identifier: string; function: string[]; 
 			}
 		});
 
-		console.log(serialObject);
+		// console.log(serialObject);
 
 		const identifierNames = [
 			{ name: "None", value: -1 },
@@ -218,15 +218,18 @@ export const load = (async ({ params, fetch }) => {
 	const supportUrl = `https://build.betaflight.com/api/support/${key}`;
 
 	if (!isBuildKey) {
+		console.log(key)
 		const supportResponse = await fetch(supportUrl);
 		const supportText = await supportResponse.text();
 
 		const supportBuildKeyMatch = supportText.match(/BUILD KEY: ([a-z0-9]+)/i);
 
 		const supportBuildKey = supportBuildKeyMatch ? supportBuildKeyMatch[1] : null;
+		console.log(supportBuildKey);
 		const buildResponse = await fetch(
 			`https://build.betaflight.com/api/builds/${supportBuildKey}/json`
 		);
+		console.log(buildResponse)
 		const build = await buildResponse.json();
 
 		const status = extractStatus(supportText);
