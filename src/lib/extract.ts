@@ -112,7 +112,7 @@ export function extractTimer(data: string): { [key: string]: { [key: string]: st
 	}
 }
 
-export function extractSerial(data: string): { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | null{
+export function extractSerial(data: string): { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | null {
 	const match = data.match(/# serial([\s\S]*?)#/);
 
 	if (match) {
@@ -172,7 +172,7 @@ export function extractSerial(data: string): { identifier: string; function: str
 			{ name: "RC Device", value: 1 << 14 },
 			{ name: "Lidar TF", value: 1 << 15 },
 			{ name: "FrSky OSD", value: 1 << 16 },
-			{ name: "VTX MSP", value: (1 << 17)}
+			{ name: "VTX MSP", value: (1 << 17) }
 		];
 
 		const formattedSerial = serialObject.map((serial) => {
@@ -193,4 +193,46 @@ export function extractSerial(data: string): { identifier: string; function: str
 		return formattedSerial;
 	}
 	return null;
+}
+
+export function extractModes(data: string): { mode: string; channel: number; low: number; high: number; }[] | null {
+
+	const names = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","CAMSTAB","PASSTHRU","BEEPERON","LEDLOW","CALIB",
+	"OSD","TELEMETRY","SERVO1","SERVO2","SERVO3","BLACKBOX","FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","BLACKBOX ERASE","CAMERA CONTROL 1",
+	"CAMERA CONTROL 2","CAMERA CONTROL 3","FLIP OVER AFTER CRASH","BOXPREARM","BEEP GPS SATELLITE COUNT","VTX PIT MODE","USER1","USER2",
+	"USER3","USER4","PID AUDIO","PARALYZE","GPS RESCUE","ACRO TRAINER","DISABLE VTX CONTROL","LAUNCH CONTROL", "MSP OVERRIDE", "STICK COMMANDS DISABLE",
+	"BEEPER MUTE", "READY", "LAP TIMER RESET"];
+	const ids = [0,1,2,4,5,6,7,8,12,13,15,17,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54];
+	// I was banging my head against the wall for a while wondering why some stuff was out of place
+	// this is just directly from the betaflight source code, why is it not sorted sanely?
+
+	const match = data.match(/# aux([\s\S]*?)#/);
+
+	if (match) {
+		const auxLines = match[1].trim().split("\n");
+		let auxObject: { mode: string; channel: number; low: number; high: number; }[] = [];
+
+		auxLines.forEach((line) => {
+			const auxMatch = line.match(/aux (\d+) (\d+) (\d+) (\d+) (\d+)/);
+			if (auxMatch) {
+				// this almost worked
+				// const mode = namesSorted[Number(auxMatch[2])];
+				// this now works
+				const mode = names[ids.indexOf(Number(auxMatch[2]))];
+				const channel = Number(auxMatch[3]);
+				const low = Number(auxMatch[4]);
+				const high = Number(auxMatch[5]);
+
+				auxObject.push({ mode, channel, low, high });
+			}
+		});
+
+		// remove duplicate entries
+		auxObject = auxObject.filter((value, index, self) => self.findIndex((t) => t.mode === value.mode) === index);
+
+		console.log(auxObject);
+		return auxObject;
+	} else {
+		return null;
+	}
 }

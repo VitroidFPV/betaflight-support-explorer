@@ -5,13 +5,14 @@
 	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
 	import { fly } from "svelte/transition";
 	import Ports from "$components/Ports.svelte";
+	import Modes from "$components/Modes.svelte";
 
 	export let data: PageData;
 
 	// const build = data.build;
 	// const status = data.status;
 	// const problem = data.problem;
-	const { support, build, status, problem, dump, dma, timer, serial } = data;
+	const { support, build, status, problem, dump, dma, timer, serial, modes } = data;
 	const { Config: config, Request: request } = build;
 
 	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
@@ -306,6 +307,9 @@
 	</div>
 
 	{#if serial}
+		<Ports {serial} />
+	{/if}
+
 	{#if modes}
 		<Modes {modes} />
 	{/if}

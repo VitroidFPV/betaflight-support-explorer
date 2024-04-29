@@ -1,6 +1,6 @@
 import type { PageLoad } from "./$types";
 import { error } from "@sveltejs/kit";
-import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial } from "$lib/extract";
+import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial, extractModes } from "$lib/extract";
 
 export const load = (async ({ params, fetch }) => {
 	const key = params.key as string;
@@ -42,8 +42,9 @@ export const load = (async ({ params, fetch }) => {
 		const dma = extractDma(supportText);
 		const timer = extractTimer(supportText);
 		const serial = extractSerial(supportText);
+		const modes = extractModes(supportText);
 
-		return { build, support: supportText, status, problem, dump, dma, timer, serial };
+		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes };
 	}
 
 	const buildResponse = await fetch(buildUrl);
