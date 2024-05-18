@@ -1,6 +1,7 @@
 import type { PageLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial, extractModes } from "$lib/extract";
+import { SemVer } from "semver";
 
 export const load = (async ({ params, fetch }) => {
 	const key = params.key as string;
@@ -22,14 +23,22 @@ export const load = (async ({ params, fetch }) => {
 	const supportUrl = `https://build.betaflight.com/api/support/${key}`;
 
 	if (!isBuildKey) {
-		console.log(key)
 		const supportResponse = await fetch(supportUrl);
 		const supportText = await supportResponse.text();
 
-		const supportBuildKeyMatch = supportText.match(/BUILD KEY: ([a-z0-9]+)/i);
+		const versionMatch = supportText.match(/Betaflight \/ .* (\d+\.\d+\.\d+)/);
+		const version = versionMatch ? versionMatch[1] : null;
+		if (version) {
+			const semver = new SemVer(version);
+			if (semver.compare("4.4.0") === -1) {
+				return error(400, {
+					message: "This Support ID is from an old version of Betaflight which doesn't provide the necessary data."
+				});
+			}
+		}
 
+		const supportBuildKeyMatch = supportText.match(/BUILD KEY: ([a-z0-9]+)/i);
 		const supportBuildKey = supportBuildKeyMatch ? supportBuildKeyMatch[1] : null;
-		console.log(supportBuildKey);
 		const buildResponse = await fetch(
 			`https://build.betaflight.com/api/builds/${supportBuildKey}/json`
 		);
