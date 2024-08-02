@@ -41,7 +41,7 @@
 	<title>Betaflight Support Explorer</title>
 	<meta name="description" content={description} />
 
-	<meta property="og:title" content="Betaflight Support Explorer" />
+	<meta property="og:title" content={`Support Data for ${config.Target}`} />
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:description" content={description} />
