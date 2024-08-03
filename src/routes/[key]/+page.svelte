@@ -12,18 +12,90 @@
 	// const build = data.build;
 	// const status = data.status;
 	// const problem = data.problem;
+
+	// 						<!-- commonSettings = {
+	// 	"Denominations": {
+	// 		"imuDenom": {
+	// 			"name": "IMU Denom",
+	// 			"value": "2"
+	// 		},
+	// 		"pidDenom": {
+	// 			"name": "PID Denom",
+	// 			"value": "1"
+	// 		}
+	// 	},
+	// 	"Receiver Settings": {
+	// 		"rxProtocol": {
+	// 			"name": "RX Protocol",
+	// 			"value": "CRSF"
+	// 		},
+	// 		"rxInverted": {
+	// 			"name": "RX Inverted",
+	// 			"value": "OFF"
+	// 		},
+	// 		"rxHalfDuplex": {
+	// 			"name": "RX Half Duplex",
+	// 			"value": "OFF"
+	// 		}
+	// 	},
+	// 	"Motor Settings": {
+	// 		"escProtocol": {
+	// 			"name": "ESC Protocol",
+	// 			"value": "DSHOT600"
+	// 		},
+	// 		"dshotBurst": {
+	// 			"name": "DShot Burst",
+	// 			"value": "ON"
+	// 		},
+	// 		"dshotBidir": {
+	// 			"name": "Bidirectional DShot",
+	// 			"value": "ON"
+	// 		},
+	// 		"dshotEdt": {
+	// 			"name": "DShot EDT",
+	// 			"value": "OFF"
+	// 		},
+	// 		"dshotBitbang": {
+	// 			"name": "DShot Bitbang",
+	// 			"value": "AUTO"
+	// 		},
+	// 		"dshotBitbangTimer": {
+	// 			"name": "DShot Bitbang Timer",
+	// 			"value": "AUTO"
+	// 		},
+	// 		"motorPoles": {
+	// 			"name": "Motor Poles",
+	// 			"value": "14"
+	// 		},
+	// 		"motorsReversed": {
+	// 			"name": "Motors Reversed",
+	// 			"value": "OFF"
+	// 		},
+	// 		"motorOutputLimit": {
+	// 			"name": "Motor Output Limit",
+	// 			"value": "100"
+	// 		}
+	// 	}
+	// } -->
+
+	type CommonSettings = {
+		[section: string]: {
+			[setting: string]: {
+			name: string;
+			value: string;
+			};
+		};
+	};
+
 	const { support, build, status, problem, dump, dma, timer, serial, modes } = data;
+	const commonSettings = data.commonSettings as CommonSettings;
 	const { Config: config, Request: request } = build;
 
 	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
 
 	const timerKeys = timer ? Object.keys(timer) : [];
 	const timerHalf = Math.ceil(timerKeys.length / 2);
-	// const timer1 = timerKeys.slice(0, timerHalf);
-	// const timer2 = timerKeys.slice(timerHalf, timerKeys.length);
 	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
-
-	// console.log(data.build);
 
 	function formatTime(time: string) {
 		return (
@@ -316,6 +388,31 @@
 
 	{#if modes}
 		<Modes {modes} />
+	{/if}
+
+	{#if commonSettings}
+		<Accordion>
+			<AccordionItem class="card">
+				<svelte:fragment slot="summary">
+					<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
+				</svelte:fragment>
+				<svelte:fragment slot="content">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+						{#each Object.keys(commonSettings) as section}
+							<div class="flex flex-col gap-2">
+								<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
+								{#each Object.keys(commonSettings[section]) as setting}
+									<div class="flex flex-row">
+										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
+										<span class="badge variant-soft-primary">{commonSettings[section][setting].value}</span>
+									</div>
+								{/each}
+							</div>
+						{/each}
+					</div>
+				</svelte:fragment>
+			</AccordionItem>
+		</Accordion>
 	{/if}
 
 	{#if dump}

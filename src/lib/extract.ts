@@ -236,3 +236,10 @@ export function extractModes(data: string): { mode: string; channel: number; low
 		return null;
 	}
 }
+
+export function extractCliLine(data: string, command: string): string | null {
+	// match data for "set <command> = <value>"
+	const match = data.match(new RegExp(`set ${command} = (.*)`));
+
+	return match ? match[1].trim() : null;
+}

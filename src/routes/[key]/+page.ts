@@ -1,6 +1,6 @@
 import type { PageLoad } from "./$types";
 import { error } from "@sveltejs/kit";
-import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial, extractModes } from "$lib/extract";
+import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial, extractModes, extractCliLine } from "$lib/extract";
 import { SemVer } from "semver";
 
 export const load = (async ({ params, fetch }) => {
@@ -53,7 +53,76 @@ export const load = (async ({ params, fetch }) => {
 		const serial = extractSerial(supportText);
 		const modes = extractModes(supportText);
 
-		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes };
+		const commonSettings = {
+			"Denominations": {
+				"imuDenom": {
+					name: "IMU Denom",
+					value: extractCliLine(supportText, "imu_process_denom")
+				},
+				"pidDenom": {
+					name: "PID Denom",
+					value: extractCliLine(supportText, "pid_process_denom")
+				},
+			},
+			
+			"Receiver Settings": {
+				"rxProtocol": {
+					name: "RX Protocol",
+					value: extractCliLine(supportText, "serialrx_provider")
+				},
+				"rxInverted": {
+					name: "RX Inverted",
+					value: extractCliLine(supportText, "serialrx_inverted")
+				},
+				"rxHalfDuplex": {
+					name: "RX Half Duplex",
+					value: extractCliLine(supportText, "serialrx_halfduplex")
+				},
+			},
+
+			"DShot Config": {
+				"escProtocol": {
+					name: "ESC Protocol",
+					value: extractCliLine(supportText, "motor_pwm_protocol")
+				},
+				"dshotBurst": {
+					name: "DShot Burst",
+					value: extractCliLine(supportText, "dshot_burst")
+				},
+				"dshotBidir": {
+					name: "Bidirectional DShot",
+					value: extractCliLine(supportText, "dshot_bidir")
+				},
+				"dshotEdt": {
+					name: "DShot EDT",
+					value: extractCliLine(supportText, "dshot_edt")
+				},
+				"dshotBitbang": {
+					name: "DShot Bitbang",
+					value: extractCliLine(supportText, "dshot_bitbang")
+				},
+				"dshotBitbangTimer": {
+					name: "DShot Bitbang Timer",
+					value: extractCliLine(supportText, "dshot_bitbang_timer")
+				},
+			},
+			"Motor Config": {
+				"motorPoles": {
+					name: "Motor Poles",
+					value: extractCliLine(supportText, "motor_poles")
+				},
+				"motorsReversed": {
+					name: "Motors Reversed",
+					value: extractCliLine(supportText, "yaw_motors_reversed")
+				},
+				"motorOutputLimit": {
+					name: "Motor Output Limit",
+					value: extractCliLine(supportText, "motor_output_limit")
+				},
+			}
+		}
+
+		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes, commonSettings };
 	}
 
 	const buildResponse = await fetch(buildUrl);
