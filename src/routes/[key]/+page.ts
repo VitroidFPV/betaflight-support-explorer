@@ -32,7 +32,7 @@ export const load = (async ({ params, fetch }) => {
 			const semver = new SemVer(version);
 			if (semver.compare("4.4.0") === -1) {
 				return error(400, {
-					message: "This Support ID is from an old version of Betaflight which doesn't provide the necessary data."
+					message: "The data in this Support ID is from an old version of Betaflight which doesn't provide the necessary info."
 				});
 			}
 		}
@@ -42,8 +42,14 @@ export const load = (async ({ params, fetch }) => {
 		const buildResponse = await fetch(
 			`https://build.betaflight.com/api/builds/${supportBuildKey}/json`
 		);
-		console.log(buildResponse)
-		const build = await buildResponse.json();
+		let build = null;
+		if (buildResponse.ok) {
+			build = await buildResponse.json();	
+		} else {
+			return error(400, {
+				message: "The data in this Support ID is missing a valid Cloud Build Key. Likely from a locally built firmware."
+			});
+		}
 
 		const status = extractStatus(supportText);
 		const problem = extractProblem(supportText);
