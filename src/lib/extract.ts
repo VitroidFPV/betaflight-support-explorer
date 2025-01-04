@@ -190,7 +190,6 @@ export function extractSerial(data: string): { identifier: string; function: str
 				telemetry: serial.telemetry,
 				blackbox: serial.blackbox
 			};
-
 		});
 
 		return formattedSerial;
@@ -200,14 +199,75 @@ export function extractSerial(data: string): { identifier: string; function: str
 
 export function extractModes(data: string): { mode: string; channel: number; low: number; high: number; }[] | null {
 
-	const names = ["ARM","ANGLE","HORIZON","ANTI GRAVITY","MAG","HEADFREE","HEADADJ","CAMSTAB","PASSTHRU","BEEPERON","LEDLOW","CALIB",
-	"OSD","TELEMETRY","SERVO1","SERVO2","SERVO3","BLACKBOX","FAILSAFE","AIR MODE","3D","FPV ANGLE MIX","BLACKBOX ERASE","CAMERA CONTROL 1",
-	"CAMERA CONTROL 2","CAMERA CONTROL 3","FLIP OVER AFTER CRASH","BOXPREARM","BEEP GPS SATELLITE COUNT","VTX PIT MODE","USER1","USER2",
-	"USER3","USER4","PID AUDIO","PARALYZE","GPS RESCUE","ACRO TRAINER","DISABLE VTX CONTROL","LAUNCH CONTROL", "MSP OVERRIDE", "STICK COMMANDS DISABLE",
-	"BEEPER MUTE", "READY", "LAP TIMER RESET"];
-	const ids = [0,1,2,4,5,6,7,8,12,13,15,17,19,20,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54];
-	// I was banging my head against the wall for a while wondering why some stuff was out of place
-	// this is just directly from the betaflight source code, why is it not sorted sanely?
+	const boxesSource = `
+static const box_t boxes[CHECKBOX_ITEM_COUNT] = {
+    { .boxId = BOXARM, .boxName = "ARM", .permanentId = 0 },
+    { .boxId = BOXANGLE, .boxName = "ANGLE", .permanentId = 1 },
+    { .boxId = BOXHORIZON, .boxName = "HORIZON", .permanentId = 2 },
+    { .boxId = BOXALTHOLD, .boxName = "ALTHOLD", .permanentId = 3 },
+    { .boxId = BOXANTIGRAVITY, .boxName = "ANTI GRAVITY", .permanentId = 4 },
+    { .boxId = BOXMAG, .boxName = "MAG", .permanentId = 5 },
+    { .boxId = BOXHEADFREE, .boxName = "HEADFREE", .permanentId = 6 },
+    { .boxId = BOXHEADADJ, .boxName = "HEADADJ", .permanentId = 7 },
+    { .boxId = BOXCAMSTAB, .boxName = "CAMSTAB", .permanentId = 8 },
+//    { .boxId = BOXCAMTRIG, .boxName = "CAMTRIG", .permanentId = 9 },
+//    { .boxId = BOXGPSHOME, .boxName = "GPS HOME", .permanentId = 10 },
+    { .boxId = BOXPOSHOLD, .boxName = "POS HOLD", .permanentId = 11 },
+    { .boxId = BOXPASSTHRU, .boxName = "PASSTHRU", .permanentId = 12 },
+    { .boxId = BOXBEEPERON, .boxName = "BEEPER", .permanentId = 13 },
+//    { .boxId = BOXLEDMAX, .boxName = "LEDMAX", .permanentId = 14 }, (removed)
+    { .boxId = BOXLEDLOW, .boxName = "LEDLOW", .permanentId = 15 },
+//    { .boxId = BOXLLIGHTS, .boxName = "LLIGHTS", .permanentId = 16 }, (removed)
+    { .boxId = BOXCALIB, .boxName = "CALIB", .permanentId = 17 },
+//    { .boxId = BOXGOV, .boxName = "GOVERNOR", .permanentId = 18 }, (removed)
+    { .boxId = BOXOSD, .boxName = "OSD DISABLE", .permanentId = 19 },
+    { .boxId = BOXTELEMETRY, .boxName = "TELEMETRY", .permanentId = 20 },
+//    { .boxId = BOXGTUNE, .boxName = "GTUNE", .permanentId = 21 }, (removed)
+//    { .boxId = BOXRANGEFINDER, .boxName = "RANGEFINDER", .permanentId = 22 }, (removed)
+    { .boxId = BOXSERVO1, .boxName = "SERVO1", .permanentId = 23 },
+    { .boxId = BOXSERVO2, .boxName = "SERVO2", .permanentId = 24 },
+    { .boxId = BOXSERVO3, .boxName = "SERVO3", .permanentId = 25 },
+    { .boxId = BOXBLACKBOX, .boxName = "BLACKBOX", .permanentId = 26 },
+    { .boxId = BOXFAILSAFE, .boxName = "FAILSAFE", .permanentId = 27 },
+    { .boxId = BOXAIRMODE, .boxName = "AIR MODE", .permanentId = 28 },
+    { .boxId = BOX3D, .boxName = "3D DISABLE", .permanentId = 29},
+    { .boxId = BOXFPVANGLEMIX, .boxName = "FPV ANGLE MIX", .permanentId = 30},
+    { .boxId = BOXBLACKBOXERASE, .boxName = "BLACKBOX ERASE", .permanentId = 31 },
+    { .boxId = BOXCAMERA1, .boxName = "CAMERA CONTROL 1", .permanentId = 32},
+    { .boxId = BOXCAMERA2, .boxName = "CAMERA CONTROL 2", .permanentId = 33},
+    { .boxId = BOXCAMERA3, .boxName = "CAMERA CONTROL 3", .permanentId = 34 },
+    { .boxId = BOXCRASHFLIP, .boxName = "FLIP OVER AFTER CRASH", .permanentId = 35 },
+    { .boxId = BOXPREARM, .boxName = "PREARM", .permanentId = 36 },
+    { .boxId = BOXBEEPGPSCOUNT, .boxName = "GPS BEEP SATELLITE COUNT", .permanentId = 37 },
+//    { .boxId = BOX3DONASWITCH, .boxName = "3D ON A SWITCH", .permanentId = 38 }, (removed)
+    { .boxId = BOXVTXPITMODE, .boxName = "VTX PIT MODE", .permanentId = 39 },
+    { .boxId = BOXUSER1, .boxName = BOX_USER1_NAME, .permanentId = 40 }, // may be overridden by modeActivationConfig
+    { .boxId = BOXUSER2, .boxName = BOX_USER2_NAME, .permanentId = 41 },
+    { .boxId = BOXUSER3, .boxName = BOX_USER3_NAME, .permanentId = 42 },
+    { .boxId = BOXUSER4, .boxName = BOX_USER4_NAME, .permanentId = 43 },
+    { .boxId = BOXPIDAUDIO, .boxName = "PID AUDIO", .permanentId = 44 },
+    { .boxId = BOXPARALYZE, .boxName = "PARALYZE", .permanentId = 45 },
+    { .boxId = BOXGPSRESCUE, .boxName = "GPS RESCUE", .permanentId = 46 },
+    { .boxId = BOXACROTRAINER, .boxName = "ACRO TRAINER", .permanentId = 47 },
+    { .boxId = BOXVTXCONTROLDISABLE, .boxName = "VTX CONTROL DISABLE", .permanentId = 48},
+    { .boxId = BOXLAUNCHCONTROL, .boxName = "LAUNCH CONTROL", .permanentId = 49 },
+    { .boxId = BOXMSPOVERRIDE, .boxName = "MSP OVERRIDE", .permanentId = 50},
+    { .boxId = BOXSTICKCOMMANDDISABLE, .boxName = "STICK COMMANDS DISABLE", .permanentId = 51},
+    { .boxId = BOXBEEPERMUTE, .boxName = "BEEPER MUTE", .permanentId = 52},
+    { .boxId = BOXREADY, .boxName = "READY", .permanentId = 53},
+    { .boxId = BOXLAPTIMERRESET, .boxName = "LAP TIMER RESET", .permanentId = 54},
+};
+	`
+
+	// sourced from main betaflight codebase in src/main/msp/msp_box.c
+	// when file is updated, this should be updated as well
+	// unless I forget
+
+	const boxesMatch = boxesSource.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/g);
+	const boxes = boxesMatch ? boxesMatch.map((box) => {
+		const match = box.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/);
+		return { name: match![2], id: Number(match![3]) };
+	}, []) : [];
 
 	const match = data.match(/# aux([\s\S]*?)#/);
 
@@ -218,10 +278,7 @@ export function extractModes(data: string): { mode: string; channel: number; low
 		auxLines.forEach((line) => {
 			const auxMatch = line.match(/aux (\d+) (\d+) (\d+) (\d+) (\d+)/);
 			if (auxMatch) {
-				// this almost worked
-				// const mode = namesSorted[Number(auxMatch[2])];
-				// this now works
-				const mode = names[ids.indexOf(Number(auxMatch[2]))];
+				const mode = boxes.find((box) => box.id === Number(auxMatch[2]))?.name || "Unknown";
 				const channel = Number(auxMatch[3]);
 				const low = Number(auxMatch[4]);
 				const high = Number(auxMatch[5]);
@@ -230,10 +287,13 @@ export function extractModes(data: string): { mode: string; channel: number; low
 			}
 		});
 
-		// remove duplicate entries
-		auxObject = auxObject.filter((value, index, self) => self.findIndex((t) => t.mode === value.mode) === index);
+		// filters empty aux slots
+		auxObject = auxObject.filter((aux) => aux.low !== aux.high);
 
-		console.log(auxObject);
+		if (auxObject.length === 0) {
+			return null;
+		}
+
 		return auxObject;
 	} else {
 		return null;
