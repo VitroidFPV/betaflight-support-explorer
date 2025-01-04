@@ -117,23 +117,27 @@ export function extractSerial(data: string): { identifier: string; function: str
 
 	if (match) {
 		const serialLines = match[1].trim().split("\n");
-		const serialObject: { identifier: number; function: number; msp: number; gps: number; telemetry: number; blackbox: number }[] = [];
+		const serialObject: { identifier: string; function: number; msp: number; gps: number; telemetry: number; blackbox: number }[] = [];
 
 		serialLines.forEach((line) => {
-			const serialMatch = line.match(/serial (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)/);
-			if (serialMatch) {
-				const port = Number(serialMatch[1]);
-				const func = Number(serialMatch[2]);
-				const msp = Number(serialMatch[3]);
-				const gps = Number(serialMatch[4]);
-				const telemetry = Number(serialMatch[5]);
-				const blackbox = Number(serialMatch[6]);
+			// Try format 2 first (with text identifiers)
+			const format2Match = line.match(/serial ([A-Za-z0-9]+) (\d+) (\d+) (\d+) (\d+) (\d+)/);
+			// Then try format 1 (with numeric identifiers)
+			const format1Match = line.match(/serial (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)/);
 
-				serialObject.push({ identifier: port, function: func, msp, gps, telemetry, blackbox });
+			if (format2Match || format1Match) {
+				const match = format2Match || format1Match;
+				const identifier = format2Match ? format2Match[1] : identifierNames.find(
+					(port) => port.value === Number(match![1]))?.name || "Unknown";
+				const func = Number(match![2]);
+				const msp = Number(match![3]);
+				const gps = Number(match![4]);
+				const telemetry = Number(match![5]);
+				const blackbox = Number(match![6]);
+
+				serialObject.push({ identifier, function: func, msp, gps, telemetry, blackbox });
 			}
 		});
-
-		// console.log(serialObject);
 
 		const identifierNames = [
 			{ name: "None", value: -1 },
@@ -176,11 +180,10 @@ export function extractSerial(data: string): { identifier: string; function: str
 		];
 
 		const formattedSerial = serialObject.map((serial) => {
-			const identifier = identifierNames.find((port) => port.value === serial.identifier)?.name || "Unknown";
 			const functions = functionNames.filter((func) => serial.function & func.value).map((func) => func.name);
 
 			return {
-				identifier,
+				identifier: serial.identifier,
 				function: functions,
 				msp: serial.msp,
 				gps: serial.gps,
