@@ -115,69 +115,73 @@ export function extractTimer(data: string): { [key: string]: { [key: string]: st
 export function extractSerial(data: string): { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | null {
 	const match = data.match(/# serial([\s\S]*?)#/);
 
+	const identifierNames = [
+		{ name: "None", value: -1 },
+		{ name: "UART 1", value: 0 },
+		{ name: "UART 2", value: 1 },
+		{ name: "UART 3", value: 2 },
+		{ name: "UART 4", value: 3 },
+		{ name: "UART 5", value: 4 },
+		{ name: "UART 6", value: 5 },
+		{ name: "UART 7", value: 6 },
+		{ name: "UART 8", value: 7 },
+		{ name: "UART 9", value: 8 },
+		{ name: "UART 10", value: 9 },
+		{ name: "USB VCP", value: 20 },
+		{ name: "Soft Serial 1", value: 30 },
+		{ name: "Soft Serial 2", value: 31 },
+		{ name: "LPUART 1", value: 40 }
+	];
+
+	const functionNames = [
+		{ name: "None", value: 0 },
+		{ name: "MSP", value: 1 << 0 },
+		{ name: "GPS", value: 1 << 1 },
+		{ name: "FrSky Hub", value: 1 << 2 },
+		{ name: "HoTT", value: 1 << 3 },
+		{ name: "LTM", value: 1 << 4 },
+		{ name: "SmartPort", value: 1 << 5 },
+		{ name: "RX Serial", value: 1 << 6 },
+		{ name: "Blackbox", value: 1 << 7 },
+		{ name: "Not Used", value: 1 << 8 },
+		{ name: "MAVLink", value: 1 << 9 },
+		{ name: "ESC Sensor", value: 1 << 10 },
+		{ name: "VTX SmartAudio", value: 1 << 11 },
+		{ name: "Telemetry iBus", value: 1 << 12 },
+		{ name: "VTX Tramp", value: 1 << 13 },
+		{ name: "RC Device", value: 1 << 14 },
+		{ name: "Lidar TF", value: 1 << 15 },
+		{ name: "FrSky OSD", value: 1 << 16 },
+		{ name: "VTX MSP", value: (1 << 17) }
+	];
+
 	if (match) {
 		const serialLines = match[1].trim().split("\n");
 		const serialObject: { identifier: string; function: number; msp: number; gps: number; telemetry: number; blackbox: number }[] = [];
 
-		serialLines.forEach((line) => {
-			// Try format 2 first (with text identifiers)
-			const format2Match = line.match(/serial ([A-Za-z0-9]+) (\d+) (\d+) (\d+) (\d+) (\d+)/);
-			// Then try format 1 (with numeric identifiers)
-			const format1Match = line.match(/serial (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)/);
+		const lineRegex = /serial\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
 
-			if (format2Match || format1Match) {
-				const match = format2Match || format1Match;
-				const identifier = format2Match ? format2Match[1] : identifierNames.find(
-					(port) => port.value === Number(match![1]))?.name || "Unknown";
-				const func = Number(match![2]);
-				const msp = Number(match![3]);
-				const gps = Number(match![4]);
-				const telemetry = Number(match![5]);
-				const blackbox = Number(match![6]);
+		for (const line of serialLines) {
+			const matches = line.trim().match(lineRegex);
+			if (matches) {
+				const [, portId, func, msp, gps, telemetry, blackbox] = matches;
 
-				serialObject.push({ identifier, function: func, msp, gps, telemetry, blackbox });
+				let identifier = portId;
+				if (!isNaN(Number(portId))) {
+					const found = identifierNames.find(id => id.value === parseInt(portId));
+					identifier = found ? found.name : portId;
+				}
+
+				serialObject.push({
+					identifier,
+					function: parseInt(func),
+					msp: parseInt(msp),
+					gps: parseInt(gps),
+					telemetry: parseInt(telemetry),
+					blackbox: parseInt(blackbox)
+				});
 			}
-		});
-
-		const identifierNames = [
-			{ name: "None", value: -1 },
-			{ name: "UART 1", value: 0 },
-			{ name: "UART 2", value: 1 },
-			{ name: "UART 3", value: 2 },
-			{ name: "UART 4", value: 3 },
-			{ name: "UART 5", value: 4 },
-			{ name: "UART 6", value: 5 },
-			{ name: "UART 7", value: 6 },
-			{ name: "UART 8", value: 7 },
-			{ name: "UART 9", value: 8 },
-			{ name: "UART 10", value: 9 },
-			{ name: "USB VCP", value: 20 },
-			{ name: "Soft Serial 1", value: 30 },
-			{ name: "Soft Serial 2", value: 31 },
-			{ name: "LPUART 1", value: 40 }
-		];
-
-		const functionNames = [
-			{ name: "None", value: 0 },
-			{ name: "MSP", value: 1 << 0 },
-			{ name: "GPS", value: 1 << 1 },
-			{ name: "FrSky Hub", value: 1 << 2 },
-			{ name: "HoTT", value: 1 << 3 },
-			{ name: "LTM", value: 1 << 4 },
-			{ name: "SmartPort", value: 1 << 5 },
-			{ name: "RX Serial", value: 1 << 6 },
-			{ name: "Blackbox", value: 1 << 7 },
-			{ name: "Not Used", value: 1 << 8 },
-			{ name: "MAVLink", value: 1 << 9 },
-			{ name: "ESC Sensor", value: 1 << 10 },
-			{ name: "VTX SmartAudio", value: 1 << 11 },
-			{ name: "Telemetry iBus", value: 1 << 12 },
-			{ name: "VTX Tramp", value: 1 << 13 },
-			{ name: "RC Device", value: 1 << 14 },
-			{ name: "Lidar TF", value: 1 << 15 },
-			{ name: "FrSky OSD", value: 1 << 16 },
-			{ name: "VTX MSP", value: (1 << 17) }
-		];
+		}
 
 		const formattedSerial = serialObject.map((serial) => {
 			const functions = functionNames.filter((func) => serial.function & func.value).map((func) => func.name);
