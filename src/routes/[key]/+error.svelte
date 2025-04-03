@@ -2,14 +2,16 @@
 	import { page } from "$app/stores";
 	import { fly } from "svelte/transition";
 	import { Icon } from "@steeze-ui/svelte-icon";
-	import { Plus, ClipboardPaste, ArrowRightCircle } from "@steeze-ui/lucide-icons";
+	import { Plus, ClipboardPaste, ArrowRightCircle, Loader2 } from "@steeze-ui/lucide-icons";
 	import { goto } from "$app/navigation";
 	import { extractSupportId } from "$lib/extractSupportId";
+	import { invalidate } from "$app/navigation";
 
 	let showNewSupportForm = false;
 	let newSupportKey = "";
 	let error = "";
 	let isPasting = false;
+	let isLoading = false;
 
 	$: hasValidId = newSupportKey && extractSupportId(newSupportKey) !== null;
 
@@ -41,7 +43,7 @@
 		}
 	}
 
-	function searchNewSupport() {
+	async function searchNewSupport() {
 		if (!newSupportKey) {
 			error = "Please enter a support ID";
 			return;
@@ -52,7 +54,13 @@
 			return;
 		}
 		console.log("Searching for:", supportId);
-		goto("/" + supportId);
+		isLoading = true;
+		try {
+			await invalidate('all');
+			await goto("/" + supportId);
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
@@ -65,16 +73,16 @@
 	<h2 class="text-2xl">{$page.error?.message}</h2>
 
 	{#if showNewSupportForm}
-		<div class="fixed bottom-24 right-4 w-[calc(100%-2rem)] sm:bottom-6 sm:right-20 sm:w-96 transform" transition:fly={{ x: 20, duration: 300 }}>
+		<div class="fixed lg:bottom-5 lg:right-20 lg:w-96 bottom-24 right-4 w-[calc(100%-2rem)]" transition:fly={{ x: 20, duration: 300 }}>
 			<form
 				class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-full"
 				on:submit|preventDefault={searchNewSupport}
 			>
-				<button class="variant-filled-tetriary" on:click={paste} disabled={isPasting}>
+				<button class="variant-filled-tetriary" on:click={paste} disabled={isPasting || isLoading}>
 					<Icon src={ClipboardPaste} size="1.5rem" />
 				</button>
-				<input type="search" placeholder="Paste Support key..." class="w-full" bind:value={newSupportKey} />
-				<button class="variant-filled-secondary disabled:cursor-not-allowed disabled:opacity-50" disabled={!hasValidId}>
+				<input type="search" placeholder="Paste Support key..." class="w-full" bind:value={newSupportKey} disabled={isLoading} />
+				<button class="variant-filled-secondary disabled:cursor-not-allowed disabled:opacity-50" disabled={!hasValidId || isLoading}>
 					<Icon src={ArrowRightCircle} size="1.5rem" />
 				</button>
 			</form>
@@ -87,7 +95,14 @@
 	<button
 		class="fixed bottom-4 right-4 btn variant-filled-primary rounded-full w-14 h-14 flex items-center justify-center z-50"
 		on:click={() => (showNewSupportForm = !showNewSupportForm)}
+		disabled={isLoading}
 	>
-		<Icon src={Plus} size="1.5rem" />
+		{#if isLoading}
+			<Icon src={Loader2} size="1.5rem" class="animate-spin" />
+		{:else}
+			<div class:rotate-45={showNewSupportForm} class="transition-transform duration-300">
+				<Icon src={Plus} size="1.5rem" />
+			</div>
+		{/if}
 	</button>
 </div>
