@@ -1,82 +1,17 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
-	import { Download, BookOpen, Code } from "@steeze-ui/lucide-icons";
+	import { Download, BookOpen, Code, Plus, ClipboardPaste, ArrowRightCircle } from "@steeze-ui/lucide-icons";
 	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
 	import { fly } from "svelte/transition";
 	import Ports from "$components/Ports.svelte";
 	import Modes from "$components/Modes.svelte";
+	import { goto } from "$app/navigation";
+	import { invalidate } from "$app/navigation";
+	import { extractSupportId } from "$lib/extractSupportId";
+	import { page } from "$app/stores";
 
 	export let data: PageData;
-
-	// const build = data.build;
-	// const status = data.status;
-	// const problem = data.problem;
-
-	// 						<!-- commonSettings = {
-	// 	"Denominations": {
-	// 		"imuDenom": {
-	// 			"name": "IMU Denom",
-	// 			"value": "2"
-	// 		},
-	// 		"pidDenom": {
-	// 			"name": "PID Denom",
-	// 			"value": "1"
-	// 		}
-	// 	},
-	// 	"Receiver Settings": {
-	// 		"rxProtocol": {
-	// 			"name": "RX Protocol",
-	// 			"value": "CRSF"
-	// 		},
-	// 		"rxInverted": {
-	// 			"name": "RX Inverted",
-	// 			"value": "OFF"
-	// 		},
-	// 		"rxHalfDuplex": {
-	// 			"name": "RX Half Duplex",
-	// 			"value": "OFF"
-	// 		}
-	// 	},
-	// 	"Motor Settings": {
-	// 		"escProtocol": {
-	// 			"name": "ESC Protocol",
-	// 			"value": "DSHOT600"
-	// 		},
-	// 		"dshotBurst": {
-	// 			"name": "DShot Burst",
-	// 			"value": "ON"
-	// 		},
-	// 		"dshotBidir": {
-	// 			"name": "Bidirectional DShot",
-	// 			"value": "ON"
-	// 		},
-	// 		"dshotEdt": {
-	// 			"name": "DShot EDT",
-	// 			"value": "OFF"
-	// 		},
-	// 		"dshotBitbang": {
-	// 			"name": "DShot Bitbang",
-	// 			"value": "AUTO"
-	// 		},
-	// 		"dshotBitbangTimer": {
-	// 			"name": "DShot Bitbang Timer",
-	// 			"value": "AUTO"
-	// 		},
-	// 		"motorPoles": {
-	// 			"name": "Motor Poles",
-	// 			"value": "14"
-	// 		},
-	// 		"motorsReversed": {
-	// 			"name": "Motors Reversed",
-	// 			"value": "OFF"
-	// 		},
-	// 		"motorOutputLimit": {
-	// 			"name": "Motor Output Limit",
-	// 			"value": "100"
-	// 		}
-	// 	}
-	// } -->
 
 	type CommonSettings = {
 		[section: string]: {
@@ -87,15 +22,15 @@
 		};
 	};
 
-	const { support, build, status, problem, dump, dma, timer, serial, modes } = data;
-	const commonSettings = data.commonSettings as CommonSettings;
-	const { Config: config, Request: request } = build;
+	$: ({ support, build, status, problem, dump, dma, timer, serial, modes } = data);
+	$: commonSettings = data.commonSettings as CommonSettings;
+	$: ({ Config: config, Request: request } = build);
 
-	const ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
+	$: ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
 
-	const timerKeys = timer ? Object.keys(timer) : [];
-	const timerHalf = Math.ceil(timerKeys.length / 2);
-	const splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
+	$: timerKeys = timer ? Object.keys(timer) : [];
+	$: timerHalf = Math.ceil(timerKeys.length / 2);
+	$: splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
 
 	function formatTime(time: string) {
 		return (
@@ -107,10 +42,60 @@
 	if (config) {
 		description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`
 	}
+
+	let showNewSupportForm = false;
+	let newSupportKey = "";
+	let error = "";
+	let isPasting = false;
+
+	$: hasValidId = newSupportKey && extractSupportId(newSupportKey) !== null;
+
+	async function paste(e: Event) {
+		e.preventDefault();
+		try {
+			isPasting = true;
+			error = "";
+			const result = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+			if (result.state === "granted" || result.state === "prompt") {
+				const text = await navigator.clipboard.readText();
+				const supportId = extractSupportId(text);
+				if (supportId) {
+					newSupportKey = supportId;
+					searchNewSupport();
+				} else {
+					error = "Invalid support ID format. Please check and try again.";
+					console.error(error);
+				}
+			} else {
+				error = "Clipboard read permission denied";
+				console.error(error);
+			}
+		} catch (err) {
+			error = "Failed to access clipboard";
+			console.error(err);
+		} finally {
+			isPasting = false;
+		}
+	}
+
+	async function searchNewSupport() {
+		if (!newSupportKey) {
+			error = "Please enter a support ID";
+			return;
+		}
+		const supportId = extractSupportId(newSupportKey);
+		if (!supportId) {
+			error = "Invalid support ID format";
+			return;
+		}
+		console.log("Searching for:", supportId);
+		await invalidate('all');
+		goto("/" + supportId);
+	}
 </script>
 
 <svelte:head>
-	<title>Betaflight Support Explorer</title>
+	<title>{"Betaflight Support Explorer" + " - " + $page.params.key}</title>
 	<meta name="description" content={description} />
 
 	<meta property="og:title" content={`Support Data for ${config.Target}`} />
@@ -121,9 +106,36 @@
 </svelte:head>
 
 <div
-	class="flex flex-col h-full w-full md:p-16 p-4 pb-6 2xl:px-40 gap-6"
+	class="flex flex-col h-full w-full md:p-16 p-4 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
+	{#if showNewSupportForm}
+		<div class="fixed bottom-24 right-4 w-[calc(100%-2rem)] sm:bottom-6 sm:right-20 sm:w-96 transform" transition:fly={{ x: 20, duration: 300 }}>
+			<form
+				class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-full"
+				on:submit|preventDefault={searchNewSupport}
+			>
+				<button class="variant-filled-tetriary" on:click={paste} disabled={isPasting}>
+					<Icon src={ClipboardPaste} size="1.5rem" />
+				</button>
+				<input type="search" placeholder="Paste Support key..." class="w-full" bind:value={newSupportKey} />
+				<button class="variant-filled-secondary disabled:cursor-not-allowed disabled:opacity-50" disabled={!hasValidId}>
+					<Icon src={ArrowRightCircle} size="1.5rem" />
+				</button>
+			</form>
+			{#if error}
+				<p class="text-error-500 mt-2" transition:fly={{ y: 20, duration: 300 }}>{error}</p>
+			{/if}
+		</div>
+	{/if}
+
+	<button
+		class="fixed bottom-4 right-4 btn variant-filled-primary rounded-full w-14 h-14 flex items-center justify-center z-50"
+		on:click={() => (showNewSupportForm = !showNewSupportForm)}
+	>
+		<Icon src={Plus} size="1.5rem" />
+	</button>
+
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
 			<div class="card">
