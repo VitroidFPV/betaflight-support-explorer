@@ -2,7 +2,7 @@
 	import "../app.postcss";
 
 	import { AppShell } from "@skeletonlabs/skeleton";
-
+	import Nav from "$components/Nav.svelte";
 	// Highlight JS
 	import hljs from "highlight.js/lib/core";
 	import "highlight.js/styles/github-dark.css";
@@ -27,7 +27,9 @@
 </script>
 
 <AppShell>
-	<!-- <svelte:fragment slot="header">Header</svelte:fragment> -->
+	<svelte:fragment slot="header">
+		<Nav />
+	</svelte:fragment>
 	<!-- (sidebarLeft) -->
 	<!-- (sidebarRight) -->
 	<!-- (pageHeader) -->

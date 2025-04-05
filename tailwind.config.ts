@@ -12,7 +12,12 @@ export default {
 		join(require.resolve("@skeletonlabs/skeleton"), "../**/*.{html,js,svelte,ts}")
 	],
 	theme: {
-		extend: {}
+		extend: {
+			backgroundSize: {
+				"0w": "0% 100%",
+				"100w": "100% 100%"
+			},
+		}
 	},
 	plugins: [
 		forms,

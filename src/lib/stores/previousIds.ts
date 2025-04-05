@@ -11,4 +11,11 @@ type PreviousId = {
 	armDisableFlags: string[];
 }
 
-export const previousIds = persisted<PreviousId[]>("previousIds", []);
+export const previousIds = persisted<PreviousId[]>("previousIds", [], {
+	beforeRead: (value) => {
+		return value.sort((a, b) => b.createdAt - a.createdAt);
+	},
+	beforeWrite: (value) => {
+		return value.sort((a, b) => b.createdAt - a.createdAt);
+	}
+});
