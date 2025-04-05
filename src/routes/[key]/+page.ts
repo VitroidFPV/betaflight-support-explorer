@@ -2,6 +2,54 @@ import type { PageLoad } from "./$types";
 import { error } from "@sveltejs/kit";
 import { extractStatus, extractProblem, extractDump, extractDma, extractTimer, extractSerial, extractModes, extractCliLine } from "$lib/extract";
 import { SemVer } from "semver";
+import { previousIds } from "$lib/stores/previousIds";
+import { get } from "svelte/store";
+
+type BuildConfig = {
+	Manufacturer: string;
+	Target: string;
+	MCU: string;
+}
+
+type BuildRequest = {
+	Release: string;
+	Tag: string;
+	Options: string[];
+}
+
+type PreviousId = {
+	id: string;
+	createdAt: number;
+	manufacturer: string;
+	target: string;
+	version: string;
+	problemDescription: string;
+	options: string[];
+	armDisableFlags: string[];
+}
+
+function addPreviousId(currentId: string, config: BuildConfig | undefined, request: BuildRequest | undefined, problem: string | null, ArmingDisableFlags: string[]) {
+	if (!config || !request) {
+		console.error("No config or request found");
+		return;
+	}
+
+	console.log("Adding previous id");
+	
+	const existingId = get(previousIds).find((id: PreviousId) => id.id === currentId);
+	if (!existingId) {
+		previousIds.update((ids) => [...ids, {
+			id: currentId,
+			createdAt: Date.now(),
+			manufacturer: config.Manufacturer,
+			target: config.Target,
+			version: request.Release,
+			problemDescription: problem ?? "",
+			options: request.Options,
+			armDisableFlags: ArmingDisableFlags,
+		}]);
+	}
+}
 
 export const load = (async ({ params, fetch }) => {
 	const key = params.key as string;
@@ -127,6 +175,9 @@ export const load = (async ({ params, fetch }) => {
 				},
 			}
 		}
+
+		// Add the support ID to the previous IDs store
+		addPreviousId(key,build.Config, build.Request, problem, (status?.["Arming disable flags"] as string)?.split(" ") ?? []);
 
 		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes, commonSettings };
 	}

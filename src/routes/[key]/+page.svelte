@@ -10,6 +10,7 @@
 	import { invalidate } from "$app/navigation";
 	import { extractSupportId } from "$lib/extractSupportId";
 	import { page } from "$app/stores";
+	import { previousIds } from "$lib/stores/previousIds";
 
 	export let data: PageData;
 
@@ -98,6 +99,9 @@
 			isLoading = false;
 		}
 	}
+
+	$: console.log($previousIds);
+
 </script>
 
 <svelte:head>
