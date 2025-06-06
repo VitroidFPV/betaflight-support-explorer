@@ -110,18 +110,24 @@
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
 							<span class="badge variant-filled-success">{build.Status}</span>
 						</div>
-						<!-- <button type="button" class="btn variant-filled-primary btn-sm">
-							<span><Icon src={Download} size="1rem" /></span>
-							<span>Download .hex</span>
-						</button> -->
-						<a
-							href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
-							target="_blank"
-							class="btn variant-filled-primary btn-sm"
-						>
-							<span><Icon src={Download} size="1rem" /></span>
-							<span>Download .hex</span>
-						</a>
+						<div class="flex gap-2">
+							<a
+								href="https://build.betaflight.com/api/builds/{build.Identifier}/log"
+								target="_blank"
+								class="btn variant-filled-secondary btn-sm"
+							>
+								<span><Icon src={BookOpen} size="1rem" /></span>
+								<span>View Log</span>
+							</a>
+							<a
+								href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
+								target="_blank"
+								class="btn variant-filled-primary btn-sm"
+							>
+								<span><Icon src={Download} size="1rem" /></span>
+								<span>Download .hex</span>
+							</a>
+						</div>
 					</div>
 					<hr />
 					<div class="flex flex-col">
