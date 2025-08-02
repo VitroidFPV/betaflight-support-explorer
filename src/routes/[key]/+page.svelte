@@ -45,10 +45,7 @@
 		);
 	}
 
-	let description = "";
-	if (config) {
-		description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`;
-	}
+	$: description = config ? `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}` : "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds";
 
 	$: console.log($previousIds);
 </script>
