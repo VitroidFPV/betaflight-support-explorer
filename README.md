@@ -1,38 +1,71 @@
-# create-svelte
+# Betaflight Support Explorer
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+A web-based tool for analyzing Betaflight firmware support data and build information from Support IDs.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Build Information**: View firmware details, configuration, and build status
+- **Hardware Configuration**: Analyze onboard hardware configuration
+- **Pilot Configuration**: Access flight modes and UART port assignments
+- **DMA & Timer Analysis**: Identify resource conflicts and timer configurations
+- **CLI Backup**: Copy the entire flight controller configuration at the time of data submission
+- **History Tracking**: Keep track of previously analyzed Support IDs
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Getting Started
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+### Prerequisites
 
-## Developing
+- Node.js (v16 or higher)
+- npm or yarn package manager
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Installation
 
-```bash
-npm run dev
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/vitroidfpv/betaflight-support-explorer.git
+   cd betaflight-support-explorer
+   ```
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Building
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-To create a production version of your app:
+4. Open your browser and navigate to `http://localhost:3000`
 
-```bash
-npm run build
-```
+## Usage
 
-You can preview the production build with `npm run preview`.
+1. **Get Support ID**: Generate a Support ID in Betaflight Configurator in the CLI tab
+2. **Paste ID**: Use the search bar to paste or type the Support ID (UUID format)
+3. **Analyze Data**: Browse through organized sections showing:
+   - Build configuration and firmware details
+   - Status information and detected problems
+   - Serial port configurations and flight modes
+   - Hardware resource allocation and conflicts
+4. **Settings**: Customize which data sections to display in `/settings`
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Technical Details
+
+- Built with [SvelteKit](https://kit.svelte.dev/) and TypeScript
+- UI components from [Skeleton Labs](https://www.skeleton.dev/)
+- Styled with [TailwindCSS](https://tailwindcss.com/)
+- Data fetched from [Betaflight Build API](https://build.betaflight.com/)
+
+## Requirements
+
+- Betaflight firmware 4.4.0 or later
+- Modern web browser with JavaScript enabled
+- Internet connection for API access
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
