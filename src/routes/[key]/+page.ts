@@ -179,10 +179,29 @@ export const load = (async ({ params, fetch }) => {
 		// Add the support ID to the previous IDs store
 		addPreviousId(key,build.Config, build.Request, problem, (status?.["Arming disable flags"] as string)?.split(" ") ?? []);
 
-		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes, commonSettings };
+		// Calculate description for meta tags
+		const formatTime = (time: string) => {
+			return time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23);
+		};
+
+		const description = build?.Config ? 
+			`Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}` :
+			"Betaflight Support Explorer - Analyze Betaflight support data and cloud builds";
+
+		return { build, support: supportText, status, problem, dump, dma, timer, serial, modes, commonSettings, description };
 	}
 
 	const buildResponse = await fetch(buildUrl);
 	const build = await buildResponse.json();
-	return { build };
+
+	// Calculate description for meta tags (build-only mode)
+	const formatTime = (time: string) => {
+		return time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23);
+	};
+
+	const description = build?.Config ? 
+		`Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}` :
+		"Betaflight Support Explorer - Analyze Betaflight support data and cloud builds";
+
+	return { build, description };
 }) satisfies PageLoad;

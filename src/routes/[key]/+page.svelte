@@ -20,7 +20,7 @@
 		};
 	};
 
-	$: ({ support, build, status, problem, dump, dma, timer, serial, modes } = data);
+	$: ({ support, build, status, problem, dump, dma, timer, serial, modes, description } = data);
 	$: commonSettings = data.commonSettings as CommonSettings;
 	$: ({ Config: config, Request: request } = build);
 
@@ -45,16 +45,14 @@
 		);
 	}
 
-	$: description = config ? `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}` : "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds";
-
 	$: console.log($previousIds);
 </script>
 
-<svelte:head>
+	<svelte:head>
 	<title>{"Betaflight Support Explorer" + " - " + $page.params.key}</title>
 	<meta name="description" content={description} />
 
-	<meta property="og:title" content={`Support Data for ${config.Target}`} />
+	<meta property="og:title" content={config?.Target ? `Support Data for ${config.Target}` : "Betaflight Support Explorer"} />
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:description" content={description} />
