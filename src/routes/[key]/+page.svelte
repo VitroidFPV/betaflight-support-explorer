@@ -24,6 +24,15 @@
 	$: commonSettings = data.commonSettings as CommonSettings;
 	$: ({ Config: config, Request: request } = build);
 
+	// Calculate PID Rate from gyro rate and pidDenom
+	$: pidRate = (() => {
+		if (!status || !commonSettings?.["Denominations"]?.["pidDenom"]?.value) return null;
+		const gyroRate = parseFloat(status["GYRO rate"] as string);
+		const pidDenom = parseFloat(commonSettings["Denominations"]["pidDenom"].value);
+		if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return null;
+		return Math.round(gyroRate / pidDenom);
+	})();
+
 	$: ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
 
 	$: timerKeys = timer ? Object.keys(timer) : [];
@@ -279,6 +288,13 @@
 								<span class="text-neutral-400 mr-1 text-base">Gyro Rate:</span>
 								<span class="text-base">{status["GYRO rate"]}Hz</span>
 							</div>
+							<span class="divider-vertical ml-4 mr-4"></span>
+							{#if pidRate !== null}
+								<div class="flex flex-row">
+									<span class="text-neutral-400 mr-1 text-base">PID Rate:</span>
+									<span class="text-base">{pidRate}Hz</span>
+								</div>
+							{/if}
 							<span class="divider-vertical ml-4 mr-4"></span>
 							<div class="flex flex-row">
 								<span class="text-neutral-400 mr-1 text-base">RX Rate:</span>
