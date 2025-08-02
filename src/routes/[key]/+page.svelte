@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
-	import { Download, BookOpen } from "@steeze-ui/lucide-icons";
+	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons";
 	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
 	import { fly } from "svelte/transition";
 	import Ports from "$components/Ports.svelte";
@@ -14,8 +14,8 @@
 	type CommonSettings = {
 		[section: string]: {
 			[setting: string]: {
-			name: string;
-			value: string;
+				name: string;
+				value: string;
 			};
 		};
 	};
@@ -38,11 +38,10 @@
 
 	let description = "";
 	if (config) {
-		description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`
+		description = `Firmware: ${config.Manufacturer}/${config.Target} \n Release: ${request.Release} \n Tag: ${request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${request.Options.join(", ")}`;
 	}
 
 	$: console.log($previousIds);
-
 </script>
 
 <svelte:head>
@@ -60,7 +59,6 @@
 	class="flex flex-col h-full w-full md:p-16 md:pt-8 p-4 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
-
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
 			<div class="card">
@@ -72,10 +70,20 @@
 								<span class="text-neutral-400 mr-1 text-base">{config.Manufacturer}/</span
 								>{config.Target}
 							</div>
-							<a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
-								<span><Icon src={BookOpen} size="1rem" /></span>
-								<span>Wiki</span>
-							</a>
+							<div class="flex gap-2">
+								<a
+									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
+									target="_blank"
+									class="btn variant-filled-primary btn-sm"
+								>
+									<span><Icon src={FileScan} size="1rem" /></span>
+									<span>Target</span>
+								</a>
+								<!-- <a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
+									<span><Icon src={BookOpen} size="1rem" /></span>
+									<span>Wiki</span>
+								</a> -->
+							</div>
 						</div>
 						<hr />
 						<div class="flex justify-between items-center">
@@ -308,8 +316,11 @@
 												{#if typeof timer[timerKey] !== "string"}
 													{#each Object.keys(timer[timerKey]) as channelKey}
 														<div class="flex flex-row">
-															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span>
-															<span class="badge variant-ghost-success">{timer[timerKey][channelKey]}</span>
+															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span
+															>
+															<span class="badge variant-ghost-success"
+																>{timer[timerKey][channelKey]}</span
+															>
 														</div>
 													{/each}
 												{/if}
@@ -347,7 +358,9 @@
 								{#each Object.keys(commonSettings[section]) as setting}
 									<div class="flex flex-row">
 										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
-										<span class="badge variant-soft-primary">{commonSettings[section][setting].value}</span>
+										<span class="badge variant-soft-primary"
+											>{commonSettings[section][setting].value}</span
+										>
 									</div>
 								{/each}
 							</div>
