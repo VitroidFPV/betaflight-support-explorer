@@ -73,9 +73,9 @@
 >
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex flex-col">
 						<div class="flex justify-between">
 							<div>
@@ -97,7 +97,7 @@
 								</a> -->
 							</div>
 						</div>
-						<hr />
+						<hr class="hr border-surface-500 my-4 border-t-2"/>
 						<div class="flex justify-between items-center">
 							<div>
 								<div class="flex flex-row">
@@ -122,9 +122,9 @@
 				</section>
 			</div>
 
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Build</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex flex-row items-center w-full justify-between">
 						<div class="flex">
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
@@ -149,7 +149,7 @@
 							</a>
 						</div>
 					</div>
-					<hr />
+					<hr class="hr border-surface-500 my-4 border-t-2"/>
 					<div class="flex flex-col">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
@@ -165,20 +165,20 @@
 			</div>
 
 			{#if problem}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<!-- problem description -->
 					<header class="card-header text-primary-500 h3 font-bold">Problem Description</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<blockquote class="blockquote text-base">{problem}</blockquote>
 					</section>
 				</div>
 			{/if}
 
 			{#if ArmingDisableFlags.length > 0}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<!-- arming disable flags -->
 					<header class="card-header text-primary-500 h3 font-bold">Arming Disable Flags</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row flex-wrap gap-2">
 							<!-- <div class="badge variant-ghost-error">RXLOSS</div>
 							<div class="badge variant-ghost-error">CLI</div>
@@ -192,10 +192,10 @@
 			{/if}
 
 			{#if dma && Object.keys(dma).length > 0}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">DMA</header>
 
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if dma}
 								{#each Object.keys(dma) as dmaKey}
@@ -222,9 +222,9 @@
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex gap-2 flex-row flex-wrap">
 						{#each request.Options as option}
 							<div class="badge preset-tonal-primary">{option}</div>
@@ -234,9 +234,9 @@
 			</div>
 
 			{#if status}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Hardware</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">MCU:</span>
 							<span class="text-base">{config.MCU}</span>
@@ -262,9 +262,9 @@
 						</div>
 					</section>
 				</div>
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Status</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">CPU Load:</span>
 							<span class="text-base">{status.CPU}</span>
@@ -317,16 +317,16 @@
 			{/if}
 
 			{#if timer}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Timers</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if timer}
 								{#each splitTimer as timerHalf}
 									<div class="flex flex-col w-full">
 										{#each timerHalf as timerKey}
 											<div class="flex flex-col">
-												<header class="h6 font-medium flex items-center">
+												<header class="font-medium flex items-center">
 													<span>{timerKey}:</span>
 													{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
 														<span class="badge preset-tonal-tertiary border border-tertiary-500 ml-2">{timer[timerKey]}</span>
@@ -355,7 +355,7 @@
 		</div>
 	</div>
 
-	{#if serial}
+	<!-- {#if serial}
 		<Ports {serial} />
 	{/if}
 
@@ -401,5 +401,5 @@
 		<div class="flex flex-col">
 			<CodeBlock class="card max-h-[88vh] overflow-y-scroll" language="nim" code={dump} />
 		</div>
-	{/if}
+	{/if} -->
 </div>

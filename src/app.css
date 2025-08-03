@@ -87,7 +87,7 @@ input:focus::-webkit-search-cancel-button {
 }
 
 [data-theme='yellowtheme'] .preset-tonal-secondary {
-	background-color: color-mix(in srgb, var(--color-secondary-500) 20%, transparent);
+	background-color: color-mix(in srgb, var(--color-secondary-500) 18%, transparent);
 }
 
 [data-theme='yellowtheme'] .preset-tonal-tertiary {
@@ -108,4 +108,9 @@ input:focus::-webkit-search-cancel-button {
 
 [data-theme='yellowtheme'] .preset-tonal-error {
 	background-color: color-mix(in srgb, var(--color-error-500) 20%, transparent);
+}
+
+[data-theme='yellowtheme'] .card.preset-tonal-secondary {
+	border-color: var(--color-surface-500);
+	border-width: 1px;
 }
