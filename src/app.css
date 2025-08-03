@@ -8,6 +8,8 @@
   Add your theme import for your theme: "yellow-theme" here
 */
 
+@import "../yellow-theme.css";
+
 @source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
 
 @plugin '@tailwindcss/forms';
