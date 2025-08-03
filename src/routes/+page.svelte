@@ -67,7 +67,7 @@
 	<meta name="theme-color" content="#ffbb00" />
 </svelte:head>
 
-<svelte:document on:keydown={handleKeyDown} />
+<svelte:document onkeydown={handleKeyDown} />
 
 <div class="flex flex-col h-full w-full md:p-16 md:pt-8 p-4 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
@@ -80,7 +80,7 @@
 		{#each $previousIds as id (id.createdAt)}
 			<div class="card group relative">
 				<div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-0 right-0 translate-x-1/2 -translate-y-1/2">
-					<button class="btn btn-icon variant-ghost-error btn-sm aspect-square" on:click={() => deleteId(id.id)}>
+					<button class="btn btn-icon variant-ghost-error btn-sm aspect-square" onclick={() => deleteId(id.id)}>
 						<Icon src={Trash} size="1rem" />
 					</button>
 				</div>

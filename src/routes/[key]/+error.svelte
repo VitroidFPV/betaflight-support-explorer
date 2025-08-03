@@ -8,12 +8,12 @@
 	import { invalidate } from "$app/navigation";
 
 	let showNewSupportForm = false;
-	let newSupportKey = "";
+	let newSupportKey = $state("");
 	let error = "";
 	let isPasting = false;
 	let isLoading = false;
 
-	$: hasValidId = newSupportKey && extractSupportId(newSupportKey) !== null;
+	let hasValidId = $derived(newSupportKey && extractSupportId(newSupportKey) !== null);
 
 	async function paste(e: Event) {
 		e.preventDefault();

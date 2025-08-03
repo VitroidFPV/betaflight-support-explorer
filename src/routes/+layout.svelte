@@ -23,18 +23,25 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom";
 	import { storePopup } from "@skeletonlabs/skeleton";
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
 <AppShell>
-	<svelte:fragment slot="header">
-		<Nav />
-	</svelte:fragment>
+	{#snippet header()}
+	
+			<Nav />
+		
+	{/snippet}
 	<!-- (sidebarLeft) -->
 	<!-- (sidebarRight) -->
 	<!-- (pageHeader) -->
 	<!-- Router Slot -->
-	<slot />
+	{@render children?.()}
 	<!-- ---- / ---- -->
 	<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment> -->
 	<!-- (footer) -->

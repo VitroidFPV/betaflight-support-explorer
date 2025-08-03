@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
 	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons";
@@ -9,7 +11,11 @@
 	import { page } from "$app/stores";
 	import { previousIds } from "$lib/stores/previousIds";
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	type CommonSettings = {
 		[section: string]: {
@@ -20,24 +26,24 @@
 		};
 	};
 
-	$: ({ support, build, status, problem, dump, dma, timer, serial, modes, description } = data);
-	$: commonSettings = data.commonSettings as CommonSettings;
-	$: ({ Config: config, Request: request } = build);
+	let { support, build, status, problem, dump, dma, timer, serial, modes, description } = $derived(data);
+	let commonSettings = $derived(data.commonSettings as CommonSettings);
+	let { Config: config, Request: request } = $derived(build);
 
 	// Calculate PID Rate from gyro rate and pidDenom
-	$: pidRate = (() => {
+	let pidRate = $derived((() => {
 		if (!status || !commonSettings?.["Denominations"]?.["pidDenom"]?.value) return null;
 		const gyroRate = parseFloat(status["GYRO rate"] as string);
 		const pidDenom = parseFloat(commonSettings["Denominations"]["pidDenom"].value);
 		if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return null;
 		return Math.round(gyroRate / pidDenom);
-	})();
+	})());
 
-	$: ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
+	let ArmingDisableFlags = $derived((status?.["Arming disable flags"] as string)?.split(" ") ?? []);
 
-	$: timerKeys = timer ? Object.keys(timer) : [];
-	$: timerHalf = Math.ceil(timerKeys.length / 2);
-	$: splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
+	let timerKeys = $derived(timer ? Object.keys(timer) : []);
+	let timerHalf = $derived(Math.ceil(timerKeys.length / 2));
+	let splitTimer = $derived([timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)]);
 
 	function formatTime(time: string) {
 		return (
@@ -45,7 +51,9 @@
 		);
 	}
 
-	$: console.log($previousIds);
+	run(() => {
+		console.log($previousIds);
+	});
 </script>
 
 	<svelte:head>
@@ -358,26 +366,30 @@
 	{#if commonSettings}
 		<Accordion>
 			<AccordionItem class="card">
-				<svelte:fragment slot="summary">
-					<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
-				</svelte:fragment>
-				<svelte:fragment slot="content">
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-						{#each Object.keys(commonSettings) as section}
-							<div class="flex flex-col gap-2">
-								<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
-								{#each Object.keys(commonSettings[section]) as setting}
-									<div class="flex flex-row">
-										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
-										<span class="badge variant-soft-primary"
-											>{commonSettings[section][setting].value}</span
-										>
-									</div>
-								{/each}
-							</div>
-						{/each}
-					</div>
-				</svelte:fragment>
+				{#snippet summary()}
+							
+						<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
+					
+							{/snippet}
+				{#snippet content()}
+							
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+							{#each Object.keys(commonSettings) as section}
+								<div class="flex flex-col gap-2">
+									<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
+									{#each Object.keys(commonSettings[section]) as setting}
+										<div class="flex flex-row">
+											<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
+											<span class="badge variant-soft-primary"
+												>{commonSettings[section][setting].value}</span
+											>
+										</div>
+									{/each}
+								</div>
+							{/each}
+						</div>
+					
+							{/snippet}
 			</AccordionItem>
 		</Accordion>
 	{/if}
