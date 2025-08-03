@@ -201,7 +201,7 @@
 							{#if dma}
 								{#each Object.keys(dma) as dmaKey}
 									<div class="flex flex-col gap-2">
-										<header class="text-primary-500 h6 font-medium">{dmaKey}:</header>
+										<div class="text-primary-500 font-bold">{dmaKey}:</div>
 										{#each Object.keys(dma[dmaKey]) as channelKey}
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
