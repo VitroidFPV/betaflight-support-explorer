@@ -65,7 +65,7 @@
 	}
 </script>
 
-<nav class="flex justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950" data-sveltekit-preload-data="hover">
+<nav class="flex sticky bg-surface-950 top-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950" data-sveltekit-preload-data="hover">
 <!-- home, about, support me, <search>, <settings> -->
 <!-- center <search> -->
 
