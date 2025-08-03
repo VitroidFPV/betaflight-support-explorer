@@ -35,14 +35,12 @@
 	// ]
 </script>
 
-<Accordion>
-	<Accordion.Item class="card">
-		{#snippet summary()}
-			
-				<header class="card-header text-primary-500 h2 font-bold mb-4">Modes</header>
-			
-			{/snippet}
-		{#snippet content()}
+<Accordion collapsible>
+	<Accordion.Item classes="card preset-tonal-secondary" controlHover="hover:bg-primary-500/20" value="modes">
+		{#snippet control()}
+			<header class="h2 font-bold mb-4 mt-3">Modes</header>
+		{/snippet}
+		{#snippet panel()}
 			
 				<div>
 					<section class="p-4 text-lg">
@@ -81,6 +79,6 @@
 					</section>
 				</div>
 			
-			{/snippet}
+		{/snippet}
 	</Accordion.Item>
 </Accordion>

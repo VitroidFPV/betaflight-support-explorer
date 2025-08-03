@@ -359,9 +359,9 @@
 		<Ports {serial} />
 	{/if}
 
-	<!-- {#if modes}
+	{#if modes}
 		<Modes {modes} />
-	{/if} -->
+	{/if}
 
 	<!-- {#if commonSettings}
 		<Accordion>
