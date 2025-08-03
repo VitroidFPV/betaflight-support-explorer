@@ -363,36 +363,33 @@
 		<Modes {modes} />
 	{/if}
 
-	<!-- {#if commonSettings}
-		<Accordion>
-			<Accordion.Item class="card">
-				{#snippet summary()}
-							
-						<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
-					
-							{/snippet}
-				{#snippet content()}
-							
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-							{#each Object.keys(commonSettings) as section}
-								<div class="flex flex-col gap-2">
-									<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
-									{#each Object.keys(commonSettings[section]) as setting}
-										<div class="flex flex-row">
-											<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
-											<span class="badge preset-tonal-primary"
-												>{commonSettings[section][setting].value}</span
-											>
-										</div>
-									{/each}
-								</div>
-							{/each}
-						</div>
-					
-							{/snippet}
+	{#if commonSettings}
+		<Accordion collapsible>
+			<Accordion.Item classes="card preset-tonal-secondary" controlHover="hover:bg-primary-500/20" value="commonSettings">
+				{#snippet control()}	
+					<header class="h2 font-bold mb-4 mt-3">Common Settings</header>
+				{/snippet}
+
+				{#snippet panel()}			
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+						{#each Object.keys(commonSettings) as section}
+							<div class="flex flex-col gap-2">
+								<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
+								{#each Object.keys(commonSettings[section]) as setting}
+									<div class="flex flex-row">
+										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
+										<span class="badge preset-tonal-primary"
+											>{commonSettings[section][setting].value}</span
+										>
+									</div>
+								{/each}
+							</div>
+						{/each}
+					</div>
+				{/snippet}
 			</Accordion.Item>
 		</Accordion>
-	{/if} -->
+	{/if}
 
 	<!-- {#if dump}
 		<hr />
