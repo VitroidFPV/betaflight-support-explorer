@@ -1,5 +1,5 @@
 <script lang="ts">
-	import "../app.postcss";
+	import "../app.css";
 	import Nav from "$components/Nav.svelte";
 	// Highlight JS
 	import hljs from "highlight.js/lib/core";
@@ -15,7 +15,7 @@
 	hljs.registerLanguage("javascript", javascript);
 	hljs.registerLanguage("typescript", typescript);
 	hljs.registerLanguage("nim", nim);
-	storeHighlightJs.set(hljs);
+	// storeHighlightJs.set(hljs);
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom";
@@ -25,21 +25,11 @@
 	}
 
 	let { children }: Props = $props();
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	// storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
-<AppShell>
-	{#snippet header()}
-	
-			<Nav />
-		
-	{/snippet}
-	<!-- (sidebarLeft) -->
-	<!-- (sidebarRight) -->
-	<!-- (pageHeader) -->
-	<!-- Router Slot -->
+<div class="grid grid-rows-[auto_1fr_auto]">
+  	<Nav />
+
 	{@render children?.()}
-	<!-- ---- / ---- -->
-	<!-- <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment> -->
-	<!-- (footer) -->
-</AppShell>
+</div>
