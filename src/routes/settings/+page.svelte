@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly } from "svelte/transition";
-	import { SlideToggle } from "@skeletonlabs/skeleton";
+	import { Switch } from "@skeletonlabs/skeleton-svelte";
 	import { settings } from "$lib/stores/settings";
 </script>
 
@@ -31,7 +31,7 @@
 						{#each $settings.idPreviewCardSettings as setting}
 							<div class="flex flex-row justify-between">
 								<div class="mr-1 text-base">{setting.title}:</div>
-								<SlideToggle bind:checked={setting.value} name={setting.name} size="sm" active="bg-primary-500" />
+								<Switch bind:checked={setting.value} name={setting.name} size="sm" active="bg-primary-500" />
 							</div>
 						{/each}
 					</div>

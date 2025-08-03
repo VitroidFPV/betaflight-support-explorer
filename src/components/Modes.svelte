@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Accordion, AccordionItem } from "@skeletonlabs/skeleton"
+	import { Accordion } from "@skeletonlabs/skeleton-svelte"
 
 	interface Props {
 		modes?: { mode: string; channel: number; low: number; high: number }[];
@@ -36,7 +36,7 @@
 </script>
 
 <Accordion>
-	<AccordionItem class="card">
+	<Accordion.Item class="card">
 		{#snippet summary()}
 			
 				<header class="card-header text-primary-500 h2 font-bold mb-4">Modes</header>
@@ -82,5 +82,5 @@
 				</div>
 			
 			{/snippet}
-	</AccordionItem>
+	</Accordion.Item>
 </Accordion>

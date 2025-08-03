@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+@import "@skeletonlabs/skeleton";
+
+@import "@skeletonlabs/skeleton/optional/presets";
+
+/*
+  Add your theme import for your theme: "yellow-theme" here
+*/
+
+@source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
+
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 

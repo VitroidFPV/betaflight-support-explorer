@@ -85,7 +85,7 @@
 				class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-full"
 				onsubmit={preventDefault(searchNewSupport)}
 			>
-				<button class="variant-filled-tetriary" onclick={paste} disabled={isPasting}>
+				<button class="preset-filled-tetriary-500" onclick={paste} disabled={isPasting}>
 					<Icon src={ClipboardPaste} size="1.5rem" />
 				</button>
 				<input 
@@ -95,7 +95,7 @@
 					bind:value={newSupportKey}
 					onkeydown={(e) => e.key === 'Enter' && searchNewSupport()} 
 				/>
-				<button class={"variant-filled-secondary disabled:cursor-not-allowed disabled:opacity-50" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
+				<button class={"preset-filled-secondary-500 disabled:cursor-not-allowed disabled:opacity-50" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
 					<!-- <Icon src={ArrowRightCircle} size="1.5rem" /> -->
 					<!-- if isLoading, show a spinner -->
 					{#if isLoading}

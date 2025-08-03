@@ -4,7 +4,7 @@
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
 	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons";
-	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
+	import { Accordion } from "@skeletonlabs/skeleton-svelte";
 	import { fly } from "svelte/transition";
 	import Ports from "$components/Ports.svelte";
 	import Modes from "$components/Modes.svelte";
@@ -86,7 +86,7 @@
 								<a
 									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
 									target="_blank"
-									class="btn variant-filled-primary btn-sm"
+									class="btn preset-filled-primary-500 btn-sm"
 								>
 									<span><Icon src={FileScan} size="1rem" /></span>
 									<span>Target</span>
@@ -112,7 +112,7 @@
 							<a
 								href="https://github.com/betaflight/betaflight/releases/tag/{request.Release}"
 								target="_blank"
-								class="btn variant-filled-secondary btn-sm"
+								class="btn preset-filled-secondary-500 btn-sm"
 							>
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>Changelog</span>
@@ -128,13 +128,13 @@
 					<div class="flex flex-row items-center w-full justify-between">
 						<div class="flex">
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
-							<span class="badge variant-filled-success">{build.Status}</span>
+							<span class="badge preset-filled-success-500">{build.Status}</span>
 						</div>
 						<div class="flex gap-2">
 							<a
 								href="https://build.betaflight.com/api/builds/{build.Identifier}/log"
 								target="_blank"
-								class="btn variant-filled-secondary btn-sm"
+								class="btn preset-filled-secondary-500 btn-sm"
 							>
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>View Log</span>
@@ -142,7 +142,7 @@
 							<a
 								href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
 								target="_blank"
-								class="btn variant-filled-primary btn-sm"
+								class="btn preset-filled-primary-500 btn-sm"
 							>
 								<span><Icon src={Download} size="1rem" /></span>
 								<span>Download .hex</span>
@@ -184,7 +184,7 @@
 							<div class="badge variant-ghost-error">CLI</div>
 							<div class="badge variant-ghost-error">MSP</div> -->
 							{#each ArmingDisableFlags as flag}
-								<div class="badge variant-ghost-error">{flag}</div>
+								<div class="badge preset-tonal-error border border-error-500">{flag}</div>
 							{/each}
 						</div>
 					</section>
@@ -205,10 +205,10 @@
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
 												{#if dma[dmaKey][channelKey] === "FREE"}
-													<span class="badge variant-ghost-tertiary">{dma[dmaKey][channelKey]}</span
+													<span class="badge preset-tonal-tertiary border border-tertiary-500">{dma[dmaKey][channelKey]}</span
 													>
 												{:else}
-													<span class="badge variant-ghost-success">{dma[dmaKey][channelKey]}</span>
+													<span class="badge preset-tonal-success border border-success-500">{dma[dmaKey][channelKey]}</span>
 												{/if}
 											</div>
 										{/each}
@@ -227,7 +227,7 @@
 				<section class="p-4 text-lg">
 					<div class="flex gap-2 flex-row flex-wrap">
 						{#each request.Options as option}
-							<div class="badge variant-soft-primary">{option}</div>
+							<div class="badge preset-tonal-primary">{option}</div>
 						{/each}
 					</div>
 				</section>
@@ -329,7 +329,7 @@
 												<header class="h6 font-medium flex items-center">
 													<span>{timerKey}:</span>
 													{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
-														<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+														<span class="badge preset-tonal-tertiary border border-tertiary-500 ml-2">{timer[timerKey]}</span>
 													{/if}
 												</header>
 												{#if typeof timer[timerKey] !== "string"}
@@ -337,7 +337,7 @@
 														<div class="flex flex-row">
 															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span
 															>
-															<span class="badge variant-ghost-success"
+															<span class="badge preset-tonal-success border border-success-500"
 																>{timer[timerKey][channelKey]}</span
 															>
 														</div>
@@ -365,7 +365,7 @@
 
 	{#if commonSettings}
 		<Accordion>
-			<AccordionItem class="card">
+			<Accordion.Item class="card">
 				{#snippet summary()}
 							
 						<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
@@ -380,7 +380,7 @@
 									{#each Object.keys(commonSettings[section]) as setting}
 										<div class="flex flex-row">
 											<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
-											<span class="badge variant-soft-primary"
+											<span class="badge preset-tonal-primary"
 												>{commonSettings[section][setting].value}</span
 											>
 										</div>
@@ -390,7 +390,7 @@
 						</div>
 					
 							{/snippet}
-			</AccordionItem>
+			</Accordion.Item>
 		</Accordion>
 	{/if}
 

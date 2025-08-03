@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Accordion, AccordionItem } from "@skeletonlabs/skeleton"
+	import { Accordion } from "@skeletonlabs/skeleton-svelte"
 
 	interface Props {
 		serial?: { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | [];
@@ -89,7 +89,7 @@
 </script>
 
 <Accordion>
-	<AccordionItem class="card">
+	<Accordion.Item class="card">
 		{#snippet summary()}
 			
 				<header class="card-header text-primary-500 h2 font-bold mb-4">Ports</header>
@@ -179,5 +179,5 @@
 	</div>
 			
 			{/snippet}
-	</AccordionItem>
+	</Accordion.Item>
 </Accordion>

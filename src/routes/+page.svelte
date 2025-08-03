@@ -80,7 +80,7 @@
 		{#each $previousIds as id (id.createdAt)}
 			<div class="card group relative">
 				<div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-0 right-0 translate-x-1/2 -translate-y-1/2">
-					<button class="btn btn-icon variant-ghost-error btn-sm aspect-square" onclick={() => deleteId(id.id)}>
+					<button class="btn btn-icon preset-tonal-error border border-error-500 btn-sm aspect-square" onclick={() => deleteId(id.id)}>
 						<Icon src={Trash} size="1rem" />
 					</button>
 				</div>
@@ -108,14 +108,14 @@
 					{#if getSetting('armDisableFlags')}
 						<div class="flex gap-2 flex-row flex-wrap max-h-16 overflow-y-auto">
 							{#each id.armDisableFlags as flag}
-								<div class="badge variant-ghost-error">{flag}</div>
+								<div class="badge preset-tonal-error border border-error-500">{flag}</div>
 							{/each}
 						</div>
 					{/if}
 					{#if getSetting('options')}
 						<div class="flex gap-2 flex-row flex-wrap max-h-48 lg:max-h-24 overflow-y-auto">
 							{#each id.options as option}
-								<div class="badge variant-soft-primary">{option}</div>
+								<div class="badge preset-tonal-primary">{option}</div>
 							{/each}
 						</div>
 					{/if}

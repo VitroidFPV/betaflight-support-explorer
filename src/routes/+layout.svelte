@@ -1,12 +1,9 @@
 <script lang="ts">
 	import "../app.postcss";
-
-	import { AppShell } from "@skeletonlabs/skeleton";
 	import Nav from "$components/Nav.svelte";
 	// Highlight JS
 	import hljs from "highlight.js/lib/core";
 	import "highlight.js/styles/github-dark.css";
-	import { storeHighlightJs } from "@skeletonlabs/skeleton";
 	import xml from "highlight.js/lib/languages/xml"; // for HTML
 	import css from "highlight.js/lib/languages/css";
 	import javascript from "highlight.js/lib/languages/javascript";
@@ -22,7 +19,7 @@
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom";
-	import { storePopup } from "@skeletonlabs/skeleton";
+
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
