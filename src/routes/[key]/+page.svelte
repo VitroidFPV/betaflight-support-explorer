@@ -355,15 +355,15 @@
 		</div>
 	</div>
 
-	<!-- {#if serial}
+	{#if serial}
 		<Ports {serial} />
 	{/if}
 
-	{#if modes}
+	<!-- {#if modes}
 		<Modes {modes} />
-	{/if}
+	{/if} -->
 
-	{#if commonSettings}
+	<!-- {#if commonSettings}
 		<Accordion>
 			<Accordion.Item class="card">
 				{#snippet summary()}
@@ -392,9 +392,9 @@
 							{/snippet}
 			</Accordion.Item>
 		</Accordion>
-	{/if}
+	{/if} -->
 
-	{#if dump}
+	<!-- {#if dump}
 		<hr />
 		<header class="text-primary-500 h2 font-bold">Dump</header>
 
