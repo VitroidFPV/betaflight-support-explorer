@@ -3,10 +3,10 @@
 @tailwind utilities;
 @tailwind variants;
 
-html,
+/* html,
 body {
 	@apply h-full overflow-hidden;
-}
+} */
 
 .transition-container {
 	display: grid;
@@ -14,7 +14,7 @@ body {
 	grid-template-columns: 1fr;
 }
 
-hr {
+/* hr {
 	@apply !border-t-2 my-4;
 }
 
@@ -24,4 +24,4 @@ input:focus::-webkit-search-cancel-button {
 
 .fancy-link {
 	@apply bg-0w hover:bg-100w transition-all duration-200 bg-gradient-to-r bg-no-repeat bg-left-bottom from-primary-500 rounded-sm to-primary-500 px-1 hover:text-black;
-}
+} */
