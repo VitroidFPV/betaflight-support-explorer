@@ -15,7 +15,7 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --background-size-0w: 0% 100%;
@@ -65,3 +65,47 @@ input:focus::-webkit-search-cancel-button {
 .fancy-link {
 	@apply bg-0w hover:bg-100w transition-all duration-200 bg-gradient-to-r bg-no-repeat bg-left-bottom from-primary-500 rounded-sm to-primary-500 px-1 hover:text-black;
 } */
+
+.fancy-link {
+	background-size: 0% 100%;
+	background-position: bottom left;
+	background-repeat: no-repeat;
+	transition: background-size 0.2s ease-in-out, color 0.2s ease-in-out;
+	background-image: linear-gradient(to right, var(--color-primary-500), var(--color-primary-500));
+	border-radius: 0.25rem;
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+}
+
+.fancy-link:hover {
+	background-size: 100% 100%;
+	color: var(--color-black);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-primary {
+	background-color: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-secondary {
+	background-color: color-mix(in srgb, var(--color-secondary-500) 20%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-tertiary {
+	background-color: color-mix(in srgb, var(--color-tertiary-500) 30%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-neutral {
+	background-color: color-mix(in srgb, var(--color-neutral-500) 30%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-success {
+	background-color: color-mix(in srgb, var(--color-success-500) 20%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-warning {
+	background-color: color-mix(in srgb, var(--color-warning-500) 20%, transparent);
+}
+
+[data-theme='yellowtheme'] .preset-tonal-error {
+	background-color: color-mix(in srgb, var(--color-error-500) 20%, transparent);
+}

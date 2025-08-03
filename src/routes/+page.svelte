@@ -78,10 +78,10 @@
 	</div>
 	<div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-6">
 		{#each $previousIds as id (id.createdAt)}
-			<div class="card group relative">
+			<div class="card preset-tonal-secondary group relative p-4 flex flex-col gap-4 border border-surface-500">
 				<div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-0 right-0 translate-x-1/2 -translate-y-1/2">
-					<button class="btn btn-icon preset-tonal-error border border-error-500 btn-sm aspect-square" onclick={() => deleteId(id.id)}>
-						<Icon src={Trash} size="1rem" />
+					<button class="btn-icon preset-tonal-error border border-error-500 aspect-square p-3" onclick={() => deleteId(id.id)}>
+						<Icon src={Trash} size="1.5rem" />
 					</button>
 				</div>
 				<section class="card-header flex justify-between">
@@ -101,7 +101,7 @@
 						</div>
 					{/if}
 				</section>
-				<section class="p-4 flex flex-col gap-4">
+				<section class="flex flex-col gap-4">
 					{#if getSetting('problemDescription')}
 						<blockquote class="blockquote">{id.problemDescription || 'No problem description provided'}</blockquote>
 					{/if}
