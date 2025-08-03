@@ -10,6 +10,7 @@
 	import Modes from "$components/Modes.svelte";
 	import { page } from "$app/stores";
 	import { previousIds } from "$lib/stores/previousIds";
+	import CodeBlock from '$components/CodeBlock/CodeBlock.svelte';
 
 	interface Props {
 		data: PageData;
@@ -391,12 +392,12 @@
 		</Accordion>
 	{/if}
 
-	<!-- {#if dump}
-		<hr />
+	{#if dump}
+		<hr class="hr border-surface-500 my-4 border-t-2"/>
 		<header class="text-primary-500 h2 font-bold">Dump</header>
 
 		<div class="flex flex-col">
-			<CodeBlock class="card max-h-[88vh] overflow-y-scroll" language="nim" code={dump} />
+			<CodeBlock classes="card max-h-[88vh] overflow-y-scroll" lang="nim" code={dump} preClasses="[&>pre]:!bg-surface-800" />
 		</div>
-	{/if} -->
+	{/if}
 </div>
