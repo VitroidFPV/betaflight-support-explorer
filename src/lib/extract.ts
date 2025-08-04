@@ -114,9 +114,7 @@ export function extractTimer(
 	}
 }
 
-export function extractSerial(
-	data: string
-):
+export function extractSerial(data: string):
 	| {
 			identifier: string
 			function: string[]
