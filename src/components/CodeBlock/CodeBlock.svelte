@@ -48,5 +48,6 @@
 
 <div class="{base} {rounded} {shadow} {classes} {preBase} {prePadding} {preClasses}">
 	<!-- Output Shiki's Generated HTML -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html generatedHtml}
 </div>

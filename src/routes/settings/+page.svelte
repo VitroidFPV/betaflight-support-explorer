@@ -29,7 +29,7 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">
-						{#each $settings.idPreviewCardSettings as setting}
+						{#each $settings.idPreviewCardSettings as setting, i (i)}
 							<div class="flex flex-row justify-between">
 								<div class="mr-1 text-base">{setting.title}:</div>
 								<Switch

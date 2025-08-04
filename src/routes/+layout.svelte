@@ -18,7 +18,7 @@
 	// storeHighlightJs.set(hljs);
 
 	// Floating UI for Popups
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom"
+	// import { computePosition, autoUpdate, flip, shift, offset, arrow } from "@floating-ui/dom"
 
 	interface Props {
 		children?: import("svelte").Snippet
