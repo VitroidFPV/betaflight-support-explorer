@@ -1,65 +1,65 @@
 <script lang="ts">
-	import { page } from "$app/stores";
-	import { fly } from "svelte/transition";
-	import { Icon } from "@steeze-ui/svelte-icon";
-	import { Plus, ClipboardPaste, ArrowRightCircle, Loader2 } from "@steeze-ui/lucide-icons";
-	import { goto } from "$app/navigation";
-	import { extractSupportId } from "$lib/extractSupportId";
-	import { invalidate } from "$app/navigation";
+	import { page } from "$app/stores"
+	import { fly } from "svelte/transition"
+	import { Icon } from "@steeze-ui/svelte-icon"
+	import { Plus, ClipboardPaste, ArrowRightCircle, Loader2 } from "@steeze-ui/lucide-icons"
+	import { goto } from "$app/navigation"
+	import { extractSupportId } from "$lib/extractSupportId"
+	import { invalidate } from "$app/navigation"
 
-	let showNewSupportForm = false;
-	let newSupportKey = $state("");
-	let error = "";
-	let isPasting = false;
-	let isLoading = false;
+	let showNewSupportForm = false
+	let newSupportKey = $state("")
+	let error = ""
+	let isPasting = false
+	let isLoading = false
 
-	let hasValidId = $derived(newSupportKey && extractSupportId(newSupportKey) !== null);
+	let hasValidId = $derived(newSupportKey && extractSupportId(newSupportKey) !== null)
 
 	async function paste(e: Event) {
-		e.preventDefault();
+		e.preventDefault()
 		try {
-			isPasting = true;
-			error = "";
-			const result = await navigator.permissions.query({ name: "clipboard-read" as PermissionName });
+			isPasting = true
+			error = ""
+			const result = await navigator.permissions.query({ name: "clipboard-read" as PermissionName })
 			if (result.state === "granted" || result.state === "prompt") {
-				const text = await navigator.clipboard.readText();
-				const supportId = extractSupportId(text);
+				const text = await navigator.clipboard.readText()
+				const supportId = extractSupportId(text)
 				if (supportId) {
-					newSupportKey = supportId;
-					searchNewSupport();
+					newSupportKey = supportId
+					searchNewSupport()
 				} else {
-					error = "Invalid support ID format. Please check and try again.";
-					console.error(error);
+					error = "Invalid support ID format. Please check and try again."
+					console.error(error)
 				}
 			} else {
-				error = "Clipboard read permission denied";
-				console.error(error);
+				error = "Clipboard read permission denied"
+				console.error(error)
 			}
 		} catch (err) {
-			error = "Failed to access clipboard";
-			console.error(err);
+			error = "Failed to access clipboard"
+			console.error(err)
 		} finally {
-			isPasting = false;
+			isPasting = false
 		}
 	}
 
 	async function searchNewSupport() {
 		if (!newSupportKey) {
-			error = "Please enter a support ID";
-			return;
+			error = "Please enter a support ID"
+			return
 		}
-		const supportId = extractSupportId(newSupportKey);
+		const supportId = extractSupportId(newSupportKey)
 		if (!supportId) {
-			error = "Invalid support ID format";
-			return;
+			error = "Invalid support ID format"
+			return
 		}
-		console.log("Searching for:", supportId);
-		isLoading = true;
+		console.log("Searching for:", supportId)
+		isLoading = true
 		try {
-			await invalidate('all');
-			await goto("/" + supportId);
+			await invalidate("all")
+			await goto("/" + supportId)
 		} finally {
-			isLoading = false;
+			isLoading = false
 		}
 	}
 </script>

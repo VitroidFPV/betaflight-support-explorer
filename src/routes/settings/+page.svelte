@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { fly } from "svelte/transition";
-	import { Switch } from "@skeletonlabs/skeleton-svelte";
-	import { settings } from "$lib/stores/settings";
+	import { fly } from "svelte/transition"
+	import { Switch } from "@skeletonlabs/skeleton-svelte"
+	import { settings } from "$lib/stores/settings"
 </script>
 
 <svelte:head>

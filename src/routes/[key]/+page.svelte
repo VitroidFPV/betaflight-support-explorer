@@ -1,67 +1,76 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
+	import { run } from "svelte/legacy"
 
-	import type { PageData } from "./$types";
-	import { Icon } from "@steeze-ui/svelte-icon";
-	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons";
-	import { Accordion } from "@skeletonlabs/skeleton-svelte";
-	import { fly } from "svelte/transition";
-	import Ports from "$components/Ports.svelte";
-	import Modes from "$components/Modes.svelte";
-	import { page } from "$app/stores";
-	import { previousIds } from "$lib/stores/previousIds";
-	import CodeBlock from '$components/CodeBlock/CodeBlock.svelte';
+	import type { PageData } from "./$types"
+	import { Icon } from "@steeze-ui/svelte-icon"
+	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons"
+	import { Accordion } from "@skeletonlabs/skeleton-svelte"
+	import { fly } from "svelte/transition"
+	import Ports from "$components/Ports.svelte"
+	import Modes from "$components/Modes.svelte"
+	import { page } from "$app/stores"
+	import { previousIds } from "$lib/stores/previousIds"
+	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 
 	interface Props {
-		data: PageData;
+		data: PageData
 	}
 
-	let { data }: Props = $props();
+	let { data }: Props = $props()
 
 	type CommonSettings = {
 		[section: string]: {
 			[setting: string]: {
-				name: string;
-				value: string;
-			};
-		};
-	};
+				name: string
+				value: string
+			}
+		}
+	}
 
-	let { support, build, status, problem, dump, dma, timer, serial, modes, description } = $derived(data);
-	let commonSettings = $derived(data.commonSettings as CommonSettings);
-	let { Config: config, Request: request } = $derived(build);
+	let { support, build, status, problem, dump, dma, timer, serial, modes, description } =
+		$derived(data)
+	let commonSettings = $derived(data.commonSettings as CommonSettings)
+	let { Config: config, Request: request } = $derived(build)
 
 	// Calculate PID Rate from gyro rate and pidDenom
-	let pidRate = $derived((() => {
-		if (!status || !commonSettings?.["Denominations"]?.["pidDenom"]?.value) return null;
-		const gyroRate = parseFloat(status["GYRO rate"] as string);
-		const pidDenom = parseFloat(commonSettings["Denominations"]["pidDenom"].value);
-		if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return null;
-		return Math.round(gyroRate / pidDenom);
-	})());
+	let pidRate = $derived(
+		(() => {
+			if (!status || !commonSettings?.["Denominations"]?.["pidDenom"]?.value) return null
+			const gyroRate = parseFloat(status["GYRO rate"] as string)
+			const pidDenom = parseFloat(commonSettings["Denominations"]["pidDenom"].value)
+			if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return null
+			return Math.round(gyroRate / pidDenom)
+		})()
+	)
 
-	let ArmingDisableFlags = $derived((status?.["Arming disable flags"] as string)?.split(" ") ?? []);
+	let ArmingDisableFlags = $derived((status?.["Arming disable flags"] as string)?.split(" ") ?? [])
 
-	let timerKeys = $derived(timer ? Object.keys(timer) : []);
-	let timerHalf = $derived(Math.ceil(timerKeys.length / 2));
-	let splitTimer = $derived([timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)]);
+	let timerKeys = $derived(timer ? Object.keys(timer) : [])
+	let timerHalf = $derived(Math.ceil(timerKeys.length / 2))
+	let splitTimer = $derived([
+		timerKeys.slice(0, timerHalf),
+		timerKeys.slice(timerHalf, timerKeys.length)
+	])
 
 	function formatTime(time: string) {
 		return (
 			time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23)
-		);
+		)
 	}
 
 	run(() => {
-		console.log($previousIds);
-	});
+		console.log($previousIds)
+	})
 </script>
 
-	<svelte:head>
+<svelte:head>
 	<title>{"Betaflight Support Explorer" + " - " + $page.params.key}</title>
 	<meta name="description" content={description} />
 
-	<meta property="og:title" content={config?.Target ? `Support Data for ${config.Target}` : "Betaflight Support Explorer"} />
+	<meta
+		property="og:title"
+		content={config?.Target ? `Support Data for ${config.Target}` : "Betaflight Support Explorer"}
+	/>
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
 	<meta property="og:type" content="website" />
 	<meta property="og:description" content={description} />
@@ -98,7 +107,7 @@
 								</a> -->
 							</div>
 						</div>
-						<hr class="hr border-surface-500 my-4 border-t-2"/>
+						<hr class="hr border-surface-500 my-4 border-t-2" />
 						<div class="flex justify-between items-center">
 							<div>
 								<div class="flex flex-row">
@@ -150,7 +159,7 @@
 							</a>
 						</div>
 					</div>
-					<hr class="hr border-surface-500 my-4 border-t-2"/>
+					<hr class="hr border-surface-500 my-4 border-t-2" />
 					<div class="flex flex-col">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
@@ -206,10 +215,13 @@
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
 												{#if dma[dmaKey][channelKey] === "FREE"}
-													<span class="badge preset-tonal-tertiary border border-tertiary-500">{dma[dmaKey][channelKey]}</span
+													<span class="badge preset-tonal-tertiary border border-tertiary-500"
+														>{dma[dmaKey][channelKey]}</span
 													>
 												{:else}
-													<span class="badge preset-tonal-success border border-success-500">{dma[dmaKey][channelKey]}</span>
+													<span class="badge preset-tonal-success border border-success-500"
+														>{dma[dmaKey][channelKey]}</span
+													>
 												{/if}
 											</div>
 										{/each}
@@ -330,7 +342,10 @@
 												<header class="font-medium flex items-center">
 													<span>{timerKey}:</span>
 													{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
-														<span class="badge preset-tonal-tertiary border border-tertiary-500 ml-2">{timer[timerKey]}</span>
+														<span
+															class="badge preset-tonal-tertiary border border-tertiary-500 ml-2"
+															>{timer[timerKey]}</span
+														>
 													{/if}
 												</header>
 												{#if typeof timer[timerKey] !== "string"}
@@ -366,12 +381,16 @@
 
 	{#if commonSettings}
 		<Accordion collapsible>
-			<Accordion.Item classes="card preset-tonal-secondary" controlHover="hover:bg-primary-500/20" value="commonSettings">
-				{#snippet control()}	
+			<Accordion.Item
+				classes="card preset-tonal-secondary"
+				controlHover="hover:bg-primary-500/20"
+				value="commonSettings"
+			>
+				{#snippet control()}
 					<header class="h2 font-bold mb-4 mt-3">Common Settings</header>
 				{/snippet}
 
-				{#snippet panel()}			
+				{#snippet panel()}
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
 						{#each Object.keys(commonSettings) as section}
 							<div class="flex flex-col gap-2">
@@ -393,11 +412,16 @@
 	{/if}
 
 	{#if dump}
-		<hr class="hr border-surface-500 my-4 border-t-2"/>
+		<hr class="hr border-surface-500 my-4 border-t-2" />
 		<header class="text-primary-500 h2 font-bold">Dump</header>
 
 		<div class="flex flex-col">
-			<CodeBlock classes="card max-h-[88vh] overflow-y-scroll" lang="nim" code={dump} preClasses="[&>pre]:!bg-surface-800" />
+			<CodeBlock
+				classes="card max-h-[88vh] overflow-y-scroll"
+				lang="nim"
+				code={dump}
+				preClasses="[&>pre]:!bg-surface-800"
+			/>
 		</div>
 	{/if}
 </div>

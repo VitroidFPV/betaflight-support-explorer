@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @import "@skeletonlabs/skeleton";
 
@@ -18,8 +18,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --background-size-0w: 0% 100%;
-  --background-size-100w: 100% 100%;
+	--background-size-0w: 0% 100%;
+	--background-size-100w: 100% 100%;
 }
 
 /*
@@ -31,13 +31,13 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
 }
 
 @layer utilities {
@@ -70,7 +70,9 @@ input:focus::-webkit-search-cancel-button {
 	background-size: 0% 100%;
 	background-position: bottom left;
 	background-repeat: no-repeat;
-	transition: background-size 0.2s ease-in-out, color 0.2s ease-in-out;
+	transition:
+		background-size 0.2s ease-in-out,
+		color 0.2s ease-in-out;
 	background-image: linear-gradient(to right, var(--color-primary-500), var(--color-primary-500));
 	border-radius: 0.25rem;
 	padding-left: 0.25rem;
@@ -82,40 +84,40 @@ input:focus::-webkit-search-cancel-button {
 	color: var(--color-black);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-primary {
+[data-theme="yellowtheme"] .preset-tonal-primary {
 	background-color: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-secondary {
+[data-theme="yellowtheme"] .preset-tonal-secondary {
 	background-color: color-mix(in srgb, var(--color-secondary-500) 18%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-tertiary {
+[data-theme="yellowtheme"] .preset-tonal-tertiary {
 	background-color: color-mix(in srgb, var(--color-tertiary-500) 30%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-neutral {
+[data-theme="yellowtheme"] .preset-tonal-neutral {
 	background-color: color-mix(in srgb, var(--color-neutral-500) 30%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-success {
+[data-theme="yellowtheme"] .preset-tonal-success {
 	background-color: color-mix(in srgb, var(--color-success-500) 20%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-warning {
+[data-theme="yellowtheme"] .preset-tonal-warning {
 	background-color: color-mix(in srgb, var(--color-warning-500) 20%, transparent);
 }
 
-[data-theme='yellowtheme'] .preset-tonal-error {
+[data-theme="yellowtheme"] .preset-tonal-error {
 	background-color: color-mix(in srgb, var(--color-error-500) 20%, transparent);
 }
 
-[data-theme='yellowtheme'] .card.preset-tonal-secondary {
+[data-theme="yellowtheme"] .card.preset-tonal-secondary {
 	border-color: var(--color-surface-500);
 	border-width: 1px;
 }
 
-[data-theme='yellowtheme'] .card.preset-tonal-primary {
+[data-theme="yellowtheme"] .card.preset-tonal-primary {
 	border-color: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
 	border-width: 1px;
 }
