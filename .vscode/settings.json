@@ -1,5 +1,7 @@
 {
-	"prettier.documentSelectors": ["**/*.svelte"],
+	"prettier.documentSelectors": [
+		"**/*.svelte"
+	],
 	"tailwindCSS.classAttributes": [
 		"class",
 		"base",
@@ -221,5 +223,14 @@
 		"btnDismissClasses",
 		"backdropClasses",
 		"zIndex"
-	]
+	],
+	"eslint.enable": true,
+	"eslint.validate": [
+		"svelte",
+	],
+	"eslint.lintTask.enable": true,
+	"eslint.format.enable": true,
+	"[svelte]": {
+		"editor.formatOnSave": true
+	}
 }
