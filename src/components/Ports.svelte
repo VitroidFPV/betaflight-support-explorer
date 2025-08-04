@@ -130,7 +130,7 @@
 
 						<div class="col-span-full bg-surface-500 h-0.5 w-full my-2"></div>
 
-						{#each serial as port}
+						{#each serial as port, i (i)}
 							<div class="col-span-2 md:col-span-1 font-bold text-primary-500">
 								{port.identifier}
 							</div>

@@ -27,8 +27,7 @@
 		}
 	}
 
-	let { support, build, status, problem, dump, dma, timer, serial, modes, description } =
-		$derived(data)
+	let { build, status, problem, dump, dma, timer, serial, modes, description } = $derived(data)
 	let commonSettings = $derived(data.commonSettings as CommonSettings)
 	let { Config: config, Request: request } = $derived(build)
 
@@ -193,7 +192,7 @@
 							<!-- <div class="badge variant-ghost-error">RXLOSS</div>
 							<div class="badge variant-ghost-error">CLI</div>
 							<div class="badge variant-ghost-error">MSP</div> -->
-							{#each ArmingDisableFlags as flag}
+							{#each ArmingDisableFlags as flag, i (i)}
 								<div class="badge preset-tonal-error border border-error-500">{flag}</div>
 							{/each}
 						</div>
@@ -208,10 +207,10 @@
 					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if dma}
-								{#each Object.keys(dma) as dmaKey}
+								{#each Object.keys(dma) as dmaKey, i (i)}
 									<div class="flex flex-col gap-2">
 										<div class="text-primary-500 font-bold">{dmaKey}:</div>
-										{#each Object.keys(dma[dmaKey]) as channelKey}
+										{#each Object.keys(dma[dmaKey]) as channelKey, j (j)}
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
 												{#if dma[dmaKey][channelKey] === "FREE"}
@@ -239,7 +238,7 @@
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
 				<section class="text-lg">
 					<div class="flex gap-2 flex-row flex-wrap">
-						{#each request.Options as option}
+						{#each request.Options as option, i (i)}
 							<div class="badge preset-tonal-primary">{option}</div>
 						{/each}
 					</div>
@@ -321,7 +320,7 @@
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">MCU Clock:</span>
 							<!-- match for key "* clock" -->
-							{#each Object.keys(status).filter((key) => key.includes("Clock")) as key}
+							{#each Object.keys(status).filter((key) => key.includes("Clock")) as key, i (i)}
 								<span class="text-base">{status[key]}</span>
 							{/each}
 						</div>
@@ -335,9 +334,9 @@
 					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if timer}
-								{#each splitTimer as timerHalf}
+								{#each splitTimer as timerHalf, i (i)}
 									<div class="flex flex-col w-full">
-										{#each timerHalf as timerKey}
+										{#each timerHalf as timerKey, j (j)}
 											<div class="flex flex-col">
 												<header class="font-medium flex items-center">
 													<span>{timerKey}:</span>
@@ -349,7 +348,7 @@
 													{/if}
 												</header>
 												{#if typeof timer[timerKey] !== "string"}
-													{#each Object.keys(timer[timerKey]) as channelKey}
+													{#each Object.keys(timer[timerKey]) as channelKey, k (k)}
 														<div class="flex flex-row">
 															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span
 															>
@@ -392,10 +391,10 @@
 
 				{#snippet panel()}
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-						{#each Object.keys(commonSettings) as section}
+						{#each Object.keys(commonSettings) as section, i (i)}
 							<div class="flex flex-col gap-2">
 								<header class="text-primary-500 h5 font-semibold font-mono">{section}</header>
-								{#each Object.keys(commonSettings[section]) as setting}
+								{#each Object.keys(commonSettings[section]) as setting, j (j)}
 									<div class="flex flex-row">
 										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
 										<span class="badge preset-tonal-primary"

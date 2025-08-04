@@ -54,7 +54,7 @@
 
 						<div class="col-span-full bg-surface-500 h-0.5 w-full my-2"></div>
 
-						{#each modes as mode}
+						{#each modes as mode, i (i)}
 							<div class="col-span-3 md:col-span-1 font-bold text-primary-500">{mode.mode}</div>
 							<div class="col-span-3 md:col-span-1">
 								{mode.channel === 255 ? "N/A" : mode.channel + 1}
@@ -70,7 +70,7 @@
 									></div>
 								</div>
 								<div class="flex w-full justify-between mt-2 mb-6">
-									{#each Array.from({ length: 13 }, (_, i) => i * 100 + 900) as pip}
+									{#each Array.from({ length: 13 }, (_, i) => i * 100 + 900) as pip, j (j)}
 										<div class="relative">
 											<div class="w-0.5 h-2 bg-surface-500"></div>
 											<div

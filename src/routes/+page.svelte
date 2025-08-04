@@ -2,7 +2,7 @@
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { settings } from "$lib/stores/settings"
 	import { previousIds } from "$lib/stores/previousIds"
-	import { fly, slide } from "svelte/transition"
+	import { fly } from "svelte/transition"
 	import { Trash } from "@steeze-ui/lucide-icons"
 	import { writable } from "svelte/store"
 
@@ -132,14 +132,14 @@
 					{/if}
 					{#if getSetting("armDisableFlags")}
 						<div class="flex gap-2 flex-row flex-wrap max-h-16 overflow-y-auto">
-							{#each id.armDisableFlags as flag}
+							{#each id.armDisableFlags as flag, i (i)}
 								<div class="badge preset-tonal-error border border-error-500">{flag}</div>
 							{/each}
 						</div>
 					{/if}
 					{#if getSetting("options")}
 						<div class="flex gap-2 flex-row flex-wrap max-h-48 lg:max-h-24 overflow-y-auto">
-							{#each id.options as option}
+							{#each id.options as option, i (i)}
 								<div class="badge preset-tonal-primary">{option}</div>
 							{/each}
 						</div>

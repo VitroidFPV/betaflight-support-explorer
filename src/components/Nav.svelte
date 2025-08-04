@@ -4,15 +4,12 @@
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import {
 		ClipboardPaste,
-		ArrowRightCircle,
-		Loader2,
-		ExternalLink,
+		CircleArrowRight,
+		LoaderCircle,
 		ArrowUpRight
 	} from "@steeze-ui/lucide-icons"
 	import { goto, invalidate } from "$app/navigation"
 	import { extractSupportId } from "$lib/extractSupportId"
-
-	import { onMount } from "svelte"
 
 	let newSupportKey = $state("")
 	let error = ""
@@ -117,9 +114,9 @@
 					<!-- <Icon src={ArrowRightCircle} size="1.5rem" /> -->
 					<!-- if isLoading, show a spinner -->
 					{#if isLoading}
-						<Icon src={Loader2} size="1.5rem" class="animate-spin" />
+						<Icon src={LoaderCircle} size="1.5rem" class="animate-spin" />
 					{:else}
-						<Icon src={ArrowRightCircle} size="1.5rem" />
+						<Icon src={CircleArrowRight} size="1.5rem" />
 					{/if}
 				</button>
 			</form>
