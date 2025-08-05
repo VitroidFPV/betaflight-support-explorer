@@ -10,6 +10,7 @@ import {
 	extractModes,
 	extractCliLine
 } from "$lib/extract"
+import { detectProblems } from "$lib/problemDetector"
 import { SemVer } from "semver"
 import { previousIds } from "$lib/stores/previousIds"
 import { get } from "svelte/store"
@@ -205,6 +206,15 @@ export const load = (async ({ params, fetch }) => {
 			(status?.["Arming disable flags"] as string)?.split(" ") ?? []
 		)
 
+		// Detect problems based on the extracted data
+		const detectedProblems = detectProblems({
+			status,
+			commonSettings,
+			armingDisableFlags: (status?.["Arming disable flags"] as string)?.split(" ") ?? [],
+			modes,
+			problem
+		})
+
 		// Calculate description for meta tags
 		const formatTime = (time: string) => {
 			return (
@@ -233,6 +243,7 @@ export const load = (async ({ params, fetch }) => {
 			serial,
 			modes,
 			commonSettings,
+			detectedProblems,
 			description
 		}
 	}
@@ -251,5 +262,5 @@ export const load = (async ({ params, fetch }) => {
 		? `Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}`
 		: "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds"
 
-	return { build, description }
+	return { build, detectedProblems: [], description }
 }) satisfies PageLoad
