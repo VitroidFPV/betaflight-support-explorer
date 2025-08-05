@@ -23,13 +23,13 @@ export interface Problem {
 	id: string
 	title: string
 	description: string
-	severity: 'warning' | 'error' | 'info'
+	severity: "warning" | "error" | "info"
 }
 
 export interface ProblemDefinition {
 	id: string
 	title: string
 	description: string
-	severity: 'warning' | 'error' | 'info'
+	severity: "warning" | "error" | "info"
 	check: (data: ProblemCheckData) => boolean
 }

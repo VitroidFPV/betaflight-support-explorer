@@ -1,11 +1,11 @@
-import type { Problem, ProblemCheckData } from './problems/types'
-import { problemDefinitions } from './problems/definitions'
+import type { Problem, ProblemCheckData } from "./problems/types"
+import { problemDefinitions } from "./problems/definitions"
 
-export type { Problem, ProblemCheckData, ProblemDefinition } from './problems/types'
+export type { Problem, ProblemCheckData, ProblemDefinition } from "./problems/types"
 
 export function detectProblems(data: ProblemCheckData): Problem[] {
 	const detectedProblems: Problem[] = []
-	
+
 	for (const problemDef of problemDefinitions) {
 		try {
 			if (problemDef.check(data)) {
@@ -20,6 +20,6 @@ export function detectProblems(data: ProblemCheckData): Problem[] {
 			console.error(`Error checking problem ${problemDef.id}:`, error)
 		}
 	}
-	
+
 	return detectedProblems
 }
