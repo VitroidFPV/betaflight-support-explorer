@@ -1,15 +1,22 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { PageData } from "./$types";
 	import { Icon } from "@steeze-ui/svelte-icon";
 	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons";
-	import { CodeBlock, Accordion, AccordionItem } from "@skeletonlabs/skeleton";
+	import { Accordion } from "@skeletonlabs/skeleton-svelte";
 	import { fly } from "svelte/transition";
 	import Ports from "$components/Ports.svelte";
 	import Modes from "$components/Modes.svelte";
 	import { page } from "$app/stores";
 	import { previousIds } from "$lib/stores/previousIds";
+	import CodeBlock from '$components/CodeBlock/CodeBlock.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	type CommonSettings = {
 		[section: string]: {
@@ -20,24 +27,24 @@
 		};
 	};
 
-	$: ({ support, build, status, problem, dump, dma, timer, serial, modes, description } = data);
-	$: commonSettings = data.commonSettings as CommonSettings;
-	$: ({ Config: config, Request: request } = build);
+	let { support, build, status, problem, dump, dma, timer, serial, modes, description } = $derived(data);
+	let commonSettings = $derived(data.commonSettings as CommonSettings);
+	let { Config: config, Request: request } = $derived(build);
 
 	// Calculate PID Rate from gyro rate and pidDenom
-	$: pidRate = (() => {
+	let pidRate = $derived((() => {
 		if (!status || !commonSettings?.["Denominations"]?.["pidDenom"]?.value) return null;
 		const gyroRate = parseFloat(status["GYRO rate"] as string);
 		const pidDenom = parseFloat(commonSettings["Denominations"]["pidDenom"].value);
 		if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return null;
 		return Math.round(gyroRate / pidDenom);
-	})();
+	})());
 
-	$: ArmingDisableFlags = (status?.["Arming disable flags"] as string)?.split(" ") ?? [];
+	let ArmingDisableFlags = $derived((status?.["Arming disable flags"] as string)?.split(" ") ?? []);
 
-	$: timerKeys = timer ? Object.keys(timer) : [];
-	$: timerHalf = Math.ceil(timerKeys.length / 2);
-	$: splitTimer = [timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)];
+	let timerKeys = $derived(timer ? Object.keys(timer) : []);
+	let timerHalf = $derived(Math.ceil(timerKeys.length / 2));
+	let splitTimer = $derived([timerKeys.slice(0, timerHalf), timerKeys.slice(timerHalf, timerKeys.length)]);
 
 	function formatTime(time: string) {
 		return (
@@ -45,7 +52,9 @@
 		);
 	}
 
-	$: console.log($previousIds);
+	run(() => {
+		console.log($previousIds);
+	});
 </script>
 
 	<svelte:head>
@@ -65,9 +74,9 @@
 >
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex flex-col">
 						<div class="flex justify-between">
 							<div>
@@ -78,7 +87,7 @@
 								<a
 									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
 									target="_blank"
-									class="btn variant-filled-primary btn-sm"
+									class="btn preset-filled-primary-500 btn-sm"
 								>
 									<span><Icon src={FileScan} size="1rem" /></span>
 									<span>Target</span>
@@ -89,7 +98,7 @@
 								</a> -->
 							</div>
 						</div>
-						<hr />
+						<hr class="hr border-surface-500 my-4 border-t-2"/>
 						<div class="flex justify-between items-center">
 							<div>
 								<div class="flex flex-row">
@@ -104,7 +113,7 @@
 							<a
 								href="https://github.com/betaflight/betaflight/releases/tag/{request.Release}"
 								target="_blank"
-								class="btn variant-filled-secondary btn-sm"
+								class="btn preset-filled-secondary-500 btn-sm"
 							>
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>Changelog</span>
@@ -114,19 +123,19 @@
 				</section>
 			</div>
 
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Build</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex flex-row items-center w-full justify-between">
 						<div class="flex">
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
-							<span class="badge variant-filled-success">{build.Status}</span>
+							<span class="badge preset-filled-success-500">{build.Status}</span>
 						</div>
 						<div class="flex gap-2">
 							<a
 								href="https://build.betaflight.com/api/builds/{build.Identifier}/log"
 								target="_blank"
-								class="btn variant-filled-secondary btn-sm"
+								class="btn preset-filled-secondary-500 btn-sm"
 							>
 								<span><Icon src={BookOpen} size="1rem" /></span>
 								<span>View Log</span>
@@ -134,14 +143,14 @@
 							<a
 								href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
 								target="_blank"
-								class="btn variant-filled-primary btn-sm"
+								class="btn preset-filled-primary-500 btn-sm"
 							>
 								<span><Icon src={Download} size="1rem" /></span>
 								<span>Download .hex</span>
 							</a>
 						</div>
 					</div>
-					<hr />
+					<hr class="hr border-surface-500 my-4 border-t-2"/>
 					<div class="flex flex-col">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
@@ -157,26 +166,26 @@
 			</div>
 
 			{#if problem}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<!-- problem description -->
 					<header class="card-header text-primary-500 h3 font-bold">Problem Description</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<blockquote class="blockquote text-base">{problem}</blockquote>
 					</section>
 				</div>
 			{/if}
 
 			{#if ArmingDisableFlags.length > 0}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<!-- arming disable flags -->
 					<header class="card-header text-primary-500 h3 font-bold">Arming Disable Flags</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row flex-wrap gap-2">
 							<!-- <div class="badge variant-ghost-error">RXLOSS</div>
 							<div class="badge variant-ghost-error">CLI</div>
 							<div class="badge variant-ghost-error">MSP</div> -->
 							{#each ArmingDisableFlags as flag}
-								<div class="badge variant-ghost-error">{flag}</div>
+								<div class="badge preset-tonal-error border border-error-500">{flag}</div>
 							{/each}
 						</div>
 					</section>
@@ -184,23 +193,23 @@
 			{/if}
 
 			{#if dma && Object.keys(dma).length > 0}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">DMA</header>
 
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if dma}
 								{#each Object.keys(dma) as dmaKey}
 									<div class="flex flex-col gap-2">
-										<header class="text-primary-500 h6 font-medium">{dmaKey}:</header>
+										<div class="text-primary-500 font-bold">{dmaKey}:</div>
 										{#each Object.keys(dma[dmaKey]) as channelKey}
 											<div class="flex flex-row">
 												<span class="text-neutral-400 mr-1 text-base">{dmaKey} {channelKey}:</span>
 												{#if dma[dmaKey][channelKey] === "FREE"}
-													<span class="badge variant-ghost-tertiary">{dma[dmaKey][channelKey]}</span
+													<span class="badge preset-tonal-tertiary border border-tertiary-500">{dma[dmaKey][channelKey]}</span
 													>
 												{:else}
-													<span class="badge variant-ghost-success">{dma[dmaKey][channelKey]}</span>
+													<span class="badge preset-tonal-success border border-success-500">{dma[dmaKey][channelKey]}</span>
 												{/if}
 											</div>
 										{/each}
@@ -214,21 +223,21 @@
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
-			<div class="card">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
-				<section class="p-4 text-lg">
+				<section class="text-lg">
 					<div class="flex gap-2 flex-row flex-wrap">
 						{#each request.Options as option}
-							<div class="badge variant-soft-primary">{option}</div>
+							<div class="badge preset-tonal-primary">{option}</div>
 						{/each}
 					</div>
 				</section>
 			</div>
 
 			{#if status}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Hardware</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">MCU:</span>
 							<span class="text-base">{config.MCU}</span>
@@ -254,9 +263,9 @@
 						</div>
 					</section>
 				</div>
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Status</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">CPU Load:</span>
 							<span class="text-base">{status.CPU}</span>
@@ -309,19 +318,19 @@
 			{/if}
 
 			{#if timer}
-				<div class="card">
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Timers</header>
-					<section class="p-4 text-lg">
+					<section class="text-lg">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#if timer}
 								{#each splitTimer as timerHalf}
 									<div class="flex flex-col w-full">
 										{#each timerHalf as timerKey}
 											<div class="flex flex-col">
-												<header class="h6 font-medium flex items-center">
+												<header class="font-medium flex items-center">
 													<span>{timerKey}:</span>
 													{#if typeof timer[timerKey] === "string" && timer[timerKey] === "FREE"}
-														<span class="badge variant-ghost-tertiary ml-2">{timer[timerKey]}</span>
+														<span class="badge preset-tonal-tertiary border border-tertiary-500 ml-2">{timer[timerKey]}</span>
 													{/if}
 												</header>
 												{#if typeof timer[timerKey] !== "string"}
@@ -329,7 +338,7 @@
 														<div class="flex flex-row">
 															<span class="text-neutral-400 mr-1 text-base pl-3">{channelKey}:</span
 															>
-															<span class="badge variant-ghost-success"
+															<span class="badge preset-tonal-success border border-success-500"
 																>{timer[timerKey][channelKey]}</span
 															>
 														</div>
@@ -356,12 +365,13 @@
 	{/if}
 
 	{#if commonSettings}
-		<Accordion>
-			<AccordionItem class="card">
-				<svelte:fragment slot="summary">
-					<header class="card-header text-primary-500 h2 font-bold mb-4">Common Settings</header>
-				</svelte:fragment>
-				<svelte:fragment slot="content">
+		<Accordion collapsible>
+			<Accordion.Item classes="card preset-tonal-secondary" controlHover="hover:bg-primary-500/20" value="commonSettings">
+				{#snippet control()}	
+					<header class="h2 font-bold mb-4 mt-3">Common Settings</header>
+				{/snippet}
+
+				{#snippet panel()}			
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
 						{#each Object.keys(commonSettings) as section}
 							<div class="flex flex-col gap-2">
@@ -369,7 +379,7 @@
 								{#each Object.keys(commonSettings[section]) as setting}
 									<div class="flex flex-row">
 										<span class="mr-1 text-base">{commonSettings[section][setting].name}:</span>
-										<span class="badge variant-soft-primary"
+										<span class="badge preset-tonal-primary"
 											>{commonSettings[section][setting].value}</span
 										>
 									</div>
@@ -377,17 +387,17 @@
 							</div>
 						{/each}
 					</div>
-				</svelte:fragment>
-			</AccordionItem>
+				{/snippet}
+			</Accordion.Item>
 		</Accordion>
 	{/if}
 
 	{#if dump}
-		<hr />
+		<hr class="hr border-surface-500 my-4 border-t-2"/>
 		<header class="text-primary-500 h2 font-bold">Dump</header>
 
 		<div class="flex flex-col">
-			<CodeBlock class="card max-h-[88vh] overflow-y-scroll" language="nim" code={dump} />
+			<CodeBlock classes="card max-h-[88vh] overflow-y-scroll" lang="nim" code={dump} preClasses="[&>pre]:!bg-surface-800" />
 		</div>
 	{/if}
 </div>

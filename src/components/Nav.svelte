@@ -1,17 +1,19 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { Icon } from "@steeze-ui/svelte-icon";
-	import { ClipboardPaste, ArrowRightCircle, Loader2, ExternalLink, ArrowUpRight } from "@steeze-ui/lucide-icons";
+	import { ClipboardPaste, CircleArrowRight, LoaderCircle, ExternalLink, ArrowUpRight } from "@steeze-ui/lucide-icons";
 	import { goto, invalidate } from "$app/navigation";
 	import { extractSupportId } from "$lib/extractSupportId";
 
 	import { onMount } from "svelte";
 
-	let newSupportKey = "";
+	let newSupportKey = $state("");
 	let error = "";
-	let isPasting = false;
-	let isLoading = false;
+	let isPasting = $state(false);
+	let isLoading = $state(false);
 
-	$: hasValidId = newSupportKey && extractSupportId(newSupportKey) !== null;
+	let hasValidId = $derived(newSupportKey && extractSupportId(newSupportKey) !== null);
 
 	async function paste(e: Event) {
 		e.preventDefault();
@@ -63,7 +65,7 @@
 	}
 </script>
 
-<nav class="flex justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-900" data-sveltekit-preload-data="hover">
+<nav class="flex sticky bg-surface-950 top-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950" data-sveltekit-preload-data="hover">
 <!-- home, about, support me, <search>, <settings> -->
 <!-- center <search> -->
 
@@ -80,26 +82,26 @@
 		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2">
 			<!-- <input type="search" placeholder="Search..." class="input input-sm" /> -->
 			<form
-				class="input-group input-group-divider grid-cols-[auto_1fr_auto] w-full"
-				on:submit|preventDefault={searchNewSupport}
+				class="input-group grid-cols-[auto_1fr_auto] w-full rounded-full focus-within:ring-[3px] focus-within:ring-primary-500"
+				onsubmit={preventDefault(searchNewSupport)}
 			>
-				<button class="variant-filled-tetriary" on:click={paste} disabled={isPasting}>
+				<button class="ig-btn preset-tonal-secondary" onclick={paste} disabled={isPasting}>
 					<Icon src={ClipboardPaste} size="1.5rem" />
 				</button>
 				<input 
 					type="search" 
 					placeholder="Paste Support ID..." 
-					class="w-full" 
+					class="w-full ig-input h-12 preset-tonal-secondary focus:ring-0 !border-none" 
 					bind:value={newSupportKey}
-					on:keydown={(e) => e.key === 'Enter' && searchNewSupport()} 
+					onkeydown={(e) => e.key === 'Enter' && searchNewSupport()} 
 				/>
-				<button class={"variant-filled-secondary disabled:cursor-not-allowed disabled:opacity-50" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
+				<button class={"preset-tonal-secondary disabled:cursor-not-allowed ig-btn !border-none" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
 					<!-- <Icon src={ArrowRightCircle} size="1.5rem" /> -->
 					<!-- if isLoading, show a spinner -->
 					{#if isLoading}
-						<Icon src={Loader2} size="1.5rem" class="animate-spin" />
+						<Icon src={LoaderCircle} size="1.5rem" class="animate-spin" />
 					{:else}
-						<Icon src={ArrowRightCircle} size="1.5rem" />
+						<Icon src={CircleArrowRight} size="1.5rem" />
 					{/if}
 				</button>
 			</form>

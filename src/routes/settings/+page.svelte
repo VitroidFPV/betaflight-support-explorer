@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly } from "svelte/transition";
-	import { SlideToggle } from "@skeletonlabs/skeleton";
+	import { Switch } from "@skeletonlabs/skeleton-svelte";
 	import { settings } from "$lib/stores/settings";
 </script>
 
@@ -20,28 +20,32 @@
 
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
-
-			<div class="card">
-				<header class="card-header text-primary-500 h3 font-bold">ID Preview Card</header>
-				<section class="p-4 text-lg flex flex-col gap-2">
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
+				<header class="h3 font-bold">ID Preview Card</header>
+				<section class="text-lg flex flex-col gap-2">
 					<div class="flex gap-2 flex-row flex-wrap">
-						<div class="text-neutral-400 mr-1 text-base">Data to display in the ID Preview Card</div>
+						<div class="text-neutral-400 mr-1 text-base">
+							Data to display in the ID Preview Card
+						</div>
 					</div>
 					<div class="flex flex-col gap-2">
 						{#each $settings.idPreviewCardSettings as setting}
 							<div class="flex flex-row justify-between">
 								<div class="mr-1 text-base">{setting.title}:</div>
-								<SlideToggle bind:checked={setting.value} name={setting.name} size="sm" active="bg-primary-500" />
+								<Switch
+									checked={setting.value}
+									name={setting.name}
+									onCheckedChange={() => (setting.value = !setting.value)}
+									thumbInactive="bg-surface-300"
+									controlInactive="bg-surface-500"
+								/>
 							</div>
 						{/each}
 					</div>
 				</section>
 			</div>
-
 		</div>
 
-		<div class="flex flex-col w-full gap-6">
-
-		</div>
+		<div class="flex flex-col w-full gap-6"></div>
 	</div>
 </div>
