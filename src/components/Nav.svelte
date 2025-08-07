@@ -2,7 +2,7 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { Icon } from "@steeze-ui/svelte-icon";
-	import { ClipboardPaste, ArrowRightCircle, Loader2, ExternalLink, ArrowUpRight } from "@steeze-ui/lucide-icons";
+	import { ClipboardPaste, CircleArrowRight, LoaderCircle, ExternalLink, ArrowUpRight } from "@steeze-ui/lucide-icons";
 	import { goto, invalidate } from "$app/navigation";
 	import { extractSupportId } from "$lib/extractSupportId";
 
@@ -82,7 +82,7 @@
 		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2">
 			<!-- <input type="search" placeholder="Search..." class="input input-sm" /> -->
 			<form
-				class="input-group grid-cols-[auto_1fr_auto] w-full"
+				class="input-group grid-cols-[auto_1fr_auto] w-full rounded-full focus-within:ring-[3px] focus-within:ring-primary-500"
 				onsubmit={preventDefault(searchNewSupport)}
 			>
 				<button class="ig-btn preset-tonal-secondary" onclick={paste} disabled={isPasting}>
@@ -91,17 +91,17 @@
 				<input 
 					type="search" 
 					placeholder="Paste Support ID..." 
-					class="w-full ig-input h-12 preset-tonal-secondary" 
+					class="w-full ig-input h-12 preset-tonal-secondary focus:ring-0 !border-none" 
 					bind:value={newSupportKey}
 					onkeydown={(e) => e.key === 'Enter' && searchNewSupport()} 
 				/>
-				<button class={"preset-tonal-secondary disabled:cursor-not-allowed ig-btn" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
+				<button class={"preset-tonal-secondary disabled:cursor-not-allowed ig-btn !border-none" + (isLoading ? " cursor-none" : "")} disabled={!hasValidId}>
 					<!-- <Icon src={ArrowRightCircle} size="1.5rem" /> -->
 					<!-- if isLoading, show a spinner -->
 					{#if isLoading}
-						<Icon src={Loader2} size="1.5rem" class="animate-spin" />
+						<Icon src={LoaderCircle} size="1.5rem" class="animate-spin" />
 					{:else}
-						<Icon src={ArrowRightCircle} size="1.5rem" />
+						<Icon src={CircleArrowRight} size="1.5rem" />
 					{/if}
 				</button>
 			</form>
