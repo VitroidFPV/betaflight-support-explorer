@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { fly } from "svelte/transition";
-	import { Switch } from "@skeletonlabs/skeleton-svelte";
-	import { settings } from "$lib/stores/settings";
+	import { fly } from "svelte/transition"
+	import { Switch } from "@skeletonlabs/skeleton-svelte"
+	import { settings } from "$lib/stores/settings"
 </script>
 
 <svelte:head>
@@ -29,7 +29,7 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">
-						{#each $settings.idPreviewCardSettings as setting}
+						{#each $settings.idPreviewCardSettings as setting, i (i)}
 							<div class="flex flex-row justify-between">
 								<div class="mr-1 text-base">{setting.title}:</div>
 								<Switch

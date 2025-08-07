@@ -1,119 +1,130 @@
 interface StatusObject {
-	[key: string]: string | number | boolean | null;
+	[key: string]: string | number | boolean | null
 }
 
 export function extractStatus(data: string): StatusObject {
-	const statusSection = data.match(/# status([\s\S]*?)(?=#|$)/);
-	const statusLines = statusSection ? statusSection[1].trim().split("\n") : [];
+	const statusSection = data.match(/# status([\s\S]*?)(?=#|$)/)
+	const statusLines = statusSection ? statusSection[1].trim().split("\n") : []
 
-	const statusObject: StatusObject = {};
+	const statusObject: StatusObject = {}
 
 	statusLines.forEach((line) => {
-		const properties = line.split(",");
+		const properties = line.split(",")
 		properties.forEach((property) => {
-			const match = property.match(/^\s*([^:=]+)\s*[:=]\s*(.+)\s*$/);
+			const match = property.match(/^\s*([^:=]+)\s*[:=]\s*(.+)\s*$/)
 			if (match) {
-				const key = match[1].trim();
-				let value: string | number | boolean | null = match[2].trim();
+				const key = match[1].trim()
+				let value: string | number | boolean | null = match[2].trim()
 
 				// Convert value to number if possible
 				if (!isNaN(Number(value))) {
-					value = Number(value);
+					value = Number(value)
 				}
 
 				// Convert boolean strings to boolean
 				if (value === "true" || value === "false") {
-					value = value === "true";
+					value = value === "true"
 				}
 
-				statusObject[key] = value;
+				statusObject[key] = value
 			}
-		});
-	});
+		})
+	})
 
-	return statusObject;
+	return statusObject
 }
 
 export function extractProblem(data: string): string | null {
-	const match = data.match(/# Problem description\s*#\s*#\s*(.*)\s*#\s*#/);
+	const match = data.match(/# Problem description\s*#\s*#\s*(.*)\s*#\s*#/)
 
-	return match ? match[1].trim() : null;
+	return match ? match[1].trim() : null
 }
 
 export function extractDump(data: string): string | null {
 	// match everything between "# dump master" and "batch end"
-	const match = data.match(/# dump master([\s\S]*?)batch end/);
+	const match = data.match(/# dump master([\s\S]*?)batch end/)
 
-	return match ? match[1].trim() : null;
+	return match ? match[1].trim() : null
 }
 
 export function extractDma(data: string): { [key: string]: { [key: string]: string } } | null {
 	// match everything between "# dma show" and "# timer show"
-	const match = data.match(/# dma show([\s\S]*?)# timer show/);
+	const match = data.match(/# dma show([\s\S]*?)# timer show/)
 
 	if (match) {
-		const dmaLines = match[1].trim().split("\n");
-		const dmaObject: { [key: string]: { [key: string]: string } } = {};
+		const dmaLines = match[1].trim().split("\n")
+		const dmaObject: { [key: string]: { [key: string]: string } } = {}
 
-		let currentDma = "";
+		let currentDma = ""
 
 		dmaLines.forEach((line) => {
-			const dmaMatch = line.match(/(DMA\d) Channel (\d): (.*)/);
+			const dmaMatch = line.match(/(DMA\d) Channel (\d): (.*)/)
 
 			if (dmaMatch) {
-				currentDma = dmaMatch[1];
-				const channel = `Channel ${dmaMatch[2]}`;
-				const target = dmaMatch[3];
+				currentDma = dmaMatch[1]
+				const channel = `Channel ${dmaMatch[2]}`
+				const target = dmaMatch[3]
 				if (!dmaObject[currentDma]) {
-					dmaObject[currentDma] = {};
+					dmaObject[currentDma] = {}
 				}
-				dmaObject[currentDma][channel] = target;
+				dmaObject[currentDma][channel] = target
 			}
-		});
+		})
 
-		return dmaObject;
+		return dmaObject
 	} else {
-		return null;
+		return null
 	}
 }
 
-export function extractTimer(data: string): { [key: string]: { [key: string]: string } | string } | null {
+export function extractTimer(
+	data: string
+): { [key: string]: { [key: string]: string } | string } | null {
 	// match everything between "# timer show" and "#"
-	const match = data.match(/# timer show([\s\S]*?)#/);
+	const match = data.match(/# timer show([\s\S]*?)#/)
 
 	if (match) {
-		const timerLines = match[1].trim().split("\n");
-		const timerObject: { [key: string]: { [key: string]: string } | string } = {};
+		const timerLines = match[1].trim().split("\n")
+		const timerObject: { [key: string]: { [key: string]: string } | string } = {}
 
-		let currentTimer = "";
+		let currentTimer = ""
 
 		timerLines.forEach((line) => {
-			const timerMatch = line.match(/(TIM\d+):(.*)/);
-			const channelMatch = line.match(/(CH\d) : (.*)/);
+			const timerMatch = line.match(/(TIM\d+):(.*)/)
+			const channelMatch = line.match(/(CH\d) : (.*)/)
 
 			if (timerMatch) {
-				currentTimer = timerMatch[1];
-				const status = timerMatch[2].trim();
+				currentTimer = timerMatch[1]
+				const status = timerMatch[2].trim()
 				if (status === "FREE") {
-					timerObject[currentTimer] = "FREE";
+					timerObject[currentTimer] = "FREE"
 				} else {
-					timerObject[currentTimer] = {};
+					timerObject[currentTimer] = {}
 				}
 			} else if (channelMatch && timerObject[currentTimer] !== "FREE") {
-				const channel = channelMatch[1];
-				const target = channelMatch[2];
-				(timerObject[currentTimer] as { [key: string]: string })[channel] = target;
+				const channel = channelMatch[1]
+				const target = channelMatch[2]
+				;(timerObject[currentTimer] as { [key: string]: string })[channel] = target
 			}
-		});
+		})
 
-		return timerObject;
+		return timerObject
 	} else {
-		return null;
+		return null
 	}
 }
 
-export function extractSerial(data: string): { identifier: string; function: string[]; msp: number; gps: number; telemetry: number; blackbox: number }[] | null {
-	const match = data.match(/# serial([\s\S]*?)#/);
+export function extractSerial(data: string):
+	| {
+			identifier: string
+			function: string[]
+			msp: number
+			gps: number
+			telemetry: number
+			blackbox: number
+	  }[]
+	| null {
+	const match = data.match(/# serial([\s\S]*?)#/)
 
 	const identifierNames = [
 		{ name: "None", value: -1 },
@@ -131,7 +142,7 @@ export function extractSerial(data: string): { identifier: string; function: str
 		{ name: "Soft Serial 1", value: 30 },
 		{ name: "Soft Serial 2", value: 31 },
 		{ name: "LPUART 1", value: 40 }
-	];
+	]
 
 	const functionNames = [
 		{ name: "None", value: 0 },
@@ -152,24 +163,31 @@ export function extractSerial(data: string): { identifier: string; function: str
 		{ name: "RC Device", value: 1 << 14 },
 		{ name: "Lidar TF", value: 1 << 15 },
 		{ name: "FrSky OSD", value: 1 << 16 },
-		{ name: "VTX MSP", value: (1 << 17) }
-	];
+		{ name: "VTX MSP", value: 1 << 17 }
+	]
 
 	if (match) {
-		const serialLines = match[1].trim().split("\n");
-		const serialObject: { identifier: string; function: number; msp: number; gps: number; telemetry: number; blackbox: number }[] = [];
+		const serialLines = match[1].trim().split("\n")
+		const serialObject: {
+			identifier: string
+			function: number
+			msp: number
+			gps: number
+			telemetry: number
+			blackbox: number
+		}[] = []
 
-		const lineRegex = /serial\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/;
+		const lineRegex = /serial\s+(\w+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/
 
 		for (const line of serialLines) {
-			const matches = line.trim().match(lineRegex);
+			const matches = line.trim().match(lineRegex)
 			if (matches) {
-				const [, portId, func, msp, gps, telemetry, blackbox] = matches;
+				const [, portId, func, msp, gps, telemetry, blackbox] = matches
 
-				let identifier = portId;
+				let identifier = portId
 				if (!isNaN(Number(portId))) {
-					const found = identifierNames.find(id => id.value === parseInt(portId));
-					identifier = found ? found.name : portId;
+					const found = identifierNames.find((id) => id.value === parseInt(portId))
+					identifier = found ? found.name : portId
 				}
 
 				serialObject.push({
@@ -179,12 +197,14 @@ export function extractSerial(data: string): { identifier: string; function: str
 					gps: parseInt(gps),
 					telemetry: parseInt(telemetry),
 					blackbox: parseInt(blackbox)
-				});
+				})
 			}
 		}
 
 		const formattedSerial = serialObject.map((serial) => {
-			const functions = functionNames.filter((func) => serial.function & func.value).map((func) => func.name);
+			const functions = functionNames
+				.filter((func) => serial.function & func.value)
+				.map((func) => func.name)
 
 			return {
 				identifier: serial.identifier,
@@ -193,16 +213,17 @@ export function extractSerial(data: string): { identifier: string; function: str
 				gps: serial.gps,
 				telemetry: serial.telemetry,
 				blackbox: serial.blackbox
-			};
-		});
+			}
+		})
 
-		return formattedSerial;
+		return formattedSerial
 	}
-	return null;
+	return null
 }
 
-export function extractModes(data: string): { mode: string; channel: number; low: number; high: number; }[] | null {
-
+export function extractModes(
+	data: string
+): { mode: string; channel: number; low: number; high: number }[] | null {
 	const boxesSource = `
 static const box_t boxes[CHECKBOX_ITEM_COUNT] = {
     { .boxId = BOXARM, .boxName = "ARM", .permanentId = 0 },
@@ -267,46 +288,48 @@ static const box_t boxes[CHECKBOX_ITEM_COUNT] = {
 	// when file is updated, this should be updated as well
 	// unless I forget
 
-	const boxesMatch = boxesSource.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/g);
-	const boxes = boxesMatch ? boxesMatch.map((box) => {
-		const match = box.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/);
-		return { name: match![2], id: Number(match![3]) };
-	}, []) : [];
+	const boxesMatch = boxesSource.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/g)
+	const boxes = boxesMatch
+		? boxesMatch.map((box) => {
+				const match = box.match(/BOX([A-Z0-9]+), .boxName = "(.*)", .permanentId = (\d+)/)
+				return { name: match![2], id: Number(match![3]) }
+			}, [])
+		: []
 
-	const match = data.match(/# aux([\s\S]*?)#/);
+	const match = data.match(/# aux([\s\S]*?)#/)
 
 	if (match) {
-		const auxLines = match[1].trim().split("\n");
-		let auxObject: { mode: string; channel: number; low: number; high: number; }[] = [];
+		const auxLines = match[1].trim().split("\n")
+		let auxObject: { mode: string; channel: number; low: number; high: number }[] = []
 
 		auxLines.forEach((line) => {
-			const auxMatch = line.match(/aux (\d+) (\d+) (\d+) (\d+) (\d+)/);
+			const auxMatch = line.match(/aux (\d+) (\d+) (\d+) (\d+) (\d+)/)
 			if (auxMatch) {
-				const mode = boxes.find((box) => box.id === Number(auxMatch[2]))?.name || "Unknown";
-				const channel = Number(auxMatch[3]);
-				const low = Number(auxMatch[4]);
-				const high = Number(auxMatch[5]);
+				const mode = boxes.find((box) => box.id === Number(auxMatch[2]))?.name || "Unknown"
+				const channel = Number(auxMatch[3])
+				const low = Number(auxMatch[4])
+				const high = Number(auxMatch[5])
 
-				auxObject.push({ mode, channel, low, high });
+				auxObject.push({ mode, channel, low, high })
 			}
-		});
+		})
 
 		// filters empty aux slots
-		auxObject = auxObject.filter((aux) => aux.low !== aux.high);
+		auxObject = auxObject.filter((aux) => aux.low !== aux.high)
 
 		if (auxObject.length === 0) {
-			return null;
+			return null
 		}
 
-		return auxObject;
+		return auxObject
 	} else {
-		return null;
+		return null
 	}
 }
 
 export function extractCliLine(data: string, command: string): string | null {
 	// match data for "set <command> = <value>"
-	const match = data.match(new RegExp(`set ${command} = (.*)`));
+	const match = data.match(new RegExp(`set ${command} = (.*)`))
 
-	return match ? match[1].trim() : null;
+	return match ? match[1].trim() : null
 }

@@ -1,8 +1,7 @@
 {
 	"prettier.documentSelectors": ["**/*.svelte"],
-"tailwindCSS.classAttributes": [
+	"tailwindCSS.classAttributes": [
 		"class",
-		// Base
 		"base",
 		"padding",
 		"border",
@@ -20,16 +19,10 @@
 		"active",
 		"flexDirection",
 		"classes",
-
-		// Fallback
 		"fallbackBase",
 		"fallbackClasses",
-
-		// Image
 		"imageBase",
 		"imageClasses",
-
-		// Control
 		"controlBase",
 		"controlGap",
 		"controlHover",
@@ -42,54 +35,36 @@
 		"controlRounded",
 		"controlHover",
 		"controlClasses",
-
-		// Lead
 		"leadBase",
 		"leadSpaceX",
 		"leadPadding",
 		"leadClasses",
-
-		// Center
 		"centerBase",
 		"centerAlign",
 		"centerPadding",
 		"centerClasses",
-
-		// Content
 		"contentBase",
 		"contentBackground",
 		"contentClasses",
-
-		// Indicator
 		"indicatorBase",
 		"indicatorBg",
 		"indicatorText",
 		"indicatorRounded",
 		"indicatorClasses",
-
-		// Panel
 		"panelBase",
 		"panelPadding",
 		"panelRounded",
 		"panelClasses",
-
-		// Toolbar
 		"toolbarBase",
 		"toolbarGridCols",
 		"toolbarGap",
 		"toolbarClasses",
-
-		// Trail
 		"trailBase",
 		"trailSpaceX",
 		"trailPadding",
 		"trailClasses",
-
-		// Headline
 		"headlineBase",
 		"headlineClasses",
-
-		// Interface
 		"interfaceBase",
 		"interfaceBg",
 		"interfaceBorder",
@@ -100,12 +75,8 @@
 		"interfaceText",
 		"interfaceSubtext",
 		"interfaceClasses",
-
-		// FilesList
 		"filesListBase",
 		"filesListClasses",
-
-		// File
 		"fileBase",
 		"fileBg",
 		"fileGap",
@@ -116,8 +87,6 @@
 		"fileSize",
 		"fileButton",
 		"fileClasses",
-
-		// State
 		"stateInfo",
 		"stateError",
 		"stateSuccess",
@@ -129,41 +98,29 @@
 		"stateInvalid",
 		"stateFocused",
 		"stateDragging",
-
-		// StateLabel
 		"stateLabelInactive",
 		"stateLabelActive",
-
-		// Tiles
 		"tilesBase",
 		"tilesFlexDirection",
 		"tilesJustify",
 		"tilesItems",
 		"tilesGap",
 		"tilesClasses",
-
-		// Header
 		"headerBase",
 		"headerFlexDirection",
 		"headerJustify",
 		"headerItems",
 		"headerGap",
 		"headerClasses",
-
-		// Footer
 		"footerBase",
 		"footerFlexDirection",
 		"footerJustify",
 		"footerItems",
 		"footerGap",
 		"footerClasses",
-
-		// Expanded
 		"expandedPadding",
 		"expandedGap",
 		"expandedClasses",
-
-		// Label
 		"labelBase",
 		"labelText",
 		"labelFill",
@@ -172,22 +129,16 @@
 		"labelClasses",
 		"labelExpandedBase",
 		"labelExpandedClasses",
-
-		// Button
 		"buttonBase",
 		"buttonActive",
 		"buttonInactive",
 		"buttonHover",
 		"buttonClasses",
-
-		// Track
 		"trackBase",
 		"trackStroke",
 		"trackBg",
 		"trackRounded",
 		"trackClasses",
-
-		// Meter
 		"meterBase",
 		"meterStroke",
 		"meterBg",
@@ -196,24 +147,14 @@
 		"meterAnimate",
 		"meterDuration",
 		"meterClasses",
-
-		// Children
 		"childrenBase",
 		"childrenClasses",
-
-		// SVG
 		"svgBase",
 		"svgClasses",
-
-		// Item
 		"itemBase",
 		"itemClasses",
-
-		// Orient
 		"orientVertical",
 		"orientHorizontal",
-
-		// Thumb
 		"thumbBase",
 		"thumbSize",
 		"thumbBg",
@@ -228,95 +169,64 @@
 		"thumbEase",
 		"thumbDuration",
 		"thumbClasses",
-
-		// Markers
 		"markersBase",
 		"markersClasses",
-
-		// Mark
 		"markBase",
 		"markText",
 		"markOpacity",
 		"markClasses",
-
-		// Icon
 		"iconInactiveBase",
 		"iconActiveBase",
-
-		// List
 		"listBase",
 		"listJustify",
 		"listBorder",
 		"listMargin",
 		"listGap",
 		"listClasses",
-
-		// TagList
 		"tagListBase",
 		"tagListClasses",
-
-		// Tag
 		"tagBase",
 		"tagBackground",
 		"tagClasses",
-
-		// InputEdit
 		"inputEditBase",
-
-		// TagEdit
 		"tagEditBase",
 		"tagEditBackground",
-
-		// InputEdit
 		"inputEditClasses",
-
-		// ButtonDelete
 		"buttonDeleteBase",
 		"buttonDeleteClasses",
-
-		// Trigger
 		"triggerBase",
 		"triggerBackground",
 		"triggerClasses",
-
-		// Positioner
 		"positionerBase",
 		"positionerClasses",
-
-		// Arrow
 		"arrowBase",
 		"arrowBackground",
 		"arrowClasses",
-
-		// Group
 		"groupBase",
 		"groupZIndex",
 		"groupGap",
 		"groupClasses",
-
-		// Toast
 		"toastBase",
 		"toastPadding",
 		"toastGap",
 		"toastShadow",
 		"toastClasses",
-
-		// Message
 		"messageBase",
 		"messageTitle",
 		"messageDescription",
 		"messageClasses",
-
-		// btnDismiss
 		"btnDismissBase",
 		"btnDimissPreset",
 		"btnDismissHover",
 		"btnDismissClasses",
-
-		// Backdrop
 		"backdropClasses",
-
-		// ZIndex
 		"zIndex"
-	]
+	],
+	"eslint.enable": true,
+	"eslint.validate": ["svelte"],
+	"eslint.lintTask.enable": true,
+	"eslint.format.enable": true,
+	"[svelte]": {
+		"editor.formatOnSave": true
+	}
 }
