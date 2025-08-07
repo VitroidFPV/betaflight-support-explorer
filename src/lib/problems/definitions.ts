@@ -8,8 +8,8 @@ export const problemDefinitions: ProblemDefinition[] = [
 			"PID loop rate is lower than 1/4 of the gyro rate, which may cause reduced performance in most setups.",
 		severity: "warning",
 		check: (data) => {
-			const pidDenom = data.commonSettings?.["Denominations"]?.["pidDenom"]?.value
-			if (!pidDenom || pidDenom === null) return false
+			const pidDenom = data.commonSettings["Denominations"]?.["pidDenom"]?.value
+			if (!pidDenom) return false
 			return parseInt(pidDenom) > 4
 		}
 	},
@@ -21,10 +21,10 @@ export const problemDefinitions: ProblemDefinition[] = [
 			"Using DShot protocol without bidirectional enabled. Consider enabling bidirectional DShot for better performance.",
 		severity: "info",
 		check: (data) => {
-			const escProtocol = data.commonSettings?.["DShot Config"]?.["escProtocol"]?.value
-			const dshotBidir = data.commonSettings?.["DShot Config"]?.["dshotBidir"]?.value
+			const escProtocol = data.commonSettings["DShot Config"]?.["escProtocol"]?.value
+			const dshotBidir = data.commonSettings["DShot Config"]?.["dshotBidir"]?.value
 
-			if (!escProtocol || escProtocol === null) return false
+			if (!escProtocol) return false
 
 			const isDshot = escProtocol.toLowerCase().includes("dshot")
 			const isBidirEnabled = dshotBidir === "ON"
@@ -41,8 +41,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 		severity: "error",
 		check: (data) => {
 			const flags = data.armingDisableFlags
-			if (!flags || flags.length === 0) return false
-			// Exclude 'NONE', 'CLI', and 'MSP' flags
+			if (flags.length === 0) return false
 			const relevantFlags = flags.filter(
 				(flag) => flag !== "NONE" && flag !== "CLI" && flag !== "MSP"
 			)
@@ -56,8 +55,8 @@ export const problemDefinitions: ProblemDefinition[] = [
 	// 	description: "Receiver protocol is not properly configured.",
 	// 	severity: "error",
 	// 	check: (data) => {
-	// 		const rxProtocol = data.commonSettings?.["Receiver Settings"]?.["rxProtocol"]?.value
-	// 		return !rxProtocol || rxProtocol === null || rxProtocol === "NONE" || rxProtocol === "0"
+	// 		const rxProtocol = data.commonSettings["Receiver Settings"]?.["rxProtocol"]?.value
+	// 		return !rxProtocol || rxProtocol === "NONE" || rxProtocol === "0"
 	// 	}
 	// }
 ]
