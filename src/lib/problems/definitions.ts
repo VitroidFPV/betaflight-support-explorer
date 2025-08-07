@@ -1,5 +1,8 @@
 import type { ProblemDefinition } from "./types"
 
+// Global constants
+const lowerEndMcus = ["F411", "F405", "F435", "F722", "G473"]
+
 export const problemDefinitions: ProblemDefinition[] = [
 	{
 		id: "low-pid-rate",
@@ -11,6 +14,50 @@ export const problemDefinitions: ProblemDefinition[] = [
 			const pidDenom = data.commonSettings["Denominations"]?.["pidDenom"]?.value
 			if (!pidDenom) return false
 			return parseInt(pidDenom) > 4
+		}
+	},
+
+	{
+		id: "high-pid-rate",
+		title: "High PID Loop Rate",
+		description: `When using a G4, F4, or F722 MCU, it can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability.`,
+		severity: "warning",
+		check: (data) => {
+			const gyroRateStr = data.status?.["GYRO rate"] as string | undefined
+			const pidDenomValue = data.commonSettings["Denominations"]?.["pidDenom"]?.value
+			const mcu = data.build?.Config?.MCU
+
+			if (!gyroRateStr || !pidDenomValue || !mcu) return false
+
+			const gyroRate = parseFloat(gyroRateStr)
+			const pidDenom = parseFloat(pidDenomValue)
+
+			if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return false
+
+			const pidRate = Math.round(gyroRate / pidDenom)
+			return pidRate >= 8000 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+		}
+	},
+
+	{
+		id: "high-dshot-rate",
+		title: "High DShot Rate",
+		description: `When using a G4, F4, or F722 MCU, it can struggle with a DShot rate of 600. Consider using a DShot 300 
+		to avoid instability. It's better to use a lower DShot rate with bidirectional DShot enabled than a higher one without.`,
+		severity: "warning",
+		check: (data) => {
+			const escProtocol = data.commonSettings["DShot Config"]?.["escProtocol"]?.value // DSHOT600
+			const dshotRate = escProtocol?.includes("DSHOT")
+				? parseInt(escProtocol.split("DSHOT")[1])
+				: null
+			// null if not DSHOT, otherwise number
+			const mcu = data.build?.Config?.MCU
+
+			console.log(dshotRate, mcu)
+
+			if (!dshotRate || !mcu) return false
+
+			return dshotRate >= 300 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
 		}
 	},
 

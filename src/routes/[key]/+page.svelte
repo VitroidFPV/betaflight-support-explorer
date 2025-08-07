@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from "svelte/legacy"
+	// import { run } from "svelte/legacy"
 
 	import type { PageData } from "./$types"
 	import { Icon } from "@steeze-ui/svelte-icon"
@@ -10,7 +10,7 @@
 	import Modes from "$components/Modes.svelte"
 	import ProblemDetector from "$components/ProblemDetector.svelte"
 	import { page } from "$app/stores"
-	import { previousIds } from "$lib/stores/previousIds"
+	// import { previousIds } from "$lib/stores/previousIds"
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 
 	interface Props {
@@ -59,9 +59,9 @@
 		)
 	}
 
-	run(() => {
-		console.log($previousIds)
-	})
+	// run(() => {
+	// 	console.log($previousIds)
+	// })
 </script>
 
 <svelte:head>

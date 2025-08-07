@@ -50,7 +50,7 @@ function addPreviousId(
 		return
 	}
 
-	console.log("Adding previous id")
+	// console.log("Adding previous id")
 
 	const existingId = get(previousIds).find((id: PreviousId) => id.id === currentId)
 	if (!existingId) {
@@ -212,7 +212,8 @@ export const load = (async ({ params, fetch }) => {
 			commonSettings,
 			armingDisableFlags: (status?.["Arming disable flags"] as string)?.split(" ") ?? [],
 			modes,
-			problem
+			problem,
+			build
 		})
 
 		// Calculate description for meta tags
