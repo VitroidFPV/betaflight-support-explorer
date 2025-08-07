@@ -2,7 +2,7 @@ import type { ProblemDefinition } from "./types"
 
 export const problemDefinitions: ProblemDefinition[] = [
 	{
-		id: "high-pid-denom",
+		id: "low-pid-rate",
 		title: "Low PID Loop Rate",
 		description:
 			"PID loop rate is lower than 1/4 of the gyro rate, which may cause reduced performance in most setups.",
@@ -35,9 +35,9 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "arming-disabled",
-		title: "Arm Prevention Flags Present",
+		title: "Unexpected Arming Prevention Flags Present",
 		description:
-			"Detected arming prevention flags other than MSP and CLI. The flight controller may not arm",
+			"Detected unexpected arming prevention flags. The flight controller may not arm. MSP and CLI are expected, and should go away after disconnecting from the Configurator.",
 		severity: "error",
 		check: (data) => {
 			const flags = data.armingDisableFlags
@@ -48,27 +48,16 @@ export const problemDefinitions: ProblemDefinition[] = [
 			)
 			return relevantFlags.length > 0
 		}
-	},
-
-	{
-		id: "no-modes-configured",
-		title: "No Flight Modes Configured",
-		description:
-			"No auxiliary flight modes are configured. Consider setting up basic modes like ANGLE or HORIZON.",
-		severity: "info",
-		check: (data) => {
-			return !data.modes || data.modes.length === 0
-		}
-	},
-
-	{
-		id: "rx-protocol-not-set",
-		title: "Receiver Protocol Not Configured",
-		description: "Receiver protocol is not properly configured.",
-		severity: "error",
-		check: (data) => {
-			const rxProtocol = data.commonSettings?.["Receiver Settings"]?.["rxProtocol"]?.value
-			return !rxProtocol || rxProtocol === null || rxProtocol === "NONE" || rxProtocol === "0"
-		}
 	}
+
+	// {
+	// 	id: "rx-protocol-not-set",
+	// 	title: "Receiver Protocol Not Configured",
+	// 	description: "Receiver protocol is not properly configured.",
+	// 	severity: "error",
+	// 	check: (data) => {
+	// 		const rxProtocol = data.commonSettings?.["Receiver Settings"]?.["rxProtocol"]?.value
+	// 		return !rxProtocol || rxProtocol === null || rxProtocol === "NONE" || rxProtocol === "0"
+	// 	}
+	// }
 ]
