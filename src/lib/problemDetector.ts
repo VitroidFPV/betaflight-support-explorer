@@ -8,11 +8,20 @@ export function detectProblems(data: ProblemCheckData): Problem[] {
 
 	for (const problemDef of problemDefinitions) {
 		try {
-			if (problemDef.check(data)) {
+			const checkResult = problemDef.check(data)
+			const isMatch = typeof checkResult === "boolean" ? checkResult : checkResult.result
+			const values = typeof checkResult === "object" ? checkResult.values : undefined
+
+			if (isMatch) {
+				const description =
+					typeof problemDef.description === "function"
+						? problemDef.description(data, values)
+						: problemDef.description
+
 				detectedProblems.push({
 					id: problemDef.id,
 					title: problemDef.title,
-					description: problemDef.description,
+					description,
 					severity: problemDef.severity
 				})
 			}

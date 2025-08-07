@@ -64,7 +64,7 @@ export interface Problem {
 export interface ProblemDefinition {
 	id: string
 	title: string
-	description: string
+	description: string | ((data: ProblemCheckData, values?: any) => string)
 	severity: "warning" | "error" | "info"
-	check: (data: ProblemCheckData) => boolean
+	check: (data: ProblemCheckData) => boolean | { result: boolean; values?: any }
 }

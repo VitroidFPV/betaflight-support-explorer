@@ -20,7 +20,12 @@ export const problemDefinitions: ProblemDefinition[] = [
 	{
 		id: "high-pid-rate",
 		title: "High PID Loop Rate",
-		description: `When using a G4, F4, or F722 MCU, it can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability.`,
+		description: (data, values) => {
+			if (!values) {
+				return "When using a G4, F4, or F722 MCU, it can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability."
+			}
+			return `Current PID loop rate: ${values.pidRate}Hz (MCU: ${values.mcu}). G4, F4, and F722 MCUs can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability.`
+		},
 		severity: "warning",
 		check: (data) => {
 			const gyroRateStr = data.status?.["GYRO rate"] as string | undefined
@@ -35,15 +40,21 @@ export const problemDefinitions: ProblemDefinition[] = [
 			if (isNaN(gyroRate) || isNaN(pidDenom) || pidDenom === 0) return false
 
 			const pidRate = Math.round(gyroRate / pidDenom)
-			return pidRate >= 8000 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+			const isMatch = pidRate >= 8000 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+
+			return isMatch ? { result: true, values: { pidRate, mcu } } : false
 		}
 	},
 
 	{
 		id: "high-dshot-rate",
 		title: "High DShot Rate",
-		description: `When using a G4, F4, or F722 MCU, it can struggle with a DShot rate of 600. Consider using a DShot 300 
-		to avoid instability. It's better to use a lower DShot rate with bidirectional DShot enabled than a higher one without.`,
+		description: (data, values) => {
+			if (!values) {
+				return "When using a G4, F4, or F722 MCU, it can struggle with a DShot rate of 600. Consider using a DShot 300 to avoid instability."
+			}
+			return `Current DShot rate: ${values.dshotRate} (MCU: ${values.mcu}). G4, F4, and F722 MCUs can struggle with DShot 600. Consider using DShot 300 to avoid instability. It's better to use a lower DShot rate with bidirectional DShot enabled than a higher one without.`
+		},
 		severity: "warning",
 		check: (data) => {
 			const escProtocol = data.commonSettings["DShot Config"]?.["escProtocol"]?.value // DSHOT600
@@ -53,11 +64,11 @@ export const problemDefinitions: ProblemDefinition[] = [
 			// null if not DSHOT, otherwise number
 			const mcu = data.build?.Config?.MCU
 
-			console.log(dshotRate, mcu)
-
 			if (!dshotRate || !mcu) return false
 
-			return dshotRate >= 300 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+			const isMatch = dshotRate >= 300 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+
+			return isMatch ? { result: true, values: { dshotRate, mcu } } : false
 		}
 	},
 
