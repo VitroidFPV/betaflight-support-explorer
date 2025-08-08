@@ -3,6 +3,73 @@ import type { ProblemDefinition } from "./types"
 // Global constants
 const lowerEndMcus = ["F411", "F405", "F435", "F722", "G473"]
 
+// USE_SERIALRX_CRSF
+// USE_SERIALRX_FPORT
+// USE_SERIALRX_GHST
+// USE_SERIALRX_IBUS
+// USE_SERIALRX_JETIEXBUS
+// USE_SERIALRX_SBUS
+// USE_SERIALRX_SPEKTRUM
+// USE_SERIALRX_SRXL2
+// USE_SERIALRX_SUMD
+// USE_SERIALRX_SUMH
+// USE_SERIALRX_TARGET_CUSTOM
+// USE_SERIALRX_XBUS
+
+// serialrx_provider = CRSF
+// Allowed values: NONE, SPEK2048, SBUS, SUMD, SUMH, XB-B, XB-B-RJ01, IBUS, JETIEXBUS, CRSF, SRXL, CUSTOM, FPORT, SRXL2, GHST, SPEK1024
+
+const rxProtocolMap = [
+	{
+		define: "USE_SERIALRX_CRSF",
+		cli: ["CRSF"]
+	},
+	{
+		define: "USE_SERIALRX_FPORT",
+		cli: ["FPORT"]
+	},
+	{
+		define: "USE_SERIALRX_GHST",
+		cli: ["GHST"]
+	},
+	{
+		define: "USE_SERIALRX_IBUS",
+		cli: ["IBUS"]
+	},
+	{
+		define: "USE_SERIALRX_JETIEXBUS",
+		cli: ["JETIEXBUS"]
+	},
+	{
+		define: "USE_SERIALRX_SBUS",
+		cli: ["SBUS"]
+	},
+	{
+		define: "USE_SERIALRX_SPEKTRUM",
+		cli: ["SPEK2048", "SPEK1024", "SRXL"]
+	},
+	{
+		define: "USE_SERIALRX_SRXL2",
+		cli: ["SRXL2"]
+	},
+	{
+		define: "USE_SERIALRX_SUMD",
+		cli: ["SUMD"]
+	},
+	{
+		define: "USE_SERIALRX_SUMH",
+		cli: ["SUMH"]
+	},
+	{
+		define: "USE_SERIALRX_TARGET_CUSTOM",
+		cli: ["CUSTOM"]
+	},
+	{
+		define: "USE_SERIALRX_XBUS",
+		cli: ["XBUS"]
+	}
+]
+
 export const problemDefinitions: ProblemDefinition[] = [
 	{
 		id: "low-pid-rate",
@@ -106,6 +173,64 @@ export const problemDefinitions: ProblemDefinition[] = [
 				(flag) => flag !== "NONE" && flag !== "CLI" && flag !== "MSP"
 			)
 			return relevantFlags.length > 0
+		}
+	},
+
+	{
+		id: "rx-protocol-not-matching",
+		title: "Configured receiver protocol does not match",
+		description: (data, values) => {
+			if (!values) {
+				return "The configured receiver protocol does not match the protocol built into the firmware."
+			}
+
+			return `Configured receiver protocol: <strong>${values.cliRxProtocol}</strong>, protocol(s) defined in firmware: <strong>${values.builtInRxProtocols.length > 0 ? values.builtInRxProtocols.join(", ") : "None"}</strong>.<br> 
+			You will not be able to get communication from the receiver until firmware is re-flashed with the correct protocol (<strong>${values.requiredDefines.join(" or ")}</strong>).`
+		},
+		severity: "error",
+		check: (data) => {
+			const cliRxProtocol = data.commonSettings["Receiver Settings"]?.["rxProtocol"]?.value
+			const buildOptions = data.build?.Request?.Options
+
+			// Skip check if we don't have the necessary data
+			if (!cliRxProtocol || !buildOptions || cliRxProtocol === "NONE") {
+				return false
+			}
+
+			// Find which protocol defines match the CLI protocol
+			const matchingProtocols = rxProtocolMap.filter((mapping) =>
+				mapping.cli.includes(cliRxProtocol)
+			)
+
+			// If no mapping found for CLI protocol, we can't validate
+			if (matchingProtocols.length === 0) {
+				return false
+			}
+
+			// Check if any of the matching protocol defines are present in build options
+			const hasMatchingDefine = matchingProtocols.some((mapping) =>
+				buildOptions.includes(mapping.define)
+			)
+
+			// Return true if protocol is configured but not built into firmware
+			const isMatch = !hasMatchingDefine
+
+			if (isMatch) {
+				const requiredDefines = matchingProtocols.map((m) => m.define)
+				const builtInRxProtocols = buildOptions
+					.filter((option) => option.startsWith("USE_SERIALRX_") && option !== "USE_SERIALRX")
+					.map((option) => {
+						const mapping = rxProtocolMap.find((m) => m.define === option)
+						return mapping ? mapping.cli.join("/") : option.replace("USE_SERIALRX_", "")
+					})
+
+				return {
+					result: true,
+					values: { cliRxProtocol, builtInRxProtocols, requiredDefines }
+				}
+			}
+
+			return false
 		}
 	}
 
