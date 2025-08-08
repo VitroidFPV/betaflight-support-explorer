@@ -1,5 +1,6 @@
 import type { Problem, ProblemCheckData } from "./problems/types"
 import { problemDefinitions } from "./problems/definitions"
+import sanitizeHtml from "sanitize-html"
 
 export type { Problem, ProblemCheckData, ProblemDefinition } from "./problems/types"
 
@@ -21,7 +22,7 @@ export function detectProblems(data: ProblemCheckData): Problem[] {
 				detectedProblems.push({
 					id: problemDef.id,
 					title: problemDef.title,
-					description,
+					description: sanitizeHtml(description),
 					severity: problemDef.severity
 				})
 			}

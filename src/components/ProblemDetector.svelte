@@ -87,7 +87,8 @@
 									{problem.title}
 								</header>
 								<div>
-									{problem.description}
+									<!-- eslint-disable-next-line svelte/no-at-html-tags - it gets sanitized on the server, should be safe... I hope -->
+									{@html problem.description}
 								</div>
 							</div>
 						{/each}
