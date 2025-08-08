@@ -24,7 +24,8 @@ export const problemDefinitions: ProblemDefinition[] = [
 			if (!values) {
 				return "When using a G4, F4, or F722 MCU, it can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability."
 			}
-			return `Current PID loop rate: ${values.pidRate}Hz (MCU: ${values.mcu}). G4, F4, and F722 MCUs can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability.`
+			return `Current PID loop rate: <strong>${values.pidRate}Hz</strong>, Detected MCU: <strong>${values.mcu}</strong>.<br>
+			G4, F4, and F722 MCUs can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability.`
 		},
 		severity: "warning",
 		check: (data) => {
@@ -53,7 +54,8 @@ export const problemDefinitions: ProblemDefinition[] = [
 			if (!values) {
 				return "When using a G4, F4, or F722 MCU, it can struggle with a DShot rate of 600. Consider using a DShot 300 to avoid instability."
 			}
-			return `Current DShot rate: ${values.dshotRate} (MCU: ${values.mcu}). G4, F4, and F722 MCUs can struggle with DShot 600. Consider using DShot 300 to avoid instability. It's better to use a lower DShot rate with bidirectional DShot enabled than a higher one without.`
+			return `Current DShot rate: <strong>${values.dshotRate}</strong>, Detected MCU: <strong>${values.mcu}</strong>.<br>
+			G4, F4, and F722 MCUs can struggle with DShot 600. Consider using DShot 300 to avoid instability. It's better to use a lower DShot rate with bidirectional DShot enabled than a higher one without.`
 		},
 		severity: "warning",
 		check: (data) => {
@@ -66,7 +68,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 			if (!dshotRate || !mcu) return false
 
-			const isMatch = dshotRate >= 300 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
+			const isMatch = dshotRate > 300 && lowerEndMcus.some((mcuType) => mcu.includes(mcuType))
 
 			return isMatch ? { result: true, values: { dshotRate, mcu } } : false
 		}
