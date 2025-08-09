@@ -397,6 +397,25 @@ save
 			if (!smallAngle) return false
 			return { result: Number(smallAngle) < 180, values: { smallAngle } }
 		}
+	},
+
+	{
+		id: "uncommon-channel-mapping",
+		title: "Uncommon channel mapping",
+		description: (data, values) => {
+			if (!values) {
+				return "The channel mapping setting isn't set to commonly used mappings (AETR1234 or TAER1234). The order of the 4 main control channels may be incorrect."
+			}
+			return `The current channel mapping is <strong>${values.channelMapping}</strong>.<br>
+			The channel mapping setting isn't set to commonly used mappings (AETR1234 or TAER1234). The order of the 4 main control channels may be incorrect.`
+		},
+		severity: "warning",
+		check: (data) => {
+			const channelMapping = data.commonSettings["Misc Config"]?.["channelMapping"]?.value
+			if (!channelMapping) return false
+			const commonMappings = ["AETR1234", "TAER1234"]
+			return { result: !commonMappings.includes(channelMapping), values: { channelMapping } }
+		}
 	}
 
 	// {

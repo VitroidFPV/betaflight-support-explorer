@@ -8,7 +8,8 @@ import {
 	extractTimer,
 	extractSerial,
 	extractModes,
-	extractCliLine
+	extractCliLine,
+	extractNonSetCliLine
 } from "$lib/extract"
 import { detectProblems } from "$lib/problemDetector"
 import { SemVer } from "semver"
@@ -209,6 +210,10 @@ export const load = (async ({ params, fetch }) => {
 				smallAngle: {
 					name: "Maximum ARM angle",
 					value: extractCliLine(supportText, "small_angle")
+				},
+				channelMapping: {
+					name: "Channel Mapping",
+					value: extractNonSetCliLine(supportText, "map")
 				}
 			}
 		}

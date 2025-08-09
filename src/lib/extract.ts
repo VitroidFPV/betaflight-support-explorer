@@ -333,3 +333,10 @@ export function extractCliLine(data: string, command: string): string | null {
 
 	return match ? match[1].trim() : null
 }
+
+export function extractNonSetCliLine(data: string, prefix: string): string | null {
+	// match for "<prefix> <value>"
+	const match = data.match(new RegExp(`${prefix} (.*)`))
+
+	return match ? match[1].trim() : null
+}
