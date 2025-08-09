@@ -267,8 +267,7 @@ save
 		check: (data) => {
 			const buildOptions = data.build?.Request?.Options
 			if (!buildOptions) return false
-			// return buildOptions.includes("OSD_SD") && buildOptions.includes("OSD_HD")
-			return true
+			return buildOptions.includes("OSD_SD") && buildOptions.includes("OSD_HD")
 		}
 	}
 
