@@ -223,7 +223,8 @@ export const load = (async ({ params, fetch }) => {
 			armingDisableFlags: (status?.["Arming disable flags"] as string)?.split(" ") ?? [],
 			modes,
 			problem,
-			build
+			build,
+			serial
 		})
 
 		// Calculate description for meta tags

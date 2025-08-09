@@ -269,6 +269,112 @@ save
 			if (!buildOptions) return false
 			return buildOptions.includes("OSD_SD") && buildOptions.includes("OSD_HD")
 		}
+	},
+
+	{
+		id: "elrs-arm-aux-1",
+		title: "ARM mode not on Aux 1 (CH5) - ELRS",
+		description: (data, values) => {
+			if (!values) {
+				return `ELRS requires the ARM mode to be on Aux 1 (CH5). Many ELRS settings depend on the value of the ARM mode, it's important 
+				that the flight controller setup matches what ELRS is expecting.`
+			}
+			return `ELRS requires the ARM mode to be on <strong>Aux 1 (CH5)</strong>. Many ELRS settings depend on the value of the ARM mode, it's important 
+			that the flight controller setup matches what ELRS is expecting.<br>
+			The current ARM mode is on <strong>Aux ${values.armMode?.channel + 1} (CH${values.armMode?.channel + 5})</strong>.<br>
+			If you're not using ELRS, you can ignore this warning.`
+		},
+		severity: "warning",
+		check: (data) => {
+			const modes = data.modes
+			// modes =
+			// [
+			// 	{
+			// 		"mode": "ARM",
+			// 		"channel": 0,
+			// 		"low": 1800,
+			// 		"high": 2100
+			// 	},
+			// 	{
+			// 		"mode": "ANGLE",
+			// 		"channel": 3,
+			// 		"low": 1800,
+			// 		"high": 2100
+			// 	},
+			// 	{
+			// 		"mode": "BEEPER",
+			// 		"channel": 5,
+			// 		"low": 1800,
+			// 		"high": 2100
+			// 	},
+			// 	{
+			// 		"mode": "FLIP OVER AFTER CRASH",
+			// 		"channel": 2,
+			// 		"low": 1800,
+			// 		"high": 2100
+			// 	}
+			// 	]
+			const armMode = modes?.find((mode) => mode.mode === "ARM")
+			if (!armMode) return false
+			const isAux1 = armMode?.channel === 0
+			return { result: !isAux1, values: { armMode } }
+		}
+	},
+
+	{
+		id: "elrs-arm-range",
+		title: "ARM mode range set incorrectly - ELRS",
+		description: (data, values) => {
+			if (!values) {
+				return `ELRS requires the range to be active around the 2000 value. Many ELRS settings depend on the value of the ARM mode, it's important 
+				that the flight controller setup matches what ELRS is expecting.<br>If you're not using ELRS, you can ignore this warning.`
+			}
+			return `ELRS requires the range to be active around the 2000 value. Many ELRS settings depend on the value of the ARM mode, it's important 
+			that the flight controller setup matches what ELRS is expecting.<br>
+			The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.<br>
+			If you're not using ELRS, you can ignore this warning.`
+		},
+		severity: "warning",
+		check: (data) => {
+			const modes = data.modes
+			const armMode = modes?.find((mode) => mode.mode === "ARM")
+			if (!armMode) return false
+			const isRangeGood = armMode?.low > 1200 && armMode?.high > 2000
+			return { result: !isRangeGood, values: { armMode } }
+		}
+	},
+
+	{
+		id: "wide-arm-range",
+		title: "Arming range set too wide",
+		description: (data, values) => {
+			if (!values) {
+				return "The arming range is set too wide. This will most likely result in the flight controller being constantly armed, locked with pre-flight checks and unable to actually arm."
+			}
+			return `The arming range is set too wide. This will most likely result in the flight controller being constantly armed, locked with pre-flight checks and unable to actually arm.<br>
+			The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.`
+		},
+		severity: "error",
+		check: (data) => {
+			const modes = data.modes
+			const armMode = modes?.find((mode) => mode.mode === "ARM")
+			if (!armMode) return false
+			const overallRange = armMode?.high - armMode?.low
+			return { result: overallRange > 800, values: { armMode } }
+		}
+	},
+
+	{
+		id: "no-arm-mode",
+		title: "No ARM mode set",
+		description:
+			"No ARM mode is set. You will not be able to arm the flight controller until one is set.",
+		severity: "error",
+		check: (data) => {
+			const modes = data.modes
+			const armMode = modes?.find((mode) => mode.mode === "ARM")
+			return { result: !armMode, values: { armMode } }
+		}
 	}
 
 	// {
