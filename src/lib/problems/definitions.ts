@@ -279,9 +279,9 @@ save
 				return `ELRS requires the ARM mode to be on Aux 1 (CH5). Many ELRS settings depend on the value of the ARM mode, it's important 
 				that the flight controller setup matches what ELRS is expecting.`
 			}
-			return `ELRS requires the ARM mode to be on <strong>Aux 1 (CH5)</strong>. Many ELRS settings depend on the value of the ARM mode, it's important 
+			return `The current ARM mode is on <strong>Aux ${values.armMode?.channel + 1} (CH${values.armMode?.channel + 5})</strong>.<br>
+			ELRS requires the ARM mode to be on <strong>Aux 1 (CH5)</strong>. Many ELRS settings depend on the value of the ARM mode, it's important 
 			that the flight controller setup matches what ELRS is expecting.<br>
-			The current ARM mode is on <strong>Aux ${values.armMode?.channel + 1} (CH${values.armMode?.channel + 5})</strong>.<br>
 			If you're not using ELRS, you can ignore this warning.`
 		},
 		severity: "warning",
@@ -329,9 +329,9 @@ save
 				return `ELRS requires the range to be active around the 2000 value. Many ELRS settings depend on the value of the ARM mode, it's important 
 				that the flight controller setup matches what ELRS is expecting.<br>If you're not using ELRS, you can ignore this warning.`
 			}
-			return `ELRS requires the range to be active around the 2000 value. Many ELRS settings depend on the value of the ARM mode, it's important 
+			return `The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.<br>
+			ELRS requires the range to be active around the 2000 value. Many ELRS settings depend on the value of the ARM mode, it's important 
 			that the flight controller setup matches what ELRS is expecting.<br>
-			The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.<br>
 			If you're not using ELRS, you can ignore this warning.`
 		},
 		severity: "warning",
@@ -351,8 +351,8 @@ save
 			if (!values) {
 				return "The arming range is set too wide. This will most likely result in the flight controller being constantly armed, locked with pre-flight checks and unable to actually arm."
 			}
-			return `The arming range is set too wide. This will most likely result in the flight controller being constantly armed, locked with pre-flight checks and unable to actually arm.<br>
-			The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.`
+			return `The current range is <strong>${values.armMode?.low} - ${values.armMode?.high}</strong>.<br>
+			The arming range is set too wide. This will most likely result in the flight controller being constantly armed, locked with pre-flight checks and unable to actually arm.`
 		},
 		severity: "error",
 		check: (data) => {
