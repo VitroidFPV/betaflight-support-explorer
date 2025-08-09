@@ -287,33 +287,6 @@ save
 		severity: "warning",
 		check: (data) => {
 			const modes = data.modes
-			// modes =
-			// [
-			// 	{
-			// 		"mode": "ARM",
-			// 		"channel": 0,
-			// 		"low": 1800,
-			// 		"high": 2100
-			// 	},
-			// 	{
-			// 		"mode": "ANGLE",
-			// 		"channel": 3,
-			// 		"low": 1800,
-			// 		"high": 2100
-			// 	},
-			// 	{
-			// 		"mode": "BEEPER",
-			// 		"channel": 5,
-			// 		"low": 1800,
-			// 		"high": 2100
-			// 	},
-			// 	{
-			// 		"mode": "FLIP OVER AFTER CRASH",
-			// 		"channel": 2,
-			// 		"low": 1800,
-			// 		"high": 2100
-			// 	}
-			// 	]
 			const armMode = modes?.find((mode) => mode.mode === "ARM")
 			if (!armMode) return false
 			const isAux1 = armMode?.channel === 0
