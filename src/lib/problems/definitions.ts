@@ -256,18 +256,18 @@ export const problemDefinitions: ProblemDefinition[] = [
 			<pre>
 set osd_displayport_device = MAX7456
 save
-			</pre>
+</pre><br>
 			You may also need to set the video system to PAL or NTSC - the command shows PAL, but you can use NTSC if you prefer:<br><br>
 			<pre>
 set vcd_video_system = PAL
 save
-			</pre>
+</pre>
 			`,
 		severity: "warning",
 		check: (data) => {
 			const buildOptions = data.build?.Request?.Options
 			if (!buildOptions) return false
-			return buildOptions.includes("OSD_SD") && buildOptions.includes("OSD_HD")
+			return buildOptions.includes("USE_OSD_SD") && buildOptions.includes("USE_OSD_HD")
 		}
 	},
 
