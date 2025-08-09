@@ -194,6 +194,16 @@ export const load = (async ({ params, fetch }) => {
 					name: "Motor Output Limit",
 					value: extractCliLine(supportText, "motor_output_limit")
 				}
+			},
+			"OSD Config": {
+				osdDisplayportDevice: {
+					name: "OSD Displayport Device",
+					value: extractCliLine(supportText, "osd_displayport_device")
+				},
+				vcdVideoSystem: {
+					name: "VCD Video System",
+					value: extractCliLine(supportText, "vcd_video_system")
+				}
 			}
 		}
 
