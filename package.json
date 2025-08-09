@@ -44,6 +44,7 @@
 		"@steeze-ui/svelte-icon": "^1.6.2",
 		"@tailwindcss/vite": "^4.1.11",
 		"highlight.js": "11.9.0",
+		"posthog-js": "^1.259.0",
 		"semver": "^7.6.2",
 		"svelte-persisted-store": "^0.12.0"
 	}
