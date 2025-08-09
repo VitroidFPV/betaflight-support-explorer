@@ -204,6 +204,12 @@ export const load = (async ({ params, fetch }) => {
 					name: "VCD Video System",
 					value: extractCliLine(supportText, "vcd_video_system")
 				}
+			},
+			"Misc Config": {
+				smallAngle: {
+					name: "Maximum ARM angle",
+					value: extractCliLine(supportText, "small_angle")
+				}
 			}
 		}
 

@@ -394,6 +394,36 @@ save
 			const portsWithRx = ports.filter((port) => port.function.includes("RX Serial"))
 			return { result: portsWithRx.length > 1, values: { portsWithRx } }
 		}
+	},
+
+	{
+		id: "small-arm-angle",
+		title: "Maximum ARM angle set too low",
+		description: (data, values) => {
+			if (!values) {
+				return `The maximum ARM angle value is set too low. The default is 25, but it's best to set it to 180 degrees so that you can arm even when stuck upside down.<br>
+				You can set the maximum ARM angle in the CLI:<br><br>
+				<pre>
+set small_angle = 180
+save
+</pre>
+				`
+			}
+			return `The current maximum ARM angle is <strong>${values.smallAngle}</strong>.<br>
+			The maximum ARM angle value is set too low. The default is 25, but it's best to set it to 180 degrees so that you can arm even when stuck upside down.<br>
+			You can set the maximum ARM angle in the CLI:<br><br>
+			<pre>
+set small_angle = 180
+save
+</pre>
+			`
+		},
+		severity: "warning",
+		check: (data) => {
+			const smallAngle = data.commonSettings["Misc Config"]?.["smallAngle"]?.value
+			if (!smallAngle) return false
+			return { result: Number(smallAngle) < 180, values: { smallAngle } }
+		}
 	}
 
 	// {
