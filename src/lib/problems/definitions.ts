@@ -375,6 +375,25 @@ save
 			const armMode = modes?.find((mode) => mode.mode === "ARM")
 			return { result: !armMode, values: { armMode } }
 		}
+	},
+
+	{
+		id: "multiple-serialrx-ports",
+		title: "Multiple ports set for Serial RX",
+		description: (data, values) => {
+			if (!values) {
+				return "Multiple ports are set for Serial RX. It's not possible to set up redundant receivers this way. It will most likely result in incorrect communication with the receiver, or no communication at all."
+			}
+			return `Currently enabled on ports: <strong>${values.portsWithRx.map((port: { identifier: any }) => port.identifier).join(", ")}</strong>.<br>
+			Multiple ports are set for Serial RX. It's not possible to set up redundant receivers this way. It will most likely result in incorrect communication with the receiver, or no communication at all.`
+		},
+		severity: "error",
+		check: (data) => {
+			if (!data.serial) return false
+			const ports = data.serial
+			const portsWithRx = ports.filter((port) => port.function.includes("RX Serial"))
+			return { result: portsWithRx.length > 1, values: { portsWithRx } }
+		}
 	}
 
 	// {
