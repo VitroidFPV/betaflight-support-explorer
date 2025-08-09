@@ -246,6 +246,30 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 			return false
 		}
+	},
+
+	{
+		id: "analog-osd-incompatibility",
+		title: "Potential analog OSD incompatibility",
+		description: `The firmware build includes both <strong>OSD_SD</strong> and <strong>OSD_HD</strong> options. When <strong>OSD_HD</strong> is defined, the settings 
+			are automatically set up for digital OSD. Either flash the firmware with only <strong>OSD_SD</strong> enabled, or manually set up the OSD settings in the CLI:<br><br>
+			<pre>
+set osd_displayport_device = MAX7456
+save
+			</pre>
+			You may also need to set the video system to PAL or NTSC - the command shows PAL, but you can use NTSC if you prefer:<br><br>
+			<pre>
+set vcd_video_system = PAL
+save
+			</pre>
+			`,
+		severity: "warning",
+		check: (data) => {
+			const buildOptions = data.build?.Request?.Options
+			if (!buildOptions) return false
+			// return buildOptions.includes("OSD_SD") && buildOptions.includes("OSD_HD")
+			return true
+		}
 	}
 
 	// {
