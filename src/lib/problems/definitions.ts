@@ -142,6 +142,20 @@ export const problemDefinitions: ProblemDefinition[] = [
 	},
 
 	{
+		id: "high-cpu-load",
+		title: "High CPU Load",
+		description:
+			"The CPU load is higher than 50%. In flight this value will be higher, and may cause issues in flight and even crashes.",
+		severity: "warning",
+		check: (data) => {
+			const cpuLoad = data.status?.["CPU Load"] as string | undefined
+			if (!cpuLoad) return false
+			const cpuLoadValue = parseFloat(cpuLoad)
+			return cpuLoadValue > 50
+		}
+	},
+
+	{
 		id: "dshot-without-bidir",
 		title: "DShot Without Bidirectional DShot",
 		description:
