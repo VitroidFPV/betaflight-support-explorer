@@ -73,7 +73,7 @@ const rxProtocolMap = [
 export const problemDefinitions: ProblemDefinition[] = [
 	{
 		id: "low-pid-rate",
-		title: "Low PID Loop Rate",
+		title: "Low PID loop rate",
 		description:
 			"PID loop rate is lower than 1/4 of the gyro rate, which may cause reduced performance in most setups.",
 		severity: "warning",
@@ -86,7 +86,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "high-pid-rate",
-		title: "High PID Loop Rate",
+		title: "High PID loop rate",
 		description: (data, values) => {
 			if (!values) {
 				return "When using a G4, F4, or F722 MCU, it can struggle with an 8kHz PID loop rate. Consider using a lower rate to avoid instability."
@@ -116,7 +116,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "high-dshot-rate",
-		title: "High DShot Rate",
+		title: "High DShot rate",
 		description: (data, values) => {
 			if (!values) {
 				return "When using a G4, F4, or F722 MCU, it can struggle with a DShot rate of 600. Consider using a DShot 300 to avoid instability."
@@ -143,7 +143,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "high-cpu-load",
-		title: "High CPU Load",
+		title: "High CPU load",
 		description:
 			"The CPU load is higher than 50%. In flight this value will be higher, and may cause issues in flight and even crashes.",
 		severity: "warning",
@@ -157,7 +157,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "dshot-without-bidir",
-		title: "DShot Without Bidirectional DShot",
+		title: "DShot without bidirectional DShot",
 		description:
 			"Using DShot protocol without bidirectional enabled. Consider enabling bidirectional DShot for better performance.",
 		severity: "info",
@@ -176,7 +176,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 
 	{
 		id: "arming-disabled",
-		title: "Unexpected Arming Prevention Flags Present",
+		title: "Unexpected arming prevention flags present",
 		description:
 			"Detected unexpected arming prevention flags. The flight controller may not arm. MSP and CLI are expected, and should go away after disconnecting from the Configurator.",
 		severity: "error",
