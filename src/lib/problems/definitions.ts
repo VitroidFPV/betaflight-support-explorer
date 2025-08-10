@@ -261,13 +261,35 @@ save
 			<pre>
 set vcd_video_system = PAL
 save
-</pre>
+</pre><br>
+If your analog OSD is working fine, you don't need to do anything.
 			`,
 		severity: "warning",
 		check: (data) => {
 			const buildOptions = data.build?.Request?.Options
 			if (!buildOptions) return false
 			return buildOptions.includes("USE_OSD_SD") && buildOptions.includes("USE_OSD_HD")
+		}
+	},
+
+	{
+		id: "noncompliant-smartaudio-4-5-2",
+		title: "Noncompliant SmartAudio on Betaflight 4.5.2",
+		description: `Betaflight 4.5.2 included a bugfix for SmartAudio issues, but it also caused a regression where non-compliant SmartAudio devices 
+				may not work correctly. The issue isn't present in previous versions, and has been fixed in future versions.<br>
+				It can be fixed by using those other versions, or flashing with the <strong>NONCOMPLIANT_SMARTAUDIO</strong> custom define added. If your VTX works fine, you don't need to do anything.`,
+		severity: "warning",
+		check: (data) => {
+			const buildOptions = data.build?.Request
+			if (!buildOptions) return false
+			const isBetaflight452 = data.build?.Request?.Release?.startsWith("4.5.2") ?? false
+			const includesNoncompliantSmartAudio = data.build?.Request.Options.includes(
+				"USE_NONCOMPLIANT_SMARTAUDIO"
+			)
+			const isSmartAudioSet =
+				data.serial?.some((port) => port.function.includes("VTX SmartAudio")) ?? false
+			if (includesNoncompliantSmartAudio) return false
+			return isSmartAudioSet && isBetaflight452
 		}
 	},
 
