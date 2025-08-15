@@ -124,9 +124,14 @@
 			<a
 				href="https://github.com/VitroidFPV/betaflight-support-explorer"
 				class="h-fit fancy-link flex gap-1 items-center"
+				target="_blank"
+				rel="noopener noreferrer"
 			>
 				<Icon src={Github} size="1.25rem" />
 				source
+				<span class="self-start">
+					<Icon src={ArrowUpRight} size="0.75rem" />
+				</span>
 			</a>
 			<a href="/settings" class="h-fit fancy-link">settings</a>
 		</div>
