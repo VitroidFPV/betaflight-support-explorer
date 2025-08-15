@@ -1,6 +1,7 @@
 <script lang="ts">
 	import "../app.css"
 	import Nav from "$components/Nav.svelte"
+	import { Tooltip } from "bits-ui"
 
 	interface Props {
 		children?: import("svelte").Snippet
@@ -12,5 +13,5 @@
 <div class="grid grid-rows-[auto_1fr_auto]">
 	<Nav />
 
-	{@render children?.()}
+	<Tooltip.Provider delayDuration={300}>{@render children?.()}</Tooltip.Provider>
 </div>

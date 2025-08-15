@@ -44,8 +44,19 @@ const idPreviewCardSettings: IdPreviewCardSetting[] = [
 	}
 ]
 
+const showDataAnalysis = {
+	showDataAnalysis: true
+}
+
+const hiddenProblems: string[] = []
+
+const showHideWarning = true
+
 const allSettings = {
-	idPreviewCardSettings: idPreviewCardSettings
+	idPreviewCardSettings: idPreviewCardSettings,
+	showDataAnalysis: showDataAnalysis,
+	hiddenProblems: hiddenProblems,
+	showHideWarning: showHideWarning
 }
 
 export const settings = persisted("settings", allSettings)
