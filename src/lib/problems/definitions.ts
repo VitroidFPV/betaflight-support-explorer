@@ -159,7 +159,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 		id: "dshot-without-bidir",
 		title: "DShot without bidirectional DShot",
 		description:
-			"Using DShot protocol without bidirectional enabled. Consider enabling bidirectional DShot for better performance.",
+			"Using DShot protocol without bidirectional enabled. Consider enabling bidirectional DShot for better performance - only if your ESC supports it!",
 		severity: "info",
 		check: (data) => {
 			const escProtocol = data.commonSettings["DShot Config"]?.["escProtocol"]?.value
