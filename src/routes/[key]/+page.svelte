@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { run } from "svelte/legacy"
+	// import { run } from "svelte/legacy"
 
 	import type { PageData } from "./$types"
 	import { Icon } from "@steeze-ui/svelte-icon"
@@ -8,8 +8,9 @@
 	import { fly } from "svelte/transition"
 	import Ports from "$components/Ports.svelte"
 	import Modes from "$components/Modes.svelte"
+	import ProblemDetector from "$components/ProblemDetector.svelte"
 	import { page } from "$app/stores"
-	import { previousIds } from "$lib/stores/previousIds"
+	// import { previousIds } from "$lib/stores/previousIds"
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 
 	interface Props {
@@ -27,7 +28,8 @@
 		}
 	}
 
-	let { build, status, problem, dump, dma, timer, serial, modes, description } = $derived(data)
+	let { build, status, problem, dump, dma, timer, serial, modes, detectedProblems, description } =
+		$derived(data)
 	let commonSettings = $derived(data.commonSettings as CommonSettings)
 	let { Config: config, Request: request } = $derived(build)
 
@@ -57,9 +59,9 @@
 		)
 	}
 
-	run(() => {
-		console.log($previousIds)
-	})
+	// run(() => {
+	// 	console.log($previousIds)
+	// })
 </script>
 
 <svelte:head>
@@ -80,6 +82,10 @@
 	class="flex flex-col h-full w-full md:p-16 md:pt-8 p-4 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
+	{#if detectedProblems}
+		<ProblemDetector problems={detectedProblems} />
+	{/if}
+
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
 			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">

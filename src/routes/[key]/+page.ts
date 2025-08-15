@@ -8,8 +8,10 @@ import {
 	extractTimer,
 	extractSerial,
 	extractModes,
-	extractCliLine
+	extractCliLine,
+	extractNonSetCliLine
 } from "$lib/extract"
+import { detectProblems } from "$lib/problemDetector"
 import { SemVer } from "semver"
 import { previousIds } from "$lib/stores/previousIds"
 import { get } from "svelte/store"
@@ -49,7 +51,7 @@ function addPreviousId(
 		return
 	}
 
-	console.log("Adding previous id")
+	// console.log("Adding previous id")
 
 	const existingId = get(previousIds).find((id: PreviousId) => id.id === currentId)
 	if (!existingId) {
@@ -193,6 +195,26 @@ export const load = (async ({ params, fetch }) => {
 					name: "Motor Output Limit",
 					value: extractCliLine(supportText, "motor_output_limit")
 				}
+			},
+			"OSD Config": {
+				osdDisplayportDevice: {
+					name: "OSD Displayport Device",
+					value: extractCliLine(supportText, "osd_displayport_device")
+				},
+				vcdVideoSystem: {
+					name: "VCD Video System",
+					value: extractCliLine(supportText, "vcd_video_system")
+				}
+			},
+			"Misc Config": {
+				smallAngle: {
+					name: "Maximum ARM angle",
+					value: extractCliLine(supportText, "small_angle")
+				},
+				channelMapping: {
+					name: "Channel Mapping",
+					value: extractNonSetCliLine(supportText, "map")
+				}
 			}
 		}
 
@@ -204,6 +226,17 @@ export const load = (async ({ params, fetch }) => {
 			problem,
 			(status?.["Arming disable flags"] as string)?.split(" ") ?? []
 		)
+
+		// Detect problems based on the extracted data
+		const detectedProblems = detectProblems({
+			status,
+			commonSettings,
+			armingDisableFlags: (status?.["Arming disable flags"] as string)?.split(" ") ?? [],
+			modes,
+			problem,
+			build,
+			serial
+		})
 
 		// Calculate description for meta tags
 		const formatTime = (time: string) => {
@@ -233,6 +266,7 @@ export const load = (async ({ params, fetch }) => {
 			serial,
 			modes,
 			commonSettings,
+			detectedProblems,
 			description
 		}
 	}
@@ -251,5 +285,5 @@ export const load = (async ({ params, fetch }) => {
 		? `Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}`
 		: "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds"
 
-	return { build, description }
+	return { build, detectedProblems: [], description }
 }) satisfies PageLoad

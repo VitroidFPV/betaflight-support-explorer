@@ -54,18 +54,6 @@ body {
 	grid-template-columns: 1fr;
 }
 
-/* hr {
-	@apply !border-t-2 my-4;
-}
-
-input:focus::-webkit-search-cancel-button {
-	@apply invert;
-}
-
-.fancy-link {
-	@apply bg-0w hover:bg-100w transition-all duration-200 bg-gradient-to-r bg-no-repeat bg-left-bottom from-primary-500 rounded-sm to-primary-500 px-1 hover:text-black;
-} */
-
 .fancy-link {
 	background-size: 0% 100%;
 	background-position: bottom left;
@@ -120,4 +108,16 @@ input:focus::-webkit-search-cancel-button {
 [data-theme="yellowtheme"] .card.preset-tonal-primary {
 	border-color: color-mix(in srgb, var(--color-primary-500) 20%, transparent);
 	border-width: 1px;
+}
+
+[data-theme="yellowtheme"] .card.preset-tonal-warning pre {
+	background-color: color-mix(in srgb, var(--color-warning-500) 10%, transparent);
+	border-radius: 0.75rem;
+	padding: 0.5rem;
+}
+
+[data-theme="yellowtheme"] .card.preset-tonal-error pre {
+	background-color: color-mix(in srgb, var(--color-error-500) 10%, transparent);
+	border-radius: 0.75rem;
+	padding: 0.5rem;
 }
