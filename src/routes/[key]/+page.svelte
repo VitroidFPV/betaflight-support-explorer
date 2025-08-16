@@ -145,7 +145,7 @@
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
 							<span class="badge preset-filled-success-500">{build.Status}</span>
 						</div>
-						<div class="flex gap-2">
+						<div class="flex gap-2 flex-wrap w-min">
 							<a
 								href="https://build.betaflight.com/api/builds/{build.Identifier}/log"
 								target="_blank"

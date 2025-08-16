@@ -127,7 +127,7 @@
 		panelClasses="px-4 py-4"
 	>
 		{#snippet control()}
-			<div class="flex flex-row justify-between items-center">
+			<div class="flex lg:flex-row flex-col justify-between lg:items-center items-start">
 				<header class="h2 font-bold mb-4 mt-3">Data Analysis</header>
 				<div class="flex gap-2 text-sm">
 					{#if errorCount > 0}
