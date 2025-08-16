@@ -79,7 +79,7 @@
 </svelte:head>
 
 <div
-	class="flex flex-col h-full w-full md:p-16 md:pt-8 p-4 pb-6 2xl:px-40 gap-6 relative"
+	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
 	{#if detectedProblems}
@@ -417,16 +417,25 @@
 	{/if}
 
 	{#if dump}
-		<hr class="hr border-surface-500 my-4 border-t-2" />
-		<header class="text-primary-500 h2 font-bold">Dump</header>
+		<Accordion collapsible>
+			<Accordion.Item
+				classes="card preset-tonal-secondary"
+				controlHover="hover:bg-primary-500/20"
+				value="dump"
+			>
+				{#snippet control()}
+					<header class="h2 font-bold mb-4 mt-3 text-primary-500">Dump</header>
+				{/snippet}
 
-		<div class="flex flex-col">
-			<CodeBlock
-				classes="card max-h-[88vh] overflow-y-scroll"
-				lang="nim"
-				code={dump}
-				preClasses="[&>pre]:!bg-surface-800"
-			/>
-		</div>
+				{#snippet panel()}
+					<CodeBlock
+						classes="card max-h-[88vh] overflow-scroll"
+						lang="nim"
+						code={dump}
+						preClasses="[&>pre]:!bg-transparent"
+					/>
+				{/snippet}
+			</Accordion.Item>
+		</Accordion>
 	{/if}
 </div>
