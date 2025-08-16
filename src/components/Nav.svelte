@@ -73,8 +73,8 @@
 	class="flex sticky bg-surface-950 top-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950"
 	data-sveltekit-preload-data="hover"
 >
-	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full px-8 gap-y-3 py-2">
-		<div class="flex justify-start gap-8 items-center order-1">
+	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-y-3 py-2">
+		<div class="flex justify-start lg:gap-8 gap-2 items-center order-1">
 			<a href="/" class="h-fit fancy-link">home</a>
 			<a
 				href="https://ko-fi.com/vitroid"
@@ -119,7 +119,7 @@
 				</button>
 			</form>
 		</div>
-		<div class="flex justify-end items-center order-2 lg:order-3 gap-8">
+		<div class="flex justify-end items-center order-2 lg:order-3 lg:gap-8 gap-2">
 			<!-- <button class="btn btn-sm">settings</button> -->
 			<a
 				href="https://github.com/VitroidFPV/betaflight-support-explorer"
