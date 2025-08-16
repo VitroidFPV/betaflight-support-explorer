@@ -10,7 +10,7 @@
 	let { children }: Props = $props()
 </script>
 
-<div class="grid grid-rows-[auto_1fr_auto]">
+<div class="grid grid-rows-[auto_1fr_auto] max-w-screen overflow-x-hidden">
 	<Nav />
 
 	<Tooltip.Provider delayDuration={300}>{@render children?.()}</Tooltip.Provider>
