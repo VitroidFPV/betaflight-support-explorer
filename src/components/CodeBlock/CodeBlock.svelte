@@ -42,8 +42,8 @@
 		preClasses = ""
 	}: CodeBlockProps = $props()
 
-	// Shiki convert to HTML
-	const generatedHtml = shiki.codeToHtml(code, { lang, theme })
+	// Shiki convert to HTML (reactive)
+	const generatedHtml = $derived(shiki.codeToHtml(code, { lang, theme }))
 </script>
 
 <div class="{base} {rounded} {shadow} {classes} {preBase} {prePadding} {preClasses}">
