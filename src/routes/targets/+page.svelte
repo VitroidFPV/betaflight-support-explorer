@@ -3,10 +3,8 @@
 	import { fly } from "svelte/transition"
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { Github, RefreshCw } from "@steeze-ui/lucide-icons"
-	import { clearCache } from "$lib/stores/targetsCache.js"
+	import { clearCache } from "$lib/stores/targetsCache"
 	import { invalidateAll } from "$app/navigation"
-
-	// console.log(page.data.targets)
 
 	// Group targets by first letter
 	let groupedTargets = $derived(() => {
@@ -93,6 +91,7 @@
 		{/if}
 	</div>
 	<hr class="border-surface-500" />
+
 	{#if filteredTargets().length > 0}
 		{#each filteredTargets() as targetGroup, i (i)}
 			<div class="flex flex-col gap-4">
