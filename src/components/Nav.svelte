@@ -8,7 +8,8 @@
 		CircleArrowRight,
 		LoaderCircle,
 		ArrowUpRight,
-		Github
+		Github,
+		Coffee
 	} from "@steeze-ui/lucide-icons"
 	import { goto, invalidate } from "$app/navigation"
 	import { extractSupportId } from "$lib/extractSupportId"
@@ -74,8 +75,8 @@
 	class="flex sticky bg-surface-950 top-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950"
 	data-sveltekit-preload-data="hover"
 >
-	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-y-3 py-2">
-		<div class="flex justify-start lg:gap-8 gap-2 items-center order-1">
+	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-3 py-2">
+		<div class="flex justify-start xl:gap-8 lg:gap-4 gap-2 items-center order-1">
 			<a href="/" class="h-fit fancy-link" data-active={page.url.pathname === "/"}>home</a>
 			<a
 				href="/targets"
@@ -114,14 +115,15 @@
 				</button>
 			</form>
 		</div>
-		<div class="flex justify-end items-center order-2 lg:order-3 lg:gap-8 gap-2">
+		<div class="flex justify-end items-center order-2 lg:order-3 xl:gap-8 lg:gap-4 gap-2">
 			<a
 				href="https://ko-fi.com/vitroid"
-				class="h-fit fancy-link whitespace-nowrap flex gap-1"
+				class="h-fit fancy-link flex gap-1 items-center whitespace-nowrap"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				support me
+				<Icon src={Coffee} size="1.25rem" />
+				<span class="hidden lg:block">support me</span>
 				<span>
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>
@@ -134,7 +136,7 @@
 				rel="noopener noreferrer"
 			>
 				<Icon src={Github} size="1.25rem" />
-				source
+				<span class="hidden lg:block">source</span>
 				<span class="self-start">
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>

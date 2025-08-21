@@ -72,12 +72,19 @@
 	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
-	<div class="flex items-center gap-4 mt-10">
-		<header class="text-primary-500 h3 font-bold">Targets</header>
-		<div class="flex items-center gap-4">
-			<input type="text" class="input h-12 w-fit" placeholder="Search" bind:value={search} />
+	<div class="flex items-center gap-4 mt-10 flex-wrap">
+		<div class="flex items-center gap-4 lg:w-fit w-full">
+			<header class="text-primary-500 h3 font-bold h-fit">Targets</header>
+			<input
+				type="text"
+				class="input h-12 lg:w-fit w-full"
+				placeholder="Search"
+				bind:value={search}
+			/>
+		</div>
+		<div class="flex gap-4 items-center lg:w-fit w-full justify-between">
 			<button
-				class="btn variant-ghost-primary"
+				class="flex gap-2 items-center"
 				onclick={refreshCache}
 				disabled={isRefreshing}
 				title="Refresh targets from GitHub"
@@ -85,20 +92,22 @@
 				<Icon src={RefreshCw} size="1.2rem" class={isRefreshing ? "animate-spin" : ""} />
 				{isRefreshing ? "Refreshing..." : "Refresh"}
 			</button>
+			{#if page.data.fromCache}
+				<div class="text-sm text-surface-400">Loaded from cache</div>
+			{/if}
 		</div>
-		{#if page.data.fromCache}
-			<div class="text-sm text-surface-400">Loaded from cache</div>
-		{/if}
 	</div>
 	<hr class="border-surface-500" />
 
 	{#if filteredTargets().length > 0}
 		{#each filteredTargets() as targetGroup, i (i)}
-			<div class="flex flex-col gap-4">
+			<div class="flex flex-col lg:gap-4 gap-2">
 				<h3 class="text-primary-500 h3 font-bold">{targetGroup.letter}</h3>
-				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-4">
+				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
 					{#each targetGroup.targets as target, i (i)}
-						<div class="card preset-tonal-secondary p-4 flex gap-4 justify-between items-center">
+						<div
+							class="card preset-tonal-secondary lg:p-4 p-3 flex gap-4 justify-between items-center"
+						>
 							<a href={`/targets/${target}`} class="fancy-link w-fit h-fit">{target}</a>
 							<div class="flex">
 								<a
