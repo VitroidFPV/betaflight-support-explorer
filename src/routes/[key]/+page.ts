@@ -82,8 +82,8 @@ export const load = (async ({ params, fetch }) => {
 
 	// Check if the key is correctly formatted
 	if (!isBuildKey && !/^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$/i.test(key)) {
-		error(400, {
-			message: "Invalid key format! Check the key and try again."
+		error(404, {
+			message: "Invalid ID format! Check the ID and try again."
 		})
 	}
 

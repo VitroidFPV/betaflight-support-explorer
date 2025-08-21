@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from "$app/stores"
+	import { Icon } from "@steeze-ui/svelte-icon"
+	import { CloudAlert, House } from "@steeze-ui/lucide-icons"
 	import { fly } from "svelte/transition"
+	import { extractSupportId } from "$lib/extractSupportId"
+
+	const id = extractSupportId($page.params.key ?? "")
+	const status = $page.status
 </script>
 
 <!-- <h1>{$page.status}: {$page.error?.message}</h1> -->
@@ -10,4 +16,21 @@
 >
 	<h1 class="text-4xl font-bold text-error-500">Error {$page.status}:</h1>
 	<h2 class="text-2xl">{$page.error?.message}</h2>
+	<div class="flex gap-4">
+		<a href="/" class="btn preset-filled-secondary-500 btn-lg">
+			<span><Icon src={House} size="1.5rem" /></span>
+			Back to Home
+		</a>
+		{#if id || status === 400}
+			<a
+				href={`https://build.betaflight.com/api/support/${id}`}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn preset-filled-error-500 btn-lg"
+			>
+				<span><Icon src={CloudAlert} size="1.5rem" /></span>
+				Open Fallback
+			</a>
+		{/if}
+	</div>
 </div>
