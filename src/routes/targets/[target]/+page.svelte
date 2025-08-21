@@ -8,7 +8,7 @@
 
 	const { data } = $props()
 
-	let target = $derived(data.target)
+	let target = $derived(data.config)
 </script>
 
 <div
