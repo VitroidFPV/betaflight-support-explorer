@@ -1,6 +1,6 @@
 export interface CodeBlockProps {
 	code?: string
-	lang?: "console" | "html" | "css" | "js" | "nim"
+	lang?: "console" | "html" | "css" | "js" | "nim" | "c"
 	theme?: string
 	// Base Style Props
 	base?: string
