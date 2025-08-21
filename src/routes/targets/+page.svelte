@@ -73,7 +73,7 @@
 			return allTargets
 		}
 		const searchLower = search.toLowerCase()
-		return allTargets.filter((target) => target.toLowerCase().includes(searchLower))
+		return allTargets.filter((target: string) => target.toLowerCase().includes(searchLower))
 	})
 </script>
 
