@@ -77,8 +77,10 @@
 	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-y-3 py-2">
 		<div class="flex justify-start lg:gap-8 gap-2 items-center order-1">
 			<a href="/" class="h-fit fancy-link" data-active={page.url.pathname === "/"}>home</a>
-			<a href="/targets" class="h-fit fancy-link" data-active={page.url.pathname === "/targets"}
-				>targets</a
+			<a
+				href="/targets"
+				class="h-fit fancy-link"
+				data-active={page.url.pathname.startsWith("/targets")}>targets</a
 			>
 		</div>
 		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2">
