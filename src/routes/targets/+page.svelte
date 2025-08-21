@@ -66,13 +66,22 @@
 			}))
 			.filter((group) => group.targets.length > 0)
 	})
+
+	const allTargets = $derived(page.data.targets)
+	const allFilteredTargets = $derived(() => {
+		if (!search.trim()) {
+			return allTargets
+		}
+		const searchLower = search.toLowerCase()
+		return allTargets.filter((target: string) => target.toLowerCase().includes(searchLower))
+	})
 </script>
 
 <div
 	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
-	<div class="flex items-center gap-4 mt-10 flex-wrap">
+	<div class="flex items-center gap-4 mt-10 flex-wrap justify-between">
 		<div class="flex items-center gap-4 lg:w-fit w-full">
 			<header class="text-primary-500 h3 font-bold h-fit">Targets</header>
 			<input
@@ -81,6 +90,9 @@
 				placeholder="Search"
 				bind:value={search}
 			/>
+			<div class="text-sm text-surface-400">
+				<span>{allFilteredTargets().length}</span>/<span>{allTargets.length}</span>
+			</div>
 		</div>
 		<div class="flex gap-4 items-center lg:w-fit w-full justify-between">
 			<button
