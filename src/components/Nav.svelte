@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { preventDefault } from "svelte/legacy"
+	import { page } from "$app/state"
 
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import {
@@ -75,18 +76,10 @@
 >
 	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-y-3 py-2">
 		<div class="flex justify-start lg:gap-8 gap-2 items-center order-1">
-			<a href="/" class="h-fit fancy-link">home</a>
-			<a
-				href="https://ko-fi.com/vitroid"
-				class="h-fit fancy-link whitespace-nowrap flex gap-1"
-				target="_blank"
-				rel="noopener noreferrer"
+			<a href="/" class="h-fit fancy-link" data-active={page.url.pathname === "/"}>home</a>
+			<a href="/targets" class="h-fit fancy-link" data-active={page.url.pathname === "/targets"}
+				>targets</a
 			>
-				support me
-				<span>
-					<Icon src={ArrowUpRight} size="0.75rem" />
-				</span>
-			</a>
 		</div>
 		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2">
 			<!-- <input type="search" placeholder="Search..." class="input input-sm" /> -->
@@ -120,6 +113,17 @@
 			</form>
 		</div>
 		<div class="flex justify-end items-center order-2 lg:order-3 lg:gap-8 gap-2">
+			<a
+				href="https://ko-fi.com/vitroid"
+				class="h-fit fancy-link whitespace-nowrap flex gap-1"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				support me
+				<span>
+					<Icon src={ArrowUpRight} size="0.75rem" />
+				</span>
+			</a>
 			<!-- <button class="btn btn-sm">settings</button> -->
 			<a
 				href="https://github.com/VitroidFPV/betaflight-support-explorer"
@@ -133,7 +137,10 @@
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>
 			</a>
-			<a href="/settings" class="h-fit fancy-link">settings</a>
+			<span class="border-surface-500 vr"></span>
+			<a href="/settings" class="h-fit fancy-link" data-active={page.url.pathname === "/settings"}
+				>settings</a
+			>
 		</div>
 	</div>
 </nav>
