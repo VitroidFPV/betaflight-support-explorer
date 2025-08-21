@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from "./$types"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons"
+	import { Download, BookOpen, FileScan, Github } from "@steeze-ui/lucide-icons"
 	import { Accordion } from "@skeletonlabs/skeleton-svelte"
 	import { fly } from "svelte/transition"
 	import Ports from "$components/Ports.svelte"
@@ -92,12 +92,20 @@
 							</div>
 							<div class="flex gap-2">
 								<a
-									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
-									target="_blank"
+									href={`/targets/${config.Target}`}
 									class="btn preset-filled-primary-500 btn-sm"
+									data-sveltekit-preload-data="hover"
+									data-sveltekit-preload-code="eager"
 								>
 									<span><Icon src={FileScan} size="1rem" /></span>
-									<span>Target</span>
+									<span>View Target</span>
+								</a>
+								<a
+									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
+									class="btn preset-filled-primary-500 btn-sm"
+								>
+									<span><Icon src={Github} size="1rem" /></span>
+									<span>Open Target</span>
 								</a>
 								<!-- <a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
 									<span><Icon src={BookOpen} size="1rem" /></span>

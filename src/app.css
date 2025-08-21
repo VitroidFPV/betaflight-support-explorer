@@ -11,6 +11,7 @@
 @import "../yellow-theme.css";
 
 @source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
+@source "/routes/**/*.svelte";
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
@@ -70,6 +71,12 @@ body {
 .fancy-link:hover {
 	background-size: 100% 100%;
 	color: var(--color-black);
+}
+
+.fancy-link[data-active="true"] {
+	background-size: 100% 100%;
+	color: var(--color-black);
+	font-weight: 600;
 }
 
 [data-theme="yellowtheme"] .preset-tonal-primary {

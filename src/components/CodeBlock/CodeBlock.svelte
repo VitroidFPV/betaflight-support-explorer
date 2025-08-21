@@ -13,6 +13,7 @@
 	import css from "shiki/langs/css.mjs"
 	import js from "shiki/langs/javascript.mjs"
 	import nim from "shiki/langs/nim.mjs"
+	import c from "shiki/langs/c.mjs"
 
 	// https://shiki.style/guide/sync-usage
 	const shiki = createHighlighterCoreSync({
@@ -20,7 +21,7 @@
 		// Implement your import theme.
 		themes: [oneDarkPro],
 		// Implement your imported and supported languages.
-		langs: [console, html, css, js, nim]
+		langs: [console, html, css, js, nim, c]
 	})
 </script>
 
