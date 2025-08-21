@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { page } from "$app/stores"
+	import { page } from "$app/state"
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { CloudAlert, House } from "@steeze-ui/lucide-icons"
 	import { fly } from "svelte/transition"
 	import { extractSupportId } from "$lib/extractSupportId"
 
-	const id = extractSupportId($page.params.key ?? "")
-	const status = $page.status
+	const id = extractSupportId(page.params.key ?? "")
+	const status = page.status
+	const message = page.error?.message
 </script>
 
-<!-- <h1>{$page.status}: {$page.error?.message}</h1> -->
 <div
 	class="flex flex-col h-full w-full md:p-16 p-6 pb-6 2xl:px-80 gap-6"
 	in:fly={{ x: 500, duration: 400 }}
 >
-	<h1 class="text-4xl font-bold text-error-500">Error {$page.status}:</h1>
-	<h2 class="text-2xl">{$page.error?.message}</h2>
+	<h1 class="text-4xl font-bold text-error-500">Error {status}:</h1>
+	<h2 class="text-2xl">{message}</h2>
 	<div class="flex gap-4">
 		<a href="/" class="btn preset-filled-secondary-500 btn-lg">
 			<span><Icon src={House} size="1.5rem" /></span>

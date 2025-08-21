@@ -1,6 +1,4 @@
 <script lang="ts">
-	// import { run } from "svelte/legacy"
-
 	import type { PageData } from "./$types"
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { Download, BookOpen, FileScan } from "@steeze-ui/lucide-icons"
@@ -9,8 +7,7 @@
 	import Ports from "$components/Ports.svelte"
 	import Modes from "$components/Modes.svelte"
 	import ProblemDetector from "$components/ProblemDetector.svelte"
-	import { page } from "$app/stores"
-	// import { previousIds } from "$lib/stores/previousIds"
+	import { page } from "$app/state"
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 
 	interface Props {
@@ -58,14 +55,10 @@
 			time.slice(8, 10) + "." + time.slice(5, 7) + "." + time.slice(0, 4) + " " + time.slice(11, 23)
 		)
 	}
-
-	// run(() => {
-	// 	console.log($previousIds)
-	// })
 </script>
 
 <svelte:head>
-	<title>{"Betaflight Support Explorer" + " - " + $page.params.key}</title>
+	<title>{"Betaflight Support Explorer" + " - " + page.params.key}</title>
 	<meta name="description" content={description} />
 
 	<meta
