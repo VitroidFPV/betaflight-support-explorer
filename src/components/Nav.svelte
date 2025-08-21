@@ -124,7 +124,7 @@
 			>
 				<Icon src={Coffee} size="1.25rem" />
 				<span class="hidden lg:block">support me</span>
-				<span>
+				<span class="self-start">
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>
 			</a>
