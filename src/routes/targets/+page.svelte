@@ -1,0 +1,95 @@
+<script lang="ts">
+	import { page } from "$app/state"
+	import { fly } from "svelte/transition"
+	import { Icon } from "@steeze-ui/svelte-icon"
+	import { Github } from "@steeze-ui/lucide-icons"
+
+	// console.log(page.data.targets)
+
+	// Group targets by first letter
+	let groupedTargets = $derived(() => {
+		const groups: { [key: string]: string[] } = {}
+
+		page.data.targets.forEach((target: string) => {
+			const firstChar = target.charAt(0).toUpperCase()
+			// Check if first character is a letter (A-Z)
+			const groupKey = /^[A-Z]$/.test(firstChar) ? firstChar : "#"
+
+			if (!groups[groupKey]) {
+				groups[groupKey] = []
+			}
+			groups[groupKey].push(target)
+		})
+
+		// Sort the groups by letter and sort targets within each group
+		const sortedGroups: { letter: string; targets: string[] }[] = []
+		Object.keys(groups)
+			.sort((a, b) => {
+				// Put '#' (non-alphabetic) group at the start
+				if (a === "#") return -1
+				if (b === "#") return 1
+				return a.localeCompare(b)
+			})
+			.forEach((letter) => {
+				sortedGroups.push({
+					letter,
+					targets: groups[letter].sort()
+				})
+			})
+
+		return sortedGroups
+	})
+
+	let search = $state("")
+
+	// Filter targets in groupedTargets based on search
+	let filteredTargets = $derived(() => {
+		if (!search.trim()) {
+			return groupedTargets()
+		}
+		const searchLower = search.toLowerCase()
+		return groupedTargets()
+			.map((group) => ({
+				...group,
+				targets: group.targets.filter((target) => target.toLowerCase().includes(searchLower))
+			}))
+			.filter((group) => group.targets.length > 0)
+	})
+</script>
+
+<div
+	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
+	in:fly={{ x: 500, duration: 400 }}
+>
+	<div class="flex items-center gap-4 mt-10">
+		<header class="text-primary-500 h3 font-bold">Targets</header>
+		<input type="text" class="input h-12 w-fit" placeholder="Search" bind:value={search} />
+	</div>
+	<hr class="border-surface-500" />
+	{#if filteredTargets().length > 0}
+		{#each filteredTargets() as targetGroup, i (i)}
+			<div class="flex flex-col gap-4">
+				<h3 class="text-primary-500 h3 font-bold">{targetGroup.letter}</h3>
+				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-2 gap-4">
+					{#each targetGroup.targets as target, i (i)}
+						<div class="card preset-tonal-secondary p-4 flex gap-4 justify-between items-center">
+							<a href={`/targets/${target}`} class="fancy-link w-fit h-fit">{target}</a>
+							<div class="flex">
+								<a
+									href={`/targets/${target}`}
+									class="hover:text-primary-500 w-fit h-fit bg-transparent hover:bg-primary-500/10 aspect-square p-1 rounded-lg"
+								>
+									<Icon src={Github} size="1.5rem" />
+								</a>
+							</div>
+						</div>
+					{/each}
+				</div>
+			</div>
+		{/each}
+	{:else}
+		<div class="flex flex-col gap-4">
+			<h3 class="text-primary-500 h3 font-bold">No targets found</h3>
+		</div>
+	{/if}
+</div>
