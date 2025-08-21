@@ -1,11 +1,18 @@
 import { GITHUB_PAT } from "$env/static/private"
 import { Octokit } from "octokit"
+import {
+	targetsCache,
+	isCacheValid,
+	updateCache,
+	type Manufacturer
+} from "$lib/stores/targetsCache.js"
+import { get } from "svelte/store"
 
 const octokit = new Octokit({
 	auth: GITHUB_PAT
 })
 
-export const load = async () => {
+async function fetchFreshData() {
 	const { data: manufacturers } = await octokit.request(
 		"GET /repos/{owner}/{repo}/contents/{path}",
 		{
@@ -15,26 +22,12 @@ export const load = async () => {
 		}
 	)
 
-	let formattedManufacturers: { id: string; name: string; contact: string }[] = []
+	let formattedManufacturers: Manufacturer[] = []
 
 	// Check if manufacturers is an array or a single file object
 	if (Array.isArray(manufacturers)) {
 		console.log("Received array of files/directories")
 	} else if ("content" in manufacturers) {
-		// console.log(atob(manufacturers.content ?? ""))
-		// manufacturers.content =
-		// # Manufacturer Ids
-		//
-		// This is the official list of manufacturer ids (`manufacturer_id` in the target config) that will be supported for loading onto board configurations by Betaflight configurator.
-		//
-		//
-		// |Manufacturer Id|Name|Contact|
-		// |-|-|-|
-		// |CUST|'Custom', to be used for homebrew targets||
-		// |FOSS|Free open source target definitions||
-		// |COMM|Community provided target definitions for closed source targets||
-		// |LEGA|Closed source legacy targets without a maintainer||
-		// ...
 		const table = atob(manufacturers.content ?? "")
 			.split("\n")
 			.slice(7)
@@ -53,42 +46,6 @@ export const load = async () => {
 		path: "configs"
 	})
 
-	// 	{
-	//     name: 'AOCODARCF722_AIO',
-	//     path: 'configs/AOCODARCF722_AIO',
-	//     sha: 'b3a3275c6d4a7bf589471bb9ac4a8941c8152c5f',
-	//     size: 0,
-	//     url: 'https://api.github.com/repos/betaflight/config/contents/configs/AOCODARCF722_AIO?ref=master',
-	//     html_url: 'https://github.com/betaflight/config/tree/master/configs/AOCODARCF722_AIO',
-	//     git_url: 'https://api.github.com/repos/betaflight/config/git/trees/b3a3275c6d4a7bf589471bb9ac4a8941c8152c5f',
-	//     download_url: null,
-	//     type: 'dir',
-	//     _links: {
-	//       self: 'https://api.github.com/repos/betaflight/config/contents/configs/AOCODARCF722_AIO?ref=master',
-	//       git: 'https://api.github.com/repos/betaflight/config/git/trees/b3a3275c6d4a7bf589471bb9ac4a8941c8152c5f',
-	//       html: 'https://github.com/betaflight/config/tree/master/configs/AOCODARCF722_AIO'
-	//     }
-	//   },
-	//   {
-	//     name: 'AOCODARCF7DUAL',
-	//     path: 'configs/AOCODARCF7DUAL',
-	//     sha: 'a2cb4ce371b6b0837c1d8d60039efd952fa88e49',
-	//     size: 0,
-	//     url: 'https://api.github.com/repos/betaflight/config/contents/configs/AOCODARCF7DUAL?ref=master',
-	//     html_url: 'https://github.com/betaflight/config/tree/master/configs/AOCODARCF7DUAL',
-	//     git_url: 'https://api.github.com/repos/betaflight/config/git/trees/a2cb4ce371b6b0837c1d8d60039efd952fa88e49',
-	//     download_url: null,
-	//     type: 'dir',
-	//     _links: {
-	//       self: 'https://api.github.com/repos/betaflight/config/contents/configs/AOCODARCF7DUAL?ref=master',
-	//       git: 'https://api.github.com/repos/betaflight/config/git/trees/a2cb4ce371b6b0837c1d8d60039efd952fa88e49',
-	//       html: 'https://github.com/betaflight/config/tree/master/configs/AOCODARCF7DUAL'
-	//     }
-	//   },
-	//   {
-	//     name: 'AOCODARCH7DUAL',
-	//     path: 'configs
-	// ...
 	let formattedTargets: string[] = []
 
 	if (Array.isArray(targets)) {
@@ -100,4 +57,29 @@ export const load = async () => {
 	}
 
 	return { manufacturers: formattedManufacturers, targets: formattedTargets }
+}
+
+export const load = async () => {
+	// Check if we have valid cached data
+	const cachedData = get(targetsCache)
+
+	if (isCacheValid(cachedData)) {
+		console.log("Using cached targets and manufacturers data")
+		return {
+			manufacturers: cachedData.manufacturers,
+			targets: cachedData.targets,
+			fromCache: true
+		}
+	}
+
+	console.log("Fetching fresh targets and manufacturers data")
+	const freshData = await fetchFreshData()
+
+	// Update cache with fresh data
+	updateCache(freshData.targets, freshData.manufacturers)
+
+	return {
+		...freshData,
+		fromCache: false
+	}
 }

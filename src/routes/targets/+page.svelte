@@ -2,7 +2,9 @@
 	import { page } from "$app/state"
 	import { fly } from "svelte/transition"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { Github } from "@steeze-ui/lucide-icons"
+	import { Github, RefreshCw } from "@steeze-ui/lucide-icons"
+	import { clearCache } from "$lib/stores/targetsCache.js"
+	import { invalidateAll } from "$app/navigation"
 
 	// console.log(page.data.targets)
 
@@ -41,6 +43,17 @@
 	})
 
 	let search = $state("")
+	let isRefreshing = $state(false)
+
+	async function refreshCache() {
+		isRefreshing = true
+		try {
+			clearCache()
+			await invalidateAll()
+		} finally {
+			isRefreshing = false
+		}
+	}
 
 	// Filter targets in groupedTargets based on search
 	let filteredTargets = $derived(() => {
@@ -63,7 +76,21 @@
 >
 	<div class="flex items-center gap-4 mt-10">
 		<header class="text-primary-500 h3 font-bold">Targets</header>
-		<input type="text" class="input h-12 w-fit" placeholder="Search" bind:value={search} />
+		<div class="flex items-center gap-4">
+			<input type="text" class="input h-12 w-fit" placeholder="Search" bind:value={search} />
+			<button
+				class="btn variant-ghost-primary"
+				onclick={refreshCache}
+				disabled={isRefreshing}
+				title="Refresh targets from GitHub"
+			>
+				<Icon src={RefreshCw} size="1.2rem" class={isRefreshing ? "animate-spin" : ""} />
+				{isRefreshing ? "Refreshing..." : "Refresh"}
+			</button>
+		</div>
+		{#if page.data.fromCache}
+			<div class="text-sm text-surface-400">Loaded from cache</div>
+		{/if}
 	</div>
 	<hr class="border-surface-500" />
 	{#if filteredTargets().length > 0}
