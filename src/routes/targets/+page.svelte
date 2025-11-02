@@ -2,9 +2,10 @@
 	import { page } from "$app/state"
 	import { fly } from "svelte/transition"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { Github, RefreshCw } from "@steeze-ui/lucide-icons"
+	import { RefreshCw } from "@steeze-ui/lucide-icons"
 	import { clearCache } from "$lib/stores/targetsCache"
 	import { invalidateAll } from "$app/navigation"
+	import TargetListItem from "$components/TargetListItem.svelte"
 
 	// Group targets by first letter
 	let groupedTargets = $derived(() => {
@@ -113,26 +114,7 @@
 
 	{#if filteredTargets().length > 0}
 		{#each filteredTargets() as targetGroup, i (i)}
-			<div class="flex flex-col lg:gap-4 gap-2">
-				<h3 class="text-primary-500 h3 font-bold">{targetGroup.letter}</h3>
-				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
-					{#each targetGroup.targets as target, i (i)}
-						<div
-							class="card preset-tonal-secondary lg:p-4 p-3 flex gap-4 justify-between items-center"
-						>
-							<a href={`/targets/${target}`} class="fancy-link w-fit h-fit">{target}</a>
-							<div class="flex">
-								<a
-									href={`/targets/${target}`}
-									class="hover:text-primary-500 w-fit h-fit bg-transparent hover:bg-primary-500/10 aspect-square p-1 rounded-lg"
-								>
-									<Icon src={Github} size="1.5rem" />
-								</a>
-							</div>
-						</div>
-					{/each}
-				</div>
-			</div>
+			<TargetListItem letter={targetGroup.letter} targets={targetGroup.targets} />
 		{/each}
 	{:else}
 		<div class="flex flex-col gap-4">
