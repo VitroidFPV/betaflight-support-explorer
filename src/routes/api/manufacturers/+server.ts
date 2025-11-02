@@ -26,6 +26,7 @@ export async function GET() {
 			const table = atob(manufacturers.content ?? "")
 				.split("\n")
 				.slice(7)
+				.filter((line) => line.trim().length > 0)
 			formattedManufacturers = table.map((line) => {
 				// skip first | and last |
 				const [id, name, contact] = line.split("|").slice(1, -1)
