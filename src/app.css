@@ -39,6 +39,13 @@
 	::file-selector-button {
 		border-color: var(--color-gray-200, currentcolor);
 	}
+	::selection {
+		background-color: var(--color-primary-500);
+		color: black;
+		@supports (color: color-mix(in lab, red, red)) {
+			background-color: color-mix(in srgb, var(--color-primary-500) 90%, transparent);
+		}
+	}
 }
 
 @layer utilities {

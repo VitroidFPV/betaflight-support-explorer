@@ -11,7 +11,16 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw error(response.status, config.error || "Failed to fetch target config")
 	}
 
+	const manufacturerId = config.content.match(/MANUFACTURER_ID\s+(\w+)/)[1]
+	const manufacturerResponse = await fetch(`/api/manufacturers/${manufacturerId}`)
+	const manufacturer = await manufacturerResponse.json()
+
+	if (!manufacturerResponse.ok) {
+		throw error(manufacturerResponse.status, manufacturer.error || "Failed to fetch manufacturer")
+	}
+
 	return {
-		config
+		config,
+		manufacturer
 	}
 }
