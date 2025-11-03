@@ -6,40 +6,20 @@
 	import { clearCache } from "$lib/stores/targetsCache"
 	import { invalidateAll } from "$app/navigation"
 	import TargetListItem from "$components/TargetListItem.svelte"
+	import type { Target } from "$lib/stores/targetsCache.js"
 
-	// Group targets by first letter
-	let groupedTargets = $derived(() => {
-		const groups: { [key: string]: string[] } = {}
-
-		page.data.targets.forEach((target: string) => {
-			const firstChar = target.charAt(0).toUpperCase()
-			// Check if first character is a letter (A-Z)
-			const groupKey = /^[A-Z]$/.test(firstChar) ? firstChar : "#"
-
-			if (!groups[groupKey]) {
-				groups[groupKey] = []
+	// Group targets by first character
+	let groupedTargets = $derived(
+		page.data.targets.reduce((acc: { [key: string]: Target[] }, target: Target) => {
+			const firstChar = target.target.charAt(0).toUpperCase()
+			const key = /[A-Z]/.test(firstChar) ? firstChar : "#"
+			if (!acc[key]) {
+				acc[key] = []
 			}
-			groups[groupKey].push(target)
-		})
-
-		// Sort the groups by letter and sort targets within each group
-		const sortedGroups: { letter: string; targets: string[] }[] = []
-		Object.keys(groups)
-			.sort((a, b) => {
-				// Put '#' (non-alphabetic) group at the start
-				if (a === "#") return -1
-				if (b === "#") return 1
-				return a.localeCompare(b)
-			})
-			.forEach((letter) => {
-				sortedGroups.push({
-					letter,
-					targets: groups[letter].sort()
-				})
-			})
-
-		return sortedGroups
-	})
+			acc[key].push(target)
+			return acc
+		}, {})
+	) as { [key: string]: Target[] }
 
 	let search = $state("")
 	let isRefreshing = $state(false)
@@ -55,26 +35,32 @@
 	}
 
 	// Filter targets in groupedTargets based on search
-	let filteredTargets = $derived(() => {
+	let filteredTargetGroups = $derived(() => {
 		if (!search.trim()) {
-			return groupedTargets()
+			return Object.entries(groupedTargets).map(([key, targets]) => ({
+				letter: key,
+				targets
+			}))
 		}
 		const searchLower = search.toLowerCase()
-		return groupedTargets()
-			.map((group) => ({
-				...group,
-				targets: group.targets.filter((target) => target.toLowerCase().includes(searchLower))
+		return Object.entries(groupedTargets)
+			.map(([key, targets]) => ({
+				letter: key,
+				targets: targets.filter((target) => target.target.toLowerCase().includes(searchLower))
 			}))
 			.filter((group) => group.targets.length > 0)
 	})
 
 	const allTargets = $derived(page.data.targets)
+
 	const allFilteredTargets = $derived(() => {
 		if (!search.trim()) {
 			return allTargets
 		}
 		const searchLower = search.toLowerCase()
-		return allTargets.filter((target: string) => target.toLowerCase().includes(searchLower))
+		return allTargets.filter((target: { target: string }) =>
+			target.target.toLowerCase().includes(searchLower)
+		)
 	})
 </script>
 
@@ -111,10 +97,16 @@
 		</div>
 	</div>
 	<hr class="border-surface-500" />
-
-	{#if filteredTargets().length > 0}
-		{#each filteredTargets() as targetGroup, i (i)}
-			<TargetListItem letter={targetGroup.letter} targets={targetGroup.targets} />
+	{#if allFilteredTargets().length > 0}
+		{#each filteredTargetGroups() as targetGroup, index (index)}
+			<div class="flex flex-col lg:gap-4 gap-2">
+				<h3 class="text-primary-500 h3 font-bold">{targetGroup.letter}</h3>
+				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
+					{#each targetGroup.targets as target (target.target)}
+						<TargetListItem {target} />
+					{/each}
+				</div>
+			</div>
 		{/each}
 	{:else}
 		<div class="flex flex-col gap-4">
