@@ -13,7 +13,7 @@
 	let manufacturer = $derived(data.manufacturer)
 
 	const title = $derived(`${targetName} - Betaflight Support Explorer`)
-	const description = $derived(`Support data for ${targetName} (${manufacturer.name})`)
+	const description = $derived(`Target config for ${targetName} (${manufacturer.name})`)
 </script>
 
 <svelte:head>
