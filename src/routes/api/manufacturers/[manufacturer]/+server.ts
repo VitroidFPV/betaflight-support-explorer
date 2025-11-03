@@ -7,7 +7,13 @@ const octokit = new Octokit({
 	auth: GITHUB_PAT
 })
 
-export async function GET() {
+export async function GET({ params }) {
+	const { manufacturer } = params
+
+	if (!manufacturer) {
+		return json({ error: "Manufacturer parameter is required" }, { status: 400 })
+	}
+
 	try {
 		const { data: manufacturers } = await octokit.request(
 			"GET /repos/{owner}/{repo}/contents/{path}",
@@ -30,15 +36,22 @@ export async function GET() {
 			formattedManufacturers = table.map((line) => {
 				// skip first | and last |
 				const [id, name, contact] = line.split("|").slice(1, -1)
-				return { id, name, contact }
+				return { id: id.trim(), name: name.trim(), contact: contact.trim() }
 			})
 		} else {
 			console.log("No content available")
 		}
 
-		return json(formattedManufacturers)
+		// Find the specific manufacturer by ID
+		const foundManufacturer = formattedManufacturers.find((m) => m.id === manufacturer)
+
+		if (!foundManufacturer) {
+			return json({ error: `Manufacturer "${manufacturer}" not found` }, { status: 404 })
+		}
+
+		return json(foundManufacturer)
 	} catch (error) {
-		console.error("Error fetching manufacturers:", error)
-		return json([], { status: 500 })
+		console.error("Error fetching manufacturer:", error)
+		return json({ error: "Internal server error" }, { status: 500 })
 	}
 }
