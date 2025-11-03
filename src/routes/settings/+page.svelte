@@ -18,10 +18,16 @@
 </script>
 
 <svelte:head>
-	<title>{"Betaflight Support Explorer" + " - " + "Settings"}</title>
+	<title>Settings - Betaflight Support Explorer</title>
+	<meta name="description" content="Configure the settings for the Betaflight Support Explorer" />
 
+	<meta property="og:title" content="Settings - Betaflight Support Explorer" />
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/settings" />
 	<meta property="og:type" content="website" />
+	<meta
+		property="og:description"
+		content="Configure the settings for the Betaflight Support Explorer"
+	/>
 	<meta name="theme-color" content="#ffbb00" />
 </svelte:head>
 

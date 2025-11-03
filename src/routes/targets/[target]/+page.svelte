@@ -11,7 +11,21 @@
 
 	let target = $derived(data.config)
 	let manufacturer = $derived(data.manufacturer)
+
+	const title = $derived(`${targetName} - Betaflight Support Explorer`)
+	const description = $derived(`Support data for ${targetName} (${manufacturer.name})`)
 </script>
+
+<svelte:head>
+	<title>{title}</title>
+	<meta name="description" content={description} />
+
+	<meta property="og:title" content={title} />
+	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
+	<meta property="og:type" content="website" />
+	<meta property="og:description" content={description} />
+	<meta name="theme-color" content="#ffbb00" />
+</svelte:head>
 
 <div
 	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
