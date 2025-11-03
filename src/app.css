@@ -2,15 +2,13 @@
 
 @import "@skeletonlabs/skeleton";
 
-@import "@skeletonlabs/skeleton/optional/presets";
-
 /*
   Add your theme import for your theme: "yellow-theme" here
 */
 
 @import "../yellow-theme.css";
 
-@source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
+@import '@skeletonlabs/skeleton-svelte';
 @source "/routes/**/*.svelte";
 
 @plugin '@tailwindcss/forms';
