@@ -3,11 +3,17 @@ import { persisted } from "svelte-persisted-store"
 export type Manufacturer = {
 	id: string
 	name: string
-	contact: string
+	url: string
+}
+
+export type Target = {
+	target: string
+	manufacturer: string
+	mcu: string
 }
 
 export type CachedData = {
-	targets: string[]
+	targets: Target[]
 	manufacturers: Manufacturer[]
 	lastFetched: number
 	cacheVersion: string
@@ -35,7 +41,7 @@ export function isCacheValid(cachedData: CachedData): boolean {
 	return isWithinTimeLimit && isCorrectVersion && hasData
 }
 
-export function updateCache(targets: string[], manufacturers: Manufacturer[]): void {
+export function updateCache(targets: Target[], manufacturers: Manufacturer[]): void {
 	targetsCache.set({
 		targets,
 		manufacturers,
