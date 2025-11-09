@@ -4,6 +4,7 @@
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { Github } from "@steeze-ui/lucide-icons"
+	import TargetReleases from "$components/TargetReleases.svelte"
 	// console.log(page.params.target)
 	const targetName = page.params.target
 
@@ -11,6 +12,7 @@
 
 	let target = $derived(data.config)
 	let manufacturer = $derived(data.manufacturer)
+	let cloudBuildTarget = $derived(data.cloudBuildTarget)
 
 	const title = $derived(`${targetName} - Betaflight Support Explorer`)
 	const description = $derived(`Target config for ${targetName} (${manufacturer.name})`)
@@ -44,6 +46,7 @@
 			<Icon src={Github} size="1.5rem" />
 		</a>
 	</div>
+	<TargetReleases releases={cloudBuildTarget.releases} />
 	<CodeBlock
 		code={target.content}
 		lang="c"
