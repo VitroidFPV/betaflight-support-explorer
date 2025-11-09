@@ -23,6 +23,19 @@
 		}
 	}
 
+	function releaseTypeToColor(type: string): string {
+		switch (type) {
+			case "Stable":
+				return "fancy-link-success"
+			case "Unstable":
+				return "fancy-link-error"
+			case "ReleaseCandidate":
+				return "fancy-link-warning"
+			default:
+				return "fancy-link"
+		}
+	}
+
 	function releaseToUrl(release: CBRelease): string {
 		if (release.label === "latest") {
 			return `https://github.com/betaflight/betaflight/commits/master/`
@@ -52,7 +65,9 @@
 					<div class="flex gap-2 card preset-tonal-secondary p-2 justify-between">
 						<a
 							href={releaseToUrl(release)}
-							class="text-xl text-primary-500 font-bold whitespace-nowrap fancy-link flex gap-1 items-center"
+							class="text-xl {releaseTypeToColor(
+								release.type
+							)} font-bold whitespace-nowrap fancy-link flex gap-1 items-center"
 						>
 							{release.release}
 							<span class="self-start">

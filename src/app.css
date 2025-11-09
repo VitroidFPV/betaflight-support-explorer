@@ -75,6 +75,20 @@ body {
 	padding-right: 0.25rem;
 }
 
+.fancy-link-success {
+	background-image: linear-gradient(to right, var(--color-success-500), var(--color-success-500));
+	color: var(--color-success-500);
+}
+
+.fancy-link-error {
+	background-image: linear-gradient(to right, var(--color-error-500), var(--color-error-500));
+	color: var(--color-error-500);
+}
+
+.fancy-link-warning {
+	background-image: linear-gradient(to right, var(--color-warning-500), var(--color-warning-500));
+	color: var(--color-warning-500);
+}
 .fancy-link:hover {
 	background-size: 100% 100%;
 	color: var(--color-black);
