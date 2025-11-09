@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Icon } from "@steeze-ui/svelte-icon"
 	import { Github } from "@steeze-ui/lucide-icons"
-	import type { Target } from "$lib/stores/targetsCache.js"
+	import type { CBTarget } from "$lib/cloudBuildTypes"
 
 	interface Props {
-		target: Target
+		target: CBTarget
 	}
 
 	let { target }: Props = $props()

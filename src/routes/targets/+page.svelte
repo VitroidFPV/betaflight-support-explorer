@@ -6,11 +6,11 @@
 	import { clearCache } from "$lib/stores/targetsCache"
 	import { invalidateAll } from "$app/navigation"
 	import TargetListItem from "$components/TargetListItem.svelte"
-	import type { Target } from "$lib/stores/targetsCache.js"
+	import type { CBTarget } from "$lib/cloudBuildTypes"
 
 	// Group targets by first character
 	let groupedTargets = $derived(
-		page.data.targets.reduce((acc: { [key: string]: Target[] }, target: Target) => {
+		page.data.targets.reduce((acc: { [key: string]: CBTarget[] }, target: CBTarget) => {
 			const firstChar = target.target.charAt(0).toUpperCase()
 			const key = /[A-Z]/.test(firstChar) ? firstChar : "#"
 			if (!acc[key]) {
@@ -19,7 +19,7 @@
 			acc[key].push(target)
 			return acc
 		}, {})
-	) as { [key: string]: Target[] }
+	) as { [key: string]: CBTarget[] }
 
 	let search = $state("")
 	let isRefreshing = $state(false)
@@ -58,7 +58,7 @@
 			return allTargets
 		}
 		const searchLower = search.toLowerCase()
-		return allTargets.filter((target: { target: string }) =>
+		return allTargets.filter((target: CBTarget) =>
 			target.target.toLowerCase().includes(searchLower)
 		)
 	})
