@@ -1,7 +1,7 @@
 import { GITHUB_PAT } from "$env/static/private"
 import { Octokit } from "octokit"
 import { json } from "@sveltejs/kit"
-import type { Manufacturer } from "$lib/stores/targetsCache.js"
+import type { CBManufacturer } from "$lib/cloudBuildTypes"
 
 const octokit = new Octokit({
 	auth: GITHUB_PAT
@@ -18,7 +18,7 @@ export async function GET() {
 			}
 		)
 
-		let formattedManufacturers: Manufacturer[] = []
+		let formattedManufacturers: CBManufacturer[] = []
 
 		if (Array.isArray(manufacturers)) {
 			console.log("Received array of files/directories")

@@ -53,6 +53,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 	return {
 		config,
-		manufacturer
+		manufacturer,
+		cloudBuildTarget
 	}
 }

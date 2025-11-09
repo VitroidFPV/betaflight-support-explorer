@@ -2,7 +2,7 @@ import type { PageLoad } from "./$types"
 import { browser } from "$app/environment"
 import { get } from "svelte/store"
 import { targetsCache, isCacheValid, updateCache } from "$lib/stores/targetsCache.js"
-import type { Manufacturer, Target } from "$lib/stores/targetsCache.js"
+import type { CBManufacturer, CBTarget } from "$lib/cloudBuildTypes"
 
 export const load: PageLoad = async ({ fetch }) => {
 	// If we're in the browser, check cache first
@@ -27,8 +27,8 @@ export const load: PageLoad = async ({ fetch }) => {
 		fetch("https://build.betaflight.com/api/targets")
 	])
 
-	const manufacturers: Manufacturer[] = await manufacturersResponse.json()
-	const targets: Target[] = await targetsResponse.json()
+	const manufacturers: CBManufacturer[] = await manufacturersResponse.json()
+	const targets: CBTarget[] = await targetsResponse.json()
 
 	// Combine targets with their manufacturer info as an array of objects
 	const targetsWithManufacturers = targets.map((target) => {
