@@ -98,7 +98,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 		check: (data) => {
 			const gyroRateStr = data.status?.["GYRO rate"] as string | undefined
 			const pidDenomValue = data.commonSettings["Denominations"]?.["pidDenom"]?.value
-			const mcu = data.build?.Config?.MCU
+			const mcu = data.build?.config?.mcu
 
 			if (!gyroRateStr || !pidDenomValue || !mcu) return false
 
@@ -131,7 +131,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 				? parseInt(escProtocol.split("DSHOT")[1])
 				: null
 			// null if not DSHOT, otherwise number
-			const mcu = data.build?.Config?.MCU
+			const mcu = data.build?.config?.mcu
 
 			if (!dshotRate || !mcu) return false
 
@@ -204,7 +204,7 @@ export const problemDefinitions: ProblemDefinition[] = [
 		severity: "error",
 		check: (data) => {
 			const cliRxProtocol = data.commonSettings["Receiver Settings"]?.["rxProtocol"]?.value
-			const buildOptions = data.build?.Request?.Options
+			const buildOptions = data.build?.request?.options
 
 			// Skip check if we don't have the necessary data
 			if (!cliRxProtocol || !buildOptions || cliRxProtocol === "NONE") {
@@ -266,7 +266,7 @@ If your analog OSD is working fine, you don't need to do anything.
 			`,
 		severity: "warning",
 		check: (data) => {
-			const buildOptions = data.build?.Request?.Options
+			const buildOptions = data.build?.request?.options
 			if (!buildOptions) return false
 			return buildOptions.includes("USE_OSD_SD") && buildOptions.includes("USE_OSD_HD")
 		}
@@ -280,10 +280,10 @@ If your analog OSD is working fine, you don't need to do anything.
 				It can be fixed by using those other versions, or flashing with the <strong>NONCOMPLIANT_SMARTAUDIO</strong> custom define added. If your VTX works fine, you don't need to do anything.`,
 		severity: "warning",
 		check: (data) => {
-			const buildOptions = data.build?.Request
+			const buildOptions = data.build?.request
 			if (!buildOptions) return false
-			const isBetaflight452 = data.build?.Request?.Release?.startsWith("4.5.2") ?? false
-			const includesNoncompliantSmartAudio = data.build?.Request.Options.includes(
+			const isBetaflight452 = data.build?.request?.release?.startsWith("4.5.2") ?? false
+			const includesNoncompliantSmartAudio = data.build?.request.options.includes(
 				"USE_NONCOMPLIANT_SMARTAUDIO"
 			)
 			const isSmartAudioSet =

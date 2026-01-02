@@ -17,15 +17,15 @@ import { previousIds } from "$lib/stores/previousIds"
 import { get } from "svelte/store"
 
 type BuildConfig = {
-	Manufacturer: string
-	Target: string
-	MCU: string
+	manufacturer: string
+	target: string
+	mcu: string
 }
 
 type BuildRequest = {
-	Release: string
-	Tag: string
-	Options: string[]
+	release: string
+	tag: string
+	options: string[]
 }
 
 type PreviousId = {
@@ -60,11 +60,11 @@ function addPreviousId(
 			{
 				id: currentId,
 				createdAt: Date.now(),
-				manufacturer: config.Manufacturer,
-				target: config.Target,
-				version: request.Release,
+				manufacturer: config.manufacturer,
+				target: config.target,
+				version: request.release,
 				problemDescription: problem ?? "",
-				options: request.Options,
+				options: request.options,
 				armDisableFlags: ArmingDisableFlags
 			}
 		])
@@ -221,8 +221,8 @@ export const load = (async ({ params, fetch }) => {
 		// Add the support ID to the previous IDs store
 		addPreviousId(
 			key,
-			build.Config,
-			build.Request,
+			build.config,
+			build.request,
 			problem,
 			(status?.["Arming disable flags"] as string)?.split(" ") ?? []
 		)
@@ -251,8 +251,8 @@ export const load = (async ({ params, fetch }) => {
 			)
 		}
 
-		const description = build?.Config
-			? `Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}`
+		const description = build?.config
+			? `Firmware: ${build.config.manufacturer}/${build.config.target} \n Release: ${build.request.release} \n Tag: ${build.request.tag} \n Status: ${build.status} \n Submitted: ${formatTime(build.submitted)} \n Elapsed: ${build.elapsed}ms \n \n Options: ${build.request.options.join(", ")}`
 			: "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds"
 
 		return {
@@ -281,8 +281,8 @@ export const load = (async ({ params, fetch }) => {
 		)
 	}
 
-	const description = build?.Config
-		? `Firmware: ${build.Config.Manufacturer}/${build.Config.Target} \n Release: ${build.Request.Release} \n Tag: ${build.Request.Tag} \n Status: ${build.Status} \n Submitted: ${formatTime(build.Submitted)} \n Elapsed: ${build.Elapsed}ms \n \n Options: ${build.Request.Options.join(", ")}`
+	const description = build?.config
+		? `Firmware: ${build.config.manufacturer}/${build.config.target} \n Release: ${build.request.release} \n Tag: ${build.request.tag} \n Status: ${build.status} \n Submitted: ${formatTime(build.submitted)} \n Elapsed: ${build.elapsed}ms \n \n Options: ${build.request.options.join(", ")}`
 		: "Betaflight Support Explorer - Analyze Betaflight support data and cloud builds"
 
 	return { build, detectedProblems: [], description }

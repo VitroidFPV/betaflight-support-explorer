@@ -12,24 +12,24 @@ interface CommonSettings {
 }
 
 interface BuildConfig {
-	Manufacturer: string
-	Target: string
-	MCU: string
+	manufacturer: string
+	target: string
+	mcu: string
 }
 
 interface BuildRequest {
-	Release: string
-	Tag: string
-	Options: string[]
+	release: string
+	tag: string
+	options: string[]
 }
 
 interface Build {
-	Status: string
-	Identifier: string
-	Submitted: string
-	Elapsed: number
-	Config: BuildConfig
-	Request: BuildRequest
+	status: string
+	identifier: string
+	submitted: string
+	elapsed: number
+	config: BuildConfig
+	request: BuildRequest
 }
 
 interface SerialPort {

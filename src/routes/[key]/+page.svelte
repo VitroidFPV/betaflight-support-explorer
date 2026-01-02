@@ -28,7 +28,7 @@
 	let { build, status, problem, dump, dma, timer, serial, modes, detectedProblems, description } =
 		$derived(data)
 	let commonSettings = $derived(data.commonSettings as CommonSettings)
-	let { Config: config, Request: request } = $derived(build)
+	let { config, request } = $derived(build)
 
 	// Calculate PID Rate from gyro rate and pidDenom
 	let pidRate = $derived(
@@ -63,7 +63,7 @@
 
 	<meta
 		property="og:title"
-		content={config?.Target ? `Support Data for ${config.Target}` : "Betaflight Support Explorer"}
+		content={config?.target ? `Support Data for ${config.target}` : "Betaflight Support Explorer"}
 	/>
 	<meta property="og:url" content="https://betaflight-support-explorer.netlify.app/" />
 	<meta property="og:type" content="website" />
@@ -87,12 +87,12 @@
 					<div class="flex flex-col">
 						<div class="flex justify-between">
 							<div>
-								<span class="text-neutral-400 mr-1 text-base">{config.Manufacturer}/</span
-								>{config.Target}
+								<span class="text-neutral-400 mr-1 text-base">{config.manufacturer}/</span
+								>{config.target}
 							</div>
 							<div class="flex gap-2">
 								<a
-									href={`/targets/${config.Target}`}
+									href={`/targets/${config.target}`}
 									class="btn preset-filled-primary-500 btn-sm"
 									data-sveltekit-preload-data="hover"
 									data-sveltekit-preload-code="eager"
@@ -101,7 +101,7 @@
 									<span>View Target</span>
 								</a>
 								<a
-									href={`https://github.com/betaflight/config/blob/master/configs/${config.Target}/config.h`}
+									href={`https://github.com/betaflight/config/blob/master/configs/${config.target}/config.h`}
 									class="btn preset-filled-primary-500 btn-sm"
 								>
 									<span><Icon src={Github} size="1rem" /></span>
@@ -118,15 +118,15 @@
 							<div>
 								<div class="flex flex-row">
 									<span class="text-neutral-400 mr-1 text-base">Release:</span>
-									<span class="text-base">{request.Release}</span>
+									<span class="text-base">{request.release}</span>
 								</div>
 								<div class="flex flex-row">
 									<span class="text-neutral-400 mr-1 text-base">Tag:</span>
-									<span class="text-base">{request.Tag}</span>
+									<span class="text-base">{request.tag}</span>
 								</div>
 							</div>
 							<a
-								href="https://github.com/betaflight/betaflight/releases/tag/{request.Release}"
+								href="https://github.com/betaflight/betaflight/releases/tag/{request.release}"
 								target="_blank"
 								class="btn preset-filled-secondary-500 btn-sm"
 							>
@@ -144,11 +144,11 @@
 					<div class="flex flex-row items-center w-full justify-between">
 						<div class="flex">
 							<span class="text-neutral-400 mr-1 text-base">Status:</span>
-							<span class="badge preset-filled-success-500">{build.Status}</span>
+							<span class="badge preset-filled-success-500">{build.status}</span>
 						</div>
 						<div class="flex gap-2 flex-wrap w-min">
 							<a
-								href="https://build.betaflight.com/api/builds/{build.Identifier}/log"
+								href="https://build.betaflight.com/api/builds/{build.identifier}/log"
 								target="_blank"
 								class="btn preset-filled-secondary-500 btn-sm"
 							>
@@ -156,7 +156,7 @@
 								<span>View Log</span>
 							</a>
 							<a
-								href="https://build.betaflight.com/api/builds/{build.Identifier}/hex"
+								href="https://build.betaflight.com/api/builds/{build.identifier}/hex"
 								target="_blank"
 								class="btn preset-filled-primary-500 btn-sm"
 							>
@@ -169,11 +169,11 @@
 					<div class="flex flex-col">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
-							<span class="text-base">{formatTime(build.Submitted)}</span>
+							<span class="text-base">{formatTime(build.submitted)}</span>
 						</div>
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">Elapsed:</span>
-							<span class="text-base">{build.Elapsed}</span>
+							<span class="text-base">{build.elapsed}</span>
 							<span class="text-neutral-400 mr-1 text-base">ms</span>
 						</div>
 					</div>
@@ -245,7 +245,7 @@
 				<header class="card-header text-primary-500 h3 font-bold">Options</header>
 				<section class="text-lg">
 					<div class="flex gap-2 flex-row flex-wrap">
-						{#each request.Options as option, i (i)}
+						{#each request.options as option, i (i)}
 							<div class="badge preset-tonal-primary">{option}</div>
 						{/each}
 					</div>
@@ -258,7 +258,7 @@
 					<section class="text-lg">
 						<div class="flex flex-row">
 							<span class="text-neutral-400 mr-1 text-base">MCU:</span>
-							<span class="text-base">{config.MCU}</span>
+							<span class="text-base">{config.mcu}</span>
 						</div>
 						<div class="flex flex-col md:flex-row">
 							<div class="flex flex-row">
