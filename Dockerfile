@@ -10,7 +10,8 @@ RUN npm ci
 # Copy the rest of the application
 COPY . .
 
-# Build the application
+# Build the application with node adapter
+ENV ADAPTER=node
 RUN npm run build
 
 # Remove development dependencies

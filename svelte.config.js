@@ -1,5 +1,9 @@
-import adapter from "@sveltejs/adapter-node"
+import adapterAuto from "@sveltejs/adapter-auto"
+import adapterNode from "@sveltejs/adapter-node"
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte"
+
+// Use adapter-node for Docker/local Node, adapter-auto for Netlify/Cloudflare/Vercel
+const adapter = process.env.ADAPTER === "node" ? adapterNode() : adapterAuto()
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,10 +16,7 @@ const config = {
 		inspector: false
 	},
 	kit: {
-		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
-		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
-		adapter: adapter(),
+		adapter,
 		alias: {
 			$components: "./src/components"
 		}
