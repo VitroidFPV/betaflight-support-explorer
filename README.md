@@ -41,6 +41,38 @@ A web-based tool for analyzing Betaflight firmware support data and build inform
 
 4. Open your browser and navigate to `http://localhost:3000`
 
+## Running in Docker
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/vitroidfpv/betaflight-support-explorer.git
+   cd betaflight-support-explorer
+   ```
+
+2. Create a `.env` file based on the `.env.example`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   And set your `GITHUB_PAT` in the `.env` file. Create one in the [GitHub Personal Access Tokens settings](https://github.com/settings/tokens)
+
+3. Build and run the Docker container:
+
+   ```bash
+   docker build -t betaflight-support-explorer .
+   docker run -d -p 3000:3000 --env-file .env betaflight-support-explorer
+   ```
+
+   or using Docker Compose:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Open your browser and navigate to `http://localhost:3000`
+
 ## Usage
 
 1. **Get Support ID**: Generate a Support ID in Betaflight Configurator in the CLI tab

@@ -1,0 +1,15 @@
+node_modules
+.svelte-kit
+build
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+npm-debug.log
+README.md
+LICENSE
+.github
+.vscode
+docker-compose.yaml
+Dockerfile

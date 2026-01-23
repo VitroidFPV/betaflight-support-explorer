@@ -1,0 +1,10 @@
+services:
+  betaflight-support-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: betaflight-support-explorer
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file: .env
