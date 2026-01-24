@@ -72,10 +72,10 @@
 </script>
 
 <nav
-	class="flex sticky bg-surface-950 top-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950"
+	class="flex fixed bg-surface-950 top-0 left-0 right-0 z-10 justify-between items-center h-fit lg:h-16 shadow-[0_-0.5rem_0.5rem_1rem] shadow-surface-950"
 	data-sveltekit-preload-data="hover"
 >
-	<div class="grid grid-cols-2 lg:grid-cols-[2fr_3fr_2fr] w-full lg:px-8 px-4 gap-3 py-2">
+	<div class="grid grid-cols-2 lg:grid-cols-[2fr_2fr_2fr] w-full lg:px-8 px-4 gap-3 py-2">
 		<div class="flex justify-start xl:gap-8 lg:gap-4 gap-2 items-center order-1">
 			<a href="/" class="h-fit fancy-link" data-active={page.url.pathname === "/"}>home</a>
 			<a
@@ -84,13 +84,13 @@
 				data-active={page.url.pathname.startsWith("/targets")}>targets</a
 			>
 		</div>
-		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2">
+		<div class="flex justify-center col-span-2 lg:col-span-1 order-3 lg:order-2 min-w-[28rem]">
 			<!-- <input type="search" placeholder="Search..." class="input input-sm" /> -->
 			<form
 				class="input-group grid-cols-[auto_1fr_auto] w-full rounded-full focus-within:ring-[3px] focus-within:ring-primary-500"
 				onsubmit={preventDefault(searchNewSupport)}
 			>
-				<button class="ig-btn preset-tonal-secondary" onclick={paste} disabled={isPasting}>
+				<button class="ig-btn preset-tonal-secondary pr-2" onclick={paste} disabled={isPasting}>
 					<Icon src={ClipboardPaste} size="1.5rem" />
 				</button>
 				<input
@@ -101,7 +101,7 @@
 					onkeydown={(e) => e.key === "Enter" && searchNewSupport()}
 				/>
 				<button
-					class={"preset-tonal-secondary disabled:cursor-not-allowed ig-btn !border-none" +
+					class={"preset-tonal-secondary disabled:cursor-not-allowed ig-btn !border-none pl-2" +
 						(isLoading ? " cursor-none" : "")}
 					disabled={!hasValidId}
 				>
@@ -123,20 +123,20 @@
 				rel="noopener noreferrer"
 			>
 				<Icon src={Coffee} size="1.25rem" />
-				<span class="hidden lg:block">support me</span>
+				<span class="hidden xl:block">support the app</span>
 				<span class="self-start">
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>
 			</a>
 			<!-- <button class="btn btn-sm">settings</button> -->
 			<a
-				href="https://github.com/VitroidFPV/betaflight-support-explorer"
+				href="https://github.com/betaflight/betaflight-support-explorer"
 				class="h-fit fancy-link flex gap-1 items-center"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
 				<Icon src={Github} size="1.25rem" />
-				<span class="hidden lg:block">source</span>
+				<span class="hidden xl:block">source</span>
 				<span class="self-start">
 					<Icon src={ArrowUpRight} size="0.75rem" />
 				</span>
