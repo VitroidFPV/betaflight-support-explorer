@@ -19,7 +19,8 @@
 	<meta name="theme-color" content="#ffbb00" />
 </svelte:head>
 
-<div class="grid grid-rows-[auto_1fr_auto] max-w-screen overflow-x-hidden">
+<!-- Padding top for the fixed navbar -->
+<div class="max-w-screen overflow-x-hidden pt-32 lg:pt-16">
 	<Nav />
 
 	<Tooltip.Provider delayDuration={300}>{@render children?.()}</Tooltip.Provider>
