@@ -41,14 +41,15 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		throw error(response.status, config.error || "Failed to fetch target config")
 	}
 
-	const manufacturerId = config.content.match(/MANUFACTURER_ID\s+(\w+)/)[1]
+	const manufacturerId = config.content.match(/MANUFACTURER_ID\s+(\w+)/)?.[1] ?? "UNKNOWN"
 	const manufacturerResponse = await fetch(
 		`https://build.betaflight.com/api/manufacturers/${manufacturerId}`
 	)
-	const manufacturer = await manufacturerResponse.json()
 
-	if (!manufacturerResponse.ok) {
-		throw error(manufacturerResponse.status, manufacturer.error || "Failed to fetch manufacturer")
+	// Fallback to using the manufacturer ID if the API lookup fails
+	let manufacturer = { id: manufacturerId, name: manufacturerId, contact: "" }
+	if (manufacturerResponse.ok) {
+		manufacturer = await manufacturerResponse.json()
 	}
 
 	return {
