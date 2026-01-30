@@ -52,11 +52,14 @@ const hiddenProblems: string[] = []
 
 const showHideWarning = true
 
+const showFullText = false
+
 const allSettings = {
 	idPreviewCardSettings: idPreviewCardSettings,
 	showDataAnalysis: showDataAnalysis,
 	hiddenProblems: hiddenProblems,
-	showHideWarning: showHideWarning
+	showHideWarning: showHideWarning,
+	showFullText: showFullText
 }
 
 export const settings = persisted("settings", allSettings)

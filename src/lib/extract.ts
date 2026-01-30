@@ -40,11 +40,34 @@ export function extractProblem(data: string): string | null {
 	return match ? match[1].trim() : null
 }
 
-export function extractDump(data: string): string | null {
-	// match everything between "# dump master" and "batch end"
-	const match = data.match(/# dump master([\s\S]*?)batch end/)
+export function extractDump(data: string, showFullText: boolean = false): string | null {
+	if (showFullText) {
+		// Find the position of "# version"
+		const versionIndex = data.indexOf("# version")
+		if (versionIndex === -1) return null
 
-	return match ? match[1].trim() : null
+		// Find the start of the line before "# version" by looking backwards for a newline
+		let startIndex = versionIndex
+		// First, go back past any whitespace/newlines to the previous line's content
+		while (startIndex > 0 && (data[startIndex - 1] === "\n" || data[startIndex - 1] === "\r")) {
+			startIndex--
+		}
+		// Then find the start of that previous line
+		while (startIndex > 0 && data[startIndex - 1] !== "\n") {
+			startIndex--
+		}
+
+		// Find "batch end" position
+		const batchEndIndex = data.indexOf("batch end")
+		if (batchEndIndex === -1) return null
+
+		const endIndex = batchEndIndex + "batch end".length
+		return data.slice(startIndex, endIndex).trim()
+	} else {
+		// match everything between "# dump master" and "batch end"
+		const match = data.match(/# dump master([\s\S]*?)batch end/)
+		return match ? match[1].trim() : null
+	}
 }
 
 export function extractDma(data: string): { [key: string]: { [key: string]: string } } | null {

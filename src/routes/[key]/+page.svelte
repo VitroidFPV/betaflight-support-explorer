@@ -9,6 +9,8 @@
 	import ProblemDetector from "$components/ProblemDetector.svelte"
 	import { page } from "$app/state"
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
+	import { extractDump } from "$lib/extract"
+	import { settings } from "$lib/stores/settings"
 
 	interface Props {
 		data: PageData
@@ -25,9 +27,12 @@
 		}
 	}
 
-	let { build, status, problem, dump, dma, timer, serial, modes, detectedProblems, description } =
+	let { build, status, problem, dma, timer, serial, modes, detectedProblems, description, support } =
 		$derived(data)
 	let commonSettings = $derived(data.commonSettings as CommonSettings)
+
+	// Extract dump based on showFullText setting
+	let dump = $derived(support ? extractDump(support, $settings.showFullText) : null)
 	let { config, request } = $derived(build)
 
 	// Calculate PID Rate from gyro rate and pidDenom
