@@ -63,6 +63,28 @@
 					</div>
 				</section>
 			</div>
+
+			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
+				<header class="h3 font-bold">Parsing</header>
+				<section class="text-lg flex flex-col gap-2">
+					<div class="flex gap-2 flex-row flex-wrap">
+						<div class="text-neutral-400 mr-1 text-base">
+							Change how the information is parsed from the support data
+						</div>
+					</div>
+					<div class="flex flex-col gap-2">
+						<div class="flex flex-row justify-between">
+							<div class="mr-1 text-base">Show full CLI text:</div>
+							<Switch
+								checked={$settings.showFullText}
+								onCheckedChange={() => ($settings.showFullText = !$settings.showFullText)}
+								thumbInactive="bg-surface-300"
+								controlInactive="bg-surface-500"
+							/>
+						</div>
+					</div>
+				</section>
+			</div>
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
