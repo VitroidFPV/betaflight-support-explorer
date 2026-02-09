@@ -149,3 +149,12 @@ body {
 	border-radius: 0.75rem;
 	padding: 0.5rem;
 }
+
+/* Skeleton Windows theming fix */
+.select,
+.input,
+.textarea,
+.input-group {
+	background-color: var(--color-surface-50-950);
+	color: var(--color-surface-950-50);
+}

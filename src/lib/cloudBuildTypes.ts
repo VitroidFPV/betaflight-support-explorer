@@ -12,6 +12,8 @@ export type CBTarget = {
 	releases: CBRelease[]
 	target: string
 	manufacturer: string
+	mcu: string
+	group: string
 }
 
 export type CBManufacturer = {
