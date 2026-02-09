@@ -35,8 +35,22 @@
 >
 	<div class="flex items-center justify-between gap-4 mt-10">
 		<div class="flex flex-col gap-2">
-			<header class="text-primary-500 h3 font-bold">{targetName}</header>
-			<div class="text-surface-700-300">{manufacturer.name}</div>
+			<div class="flex items-center gap-4">
+				<header class="text-primary-500 h3 font-bold">{targetName}</header>
+				{#if cloudBuildTarget.group === "supported"}
+					<span class="badge preset-filled-success-500 font-semibold">Officially Supported</span>
+				{/if}
+			</div>
+			{#if manufacturer.url}
+				<a
+					href={manufacturer.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="fancy-link w-fit text-surface-300 -ml-1">{manufacturer.name}</a
+				>
+			{:else}
+				<span class="w-fit text-surface-300 -ml-1">{manufacturer.name}</span>
+			{/if}
 		</div>
 		<a
 			href={`https://github.com/betaflight/config/blob/master/configs/${targetName}/config.h`}

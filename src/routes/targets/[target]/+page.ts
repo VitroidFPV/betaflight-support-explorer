@@ -1,25 +1,12 @@
 import type { PageLoad } from "./$types"
 import { error } from "@sveltejs/kit"
+import type { CBManufacturer, CBTarget } from "$lib/cloudBuildTypes"
 
 export const load: PageLoad = async ({ params, fetch }) => {
 	const { target } = params
 
-	type CloudBuildTarget = {
-		releases: {
-			release: string
-			type: string
-			date: string
-			label: string
-			cloudBuild: boolean
-			unifiedConfig: boolean
-			withdrawn: boolean
-		}[]
-		target: string
-		manufacturer: string
-	}
-
 	const targetReleasesResponse = await fetch(`https://build.betaflight.com/api/targets/${target}`)
-	const cloudBuildTarget: CloudBuildTarget = await targetReleasesResponse.json()
+	const cloudBuildTarget: CBTarget = await targetReleasesResponse.json()
 
 	// log all releases and their unifiedConfig value
 	console.log(
@@ -46,8 +33,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		`https://build.betaflight.com/api/manufacturers/${manufacturerId}`
 	)
 
-	// Fallback to using the manufacturer ID if the API lookup fails
-	let manufacturer = { id: manufacturerId, name: manufacturerId, contact: "" }
+	// Fallback to using the manufacturer ID if the API lookup fails (url: null indicates no URL)
+	let manufacturer: CBManufacturer = { id: manufacturerId, name: manufacturerId, url: null }
 	if (manufacturerResponse.ok) {
 		manufacturer = await manufacturerResponse.json()
 	}

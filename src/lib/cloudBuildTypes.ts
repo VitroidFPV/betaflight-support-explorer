@@ -11,11 +11,14 @@ export type CBRelease = {
 export type CBTarget = {
 	releases: CBRelease[]
 	target: string
-	manufacturer: string
+	manufacturer: string // Manufacturer name as listed in Manufacturers.md
+	manufacturerId: string // Manufacturer ID as listed in the target's config.h file
+	mcu: string
+	group: string
 }
 
 export type CBManufacturer = {
 	id: string
 	name: string
-	contact: string
+	url: string | null
 }

@@ -35,7 +35,8 @@ export const load: PageLoad = async ({ fetch }) => {
 		const manufacturer = manufacturers.find((m) => m.id === target.manufacturer)
 		return {
 			...target,
-			manufacturer: manufacturer?.name || "Unknown"
+			manufacturerId: target.manufacturer,
+			manufacturer: manufacturer?.name || "Unknown",
 		}
 	})
 
