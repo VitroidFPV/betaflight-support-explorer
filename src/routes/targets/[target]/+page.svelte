@@ -41,12 +41,16 @@
 					<span class="badge preset-filled-success-500 font-semibold">Officially Supported</span>
 				{/if}
 			</div>
-			<a
-				href={manufacturer.url}
-				target="_blank"
-				rel="noopener noreferrer"
-				class="fancy-link w-fit text-surface-300 -ml-1">{manufacturer.name}</a
-			>
+			{#if manufacturer.url}
+				<a
+					href={manufacturer.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="fancy-link w-fit text-surface-300 -ml-1">{manufacturer.name}</a
+				>
+			{:else}
+				<span class="w-fit text-surface-300 -ml-1">{manufacturer.name}</span>
+			{/if}
 		</div>
 		<a
 			href={`https://github.com/betaflight/config/blob/master/configs/${targetName}/config.h`}

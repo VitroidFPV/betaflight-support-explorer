@@ -33,8 +33,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		`https://build.betaflight.com/api/manufacturers/${manufacturerId}`
 	)
 
-	// Fallback to using the manufacturer ID if the API lookup fails
-	let manufacturer: CBManufacturer = { id: manufacturerId, name: manufacturerId, url: "" }
+	// Fallback to using the manufacturer ID if the API lookup fails (url: null indicates no URL)
+	let manufacturer: CBManufacturer = { id: manufacturerId, name: manufacturerId, url: null }
 	if (manufacturerResponse.ok) {
 		manufacturer = await manufacturerResponse.json()
 	}

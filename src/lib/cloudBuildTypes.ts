@@ -20,5 +20,5 @@ export type CBTarget = {
 export type CBManufacturer = {
 	id: string
 	name: string
-	url: string
+	url: string | null
 }
