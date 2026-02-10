@@ -152,7 +152,7 @@
 	in:fly={{ x: 500, duration: 400 }}
 >
 	<div class="flex items-center gap-4 mt-10 flex-wrap justify-between">
-		<div class="flex items-center gap-4 lg:w-fit w-full">
+		<div class="flex items-center gap-4 lg:w-fit w-full flex-wrap">
 			<!-- <header class="text-primary-500 h3 font-bold h-fit">Targets</header> -->
 			<input
 				type="text"
@@ -165,7 +165,7 @@
 			</div>
 			<span class="vr border-l-2 h-8"></span>
 			<span class="text-sm text-surface-400 whitespace-nowrap">group by / desc/asc:</span>
-			<select class="select h-12" bind:value={selectedGroupOption}>
+			<select class="select h-12 w-fit" bind:value={selectedGroupOption}>
 				{#each groupOptions as option (option.value)}
 					<option value={option.value}>{option.label}</option>
 				{/each}
