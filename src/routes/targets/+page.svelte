@@ -2,9 +2,10 @@
 	import { page } from "$app/state"
 	import { fly } from "svelte/transition"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { RefreshCw, ArrowDown } from "@steeze-ui/lucide-icons"
+	import { RefreshCw, ArrowUp } from "@steeze-ui/lucide-icons"
 	import { clearCache } from "$lib/stores/targetsCache"
-	import { invalidateAll } from "$app/navigation"
+	import { invalidateAll, replaceState } from "$app/navigation"
+	import { browser } from "$app/environment"
 	import TargetListItem from "$components/TargetListItem.svelte"
 	import type { CBTarget } from "$lib/cloudBuildTypes"
 	import { SvelteMap } from "svelte/reactivity"
@@ -16,9 +17,41 @@
 		{ label: "MCU", value: "mcu" }
 	]
 
-	let selectedGroupOption = $state(groupOptions[0].value)
-	let sortDescending = $state(true)
-	let search = $state("")
+	// Initialize state from URL params
+	const groupParam = page.url.searchParams.get("group")
+	const validatedGroup = groupOptions.some((opt) => opt.value === groupParam)
+		? groupParam!
+		: groupOptions[0].value
+	let selectedGroupOption = $state(validatedGroup)
+	let sortDescending = $state(page.url.searchParams.get("sort") === "desc")
+	let search = $state(page.url.searchParams.get("q") || "")
+
+	// Sync state to URL params
+	$effect(() => {
+		if (!browser) return
+
+		const url = new URL(window.location.href)
+
+		if (selectedGroupOption !== groupOptions[0].value) {
+			url.searchParams.set("group", selectedGroupOption)
+		} else {
+			url.searchParams.delete("group")
+		}
+
+		if (sortDescending) {
+			url.searchParams.set("sort", "desc")
+		} else {
+			url.searchParams.delete("sort")
+		}
+
+		if (search.trim()) {
+			url.searchParams.set("q", search.trim())
+		} else {
+			url.searchParams.delete("q")
+		}
+
+		replaceState(url, {})
+	})
 
 	const allTargets = $derived(page.data.targets as CBTarget[])
 
@@ -39,7 +72,7 @@
 
 	// Helper function to sort targets within a group
 	const sortTargets = (targets: CBTarget[]) => {
-		return targets.sort((a, b) => {
+		return targets.toSorted((a, b) => {
 			const comparison = a.target.localeCompare(b.target)
 			return sortDescending ? -comparison : comparison
 		})
@@ -152,7 +185,7 @@
 	in:fly={{ x: 500, duration: 400 }}
 >
 	<div class="flex items-center gap-4 mt-10 flex-wrap justify-between">
-		<div class="flex items-center gap-4 lg:w-fit w-full">
+		<div class="flex items-center gap-4 lg:w-fit w-full flex-wrap">
 			<!-- <header class="text-primary-500 h3 font-bold h-fit">Targets</header> -->
 			<input
 				type="text"
@@ -165,7 +198,7 @@
 			</div>
 			<span class="vr border-l-2 h-8"></span>
 			<span class="text-sm text-surface-400 whitespace-nowrap">group by / desc/asc:</span>
-			<select class="select h-12" bind:value={selectedGroupOption}>
+			<select class="select h-12 w-fit" bind:value={selectedGroupOption}>
 				{#each groupOptions as option (option.value)}
 					<option value={option.value}>{option.label}</option>
 				{/each}
@@ -175,7 +208,7 @@
 				onclick={() => (sortDescending = !sortDescending)}
 			>
 				<Icon
-					src={ArrowDown}
+					src={ArrowUp}
 					size="1.2rem"
 					class={`${sortDescending ? "rotate-180" : ""} transition-transform duration-200`}
 				/>
@@ -198,7 +231,7 @@
 	</div>
 	<hr class="border-surface-500" />
 	{#if allFilteredTargets.length > 0}
-		{#each groupedTargets as targetGroup, index (index)}
+		{#each groupedTargets as targetGroup (targetGroup.groupTitle)}
 			<div class="flex flex-col lg:gap-4 gap-2">
 				<h3 class="text-primary-500 h3 font-bold">{targetGroup.groupTitle}</h3>
 				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
