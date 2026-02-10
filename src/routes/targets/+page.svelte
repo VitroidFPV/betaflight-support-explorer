@@ -18,7 +18,10 @@
 	]
 
 	// Initialize state from URL params
-	let selectedGroupOption = $state(page.url.searchParams.get("group") || groupOptions[0].value)
+	const groupParam = page.url.searchParams.get("group")
+	const validatedGroup =
+		groupOptions.some((opt) => opt.value === groupParam) ? groupParam! : groupOptions[0].value
+	let selectedGroupOption = $state(validatedGroup)
 	let sortDescending = $state(page.url.searchParams.get("sort") === "desc")
 	let search = $state(page.url.searchParams.get("q") || "")
 
