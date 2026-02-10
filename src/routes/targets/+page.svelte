@@ -26,7 +26,8 @@
 	let sortDescending = $state(page.url.searchParams.get("sort") === "desc")
 	let search = $state(page.url.searchParams.get("q") || "")
 
-	// Sync state to URL params
+	// Sync state to URL params (skip first run to avoid calling replaceState before router is initialized)
+	let isFirstRun = true
 	$effect(() => {
 		if (!browser) return
 
@@ -48,6 +49,11 @@
 			url.searchParams.set("q", search.trim())
 		} else {
 			url.searchParams.delete("q")
+		}
+
+		if (isFirstRun) {
+			isFirstRun = false
+			return
 		}
 
 		replaceState(url, {})
