@@ -19,8 +19,9 @@
 
 	// Initialize state from URL params
 	const groupParam = page.url.searchParams.get("group")
-	const validatedGroup =
-		groupOptions.some((opt) => opt.value === groupParam) ? groupParam! : groupOptions[0].value
+	const validatedGroup = groupOptions.some((opt) => opt.value === groupParam)
+		? groupParam!
+		: groupOptions[0].value
 	let selectedGroupOption = $state(validatedGroup)
 	let sortDescending = $state(page.url.searchParams.get("sort") === "desc")
 	let search = $state(page.url.searchParams.get("q") || "")
@@ -71,7 +72,7 @@
 
 	// Helper function to sort targets within a group
 	const sortTargets = (targets: CBTarget[]) => {
-		return targets.sort((a, b) => {
+		return targets.toSorted((a, b) => {
 			const comparison = a.target.localeCompare(b.target)
 			return sortDescending ? -comparison : comparison
 		})
@@ -230,7 +231,7 @@
 	</div>
 	<hr class="border-surface-500" />
 	{#if allFilteredTargets.length > 0}
-		{#each groupedTargets as targetGroup, index (index)}
+		{#each groupedTargets as targetGroup (targetGroup.groupTitle)}
 			<div class="flex flex-col lg:gap-4 gap-2">
 				<h3 class="text-primary-500 h3 font-bold">{targetGroup.groupTitle}</h3>
 				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
