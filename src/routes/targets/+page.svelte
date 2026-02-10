@@ -2,9 +2,10 @@
 	import { page } from "$app/state"
 	import { fly } from "svelte/transition"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { RefreshCw, ArrowDown } from "@steeze-ui/lucide-icons"
+	import { RefreshCw, ArrowUp } from "@steeze-ui/lucide-icons"
 	import { clearCache } from "$lib/stores/targetsCache"
-	import { invalidateAll } from "$app/navigation"
+	import { invalidateAll, replaceState } from "$app/navigation"
+	import { browser } from "$app/environment"
 	import TargetListItem from "$components/TargetListItem.svelte"
 	import type { CBTarget } from "$lib/cloudBuildTypes"
 	import { SvelteMap } from "svelte/reactivity"
@@ -16,9 +17,37 @@
 		{ label: "MCU", value: "mcu" }
 	]
 
-	let selectedGroupOption = $state(groupOptions[0].value)
-	let sortDescending = $state(true)
-	let search = $state("")
+	// Initialize state from URL params
+	let selectedGroupOption = $state(page.url.searchParams.get("group") || groupOptions[0].value)
+	let sortDescending = $state(page.url.searchParams.get("sort") === "desc")
+	let search = $state(page.url.searchParams.get("q") || "")
+
+	// Sync state to URL params
+	$effect(() => {
+		if (!browser) return
+
+		const url = new URL(window.location.href)
+
+		if (selectedGroupOption !== groupOptions[0].value) {
+			url.searchParams.set("group", selectedGroupOption)
+		} else {
+			url.searchParams.delete("group")
+		}
+
+		if (sortDescending) {
+			url.searchParams.set("sort", "desc")
+		} else {
+			url.searchParams.delete("sort")
+		}
+
+		if (search.trim()) {
+			url.searchParams.set("q", search.trim())
+		} else {
+			url.searchParams.delete("q")
+		}
+
+		replaceState(url, {})
+	})
 
 	const allTargets = $derived(page.data.targets as CBTarget[])
 
@@ -175,7 +204,7 @@
 				onclick={() => (sortDescending = !sortDescending)}
 			>
 				<Icon
-					src={ArrowDown}
+					src={ArrowUp}
 					size="1.2rem"
 					class={`${sortDescending ? "rotate-180" : ""} transition-transform duration-200`}
 				/>
