@@ -28,7 +28,12 @@ export async function GET() {
 			formattedManufacturers = table.map((line) => {
 				// skip first | and last |
 				const [id, name, contact] = line.split("|").slice(1, -1)
-				return { id, name, contact }
+				const url = contact.trim()
+				return {
+					id: id.trim(),
+					name: name.trim(),
+					url: url.length > 0 ? url : null
+				}
 			})
 		} else {
 			console.log("No content available")
