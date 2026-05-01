@@ -31,11 +31,14 @@ jobs:
           ADAPTER: cloudflare
         run: npm run build
 
-      # adapter-cloudflare's _worker.js imports siblings under .svelte-kit/
-      # that wrangler bundles at deploy time — keep the whole tree.
+      # wrangler bundles _worker.js (and its npm deps) at deploy time,
+      # so ship the .svelte-kit tree plus the lockfile for a fresh install.
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: dist-files
-          path: .svelte-kit
+          path: |
+            .svelte-kit
+            package.json
+            package-lock.json
           include-hidden-files: true

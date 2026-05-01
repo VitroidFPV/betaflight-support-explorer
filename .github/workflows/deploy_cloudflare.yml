@@ -43,7 +43,17 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: dist-files
-          path: .svelte-kit
+
+      - name: Install node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # --ignore-scripts: deps must be present for esbuild to bundle the
+      # worker, but no PR lifecycle scripts run alongside the deploy secrets.
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
 
       - name: Deploy to Cloudflare Pages
         id: deploy
