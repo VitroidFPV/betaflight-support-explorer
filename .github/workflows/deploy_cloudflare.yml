@@ -43,7 +43,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: dist-files
-          path: .svelte-kit/cloudflare
+          path: .svelte-kit
 
       - name: Deploy to Cloudflare Pages
         id: deploy
