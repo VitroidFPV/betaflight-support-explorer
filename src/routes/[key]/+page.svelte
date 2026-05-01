@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from "./$types"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { Download, BookOpen, FileScan, Github } from "@steeze-ui/lucide-icons"
+	import { Download, BookOpen, FileScan, Github, TriangleAlert } from "@steeze-ui/lucide-icons"
 	import { Accordion } from "@skeletonlabs/skeleton-svelte"
 	import { fly } from "svelte/transition"
 	import Ports from "$components/Ports.svelte"
@@ -27,13 +27,23 @@
 		}
 	}
 
-	let { build, status, problem, dma, timer, serial, modes, detectedProblems, description, support } =
-		$derived(data)
+	let {
+		build,
+		status,
+		problem,
+		dma,
+		timer,
+		serial,
+		modes,
+		detectedProblems,
+		description,
+		support
+	} = $derived(data)
 	let commonSettings = $derived(data.commonSettings as CommonSettings)
 
 	// Extract dump based on showFullText setting
 	let dump = $derived(support ? extractDump(support, $settings.showFullText) : null)
-	let { config, request } = $derived(build)
+	let { config, request } = $derived(build || { config: null, request: null })
 
 	// Calculate PID Rate from gyro rate and pidDenom
 	let pidRate = $derived(
@@ -80,110 +90,135 @@
 	class="flex flex-col h-full max-w-screen md:p-16 md:pt-8 lg:p-4 p-2 pb-6 2xl:px-40 gap-6 relative"
 	in:fly={{ x: 500, duration: 400 }}
 >
+	{#if build.isLocal}
+		<div class="card preset-tonal-warning p-4">
+			<div class="flex items-center gap-2">
+				<Icon src={TriangleAlert} size="1.2rem" class="text-warning-500" />
+				<span class="text-warning-500 font-semibold">Build Data Missing</span>
+			</div>
+			<p class="mt-2 text-sm">
+				This Support ID is missing a valid Cloud Build Key, likely from locally built firmware.
+				Build information will not be available.
+			</p>
+		</div>
+	{/if}
+
 	{#if detectedProblems}
 		<ProblemDetector problems={detectedProblems} />
 	{/if}
 
 	<div class="grid md:grid-cols-2 grid-cols-1 gap-6">
 		<div class="flex flex-col w-full gap-6">
-			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
-				<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
-				<section class="text-lg">
-					<div class="flex flex-col">
-						<div class="flex justify-between">
-							<div>
-								<span class="text-neutral-400 mr-1 text-base">{config.manufacturer}/</span
-								>{config.target}
+			{#if config}
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
+					<header class="card-header text-primary-500 h3 font-bold">Firmware</header>
+					<section class="text-lg">
+						<div class="flex flex-col">
+							<div class="flex justify-between">
+								<div>
+									<span class="text-neutral-400 mr-1 text-base">{config.manufacturer}/</span
+									>{config.target}
+								</div>
+								<div class="flex gap-2">
+									{#if !build.isLocal}
+										<a
+											href={`/targets/${config.target}`}
+											class="btn preset-filled-primary-500 btn-sm"
+											data-sveltekit-preload-data="hover"
+											data-sveltekit-preload-code="eager"
+										>
+											<span><Icon src={FileScan} size="1rem" /></span>
+											<span>View Target</span>
+										</a>
+										<a
+											href={`https://github.com/betaflight/config/blob/master/configs/${config.target}/config.h`}
+											class="btn preset-filled-primary-500 btn-sm"
+										>
+											<span><Icon src={Github} size="1rem" /></span>
+											<span>Open Target</span>
+										</a>
+										<!-- <a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
+											<span><Icon src={BookOpen} size="1rem" /></span>
+											<span>Wiki</span>
+										</a> -->
+									{/if}
+								</div>
 							</div>
-							<div class="flex gap-2">
+							{#if request}
+								<hr class="hr border-surface-500 my-4 border-t-2" />
+								<div class="flex justify-between items-center">
+									<div>
+										<div class="flex flex-row">
+											<span class="text-neutral-400 mr-1 text-base">Release:</span>
+											<span class="text-base">{request.release}</span>
+										</div>
+										{#if request.tag}
+											<div class="flex flex-row">
+												<span class="text-neutral-400 mr-1 text-base">Tag:</span>
+												<span class="text-base">{request.tag}</span>
+											</div>
+										{/if}
+									</div>
+									{#if !build.isLocal}
+										<a
+											href="https://github.com/betaflight/betaflight/releases/tag/{request.release}"
+											target="_blank"
+											class="btn preset-filled-secondary-500 btn-sm"
+										>
+											<span><Icon src={BookOpen} size="1rem" /></span>
+											<span>Changelog</span>
+										</a>
+									{/if}
+								</div>
+							{/if}
+						</div>
+					</section>
+				</div>
+			{/if}
+
+			{#if build.submitted && build.elapsed && build.status}
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
+					<header class="card-header text-primary-500 h3 font-bold">Build</header>
+					<section class="text-lg">
+						<div class="flex flex-row items-center w-full justify-between">
+							<div class="flex">
+								<span class="text-neutral-400 mr-1 text-base">Status:</span>
+								<span class="badge preset-filled-success-500">{build.status}</span>
+							</div>
+							<div class="flex gap-2 flex-wrap w-min">
 								<a
-									href={`/targets/${config.target}`}
-									class="btn preset-filled-primary-500 btn-sm"
-									data-sveltekit-preload-data="hover"
-									data-sveltekit-preload-code="eager"
+									href="https://build.betaflight.com/api/builds/{build.identifier}/log"
+									target="_blank"
+									class="btn preset-filled-secondary-500 btn-sm"
 								>
-									<span><Icon src={FileScan} size="1rem" /></span>
-									<span>View Target</span>
-								</a>
-								<a
-									href={`https://github.com/betaflight/config/blob/master/configs/${config.target}/config.h`}
-									class="btn preset-filled-primary-500 btn-sm"
-								>
-									<span><Icon src={Github} size="1rem" /></span>
-									<span>Open Target</span>
-								</a>
-								<!-- <a href="/" target="_blank" class="btn variant-filled-primary btn-sm">
 									<span><Icon src={BookOpen} size="1rem" /></span>
-									<span>Wiki</span>
-								</a> -->
+									<span>View Log</span>
+								</a>
+								<a
+									href="https://build.betaflight.com/api/builds/{build.identifier}/hex"
+									target="_blank"
+									class="btn preset-filled-primary-500 btn-sm"
+								>
+									<span><Icon src={Download} size="1rem" /></span>
+									<span>Download .hex</span>
+								</a>
 							</div>
 						</div>
 						<hr class="hr border-surface-500 my-4 border-t-2" />
-						<div class="flex justify-between items-center">
-							<div>
-								<div class="flex flex-row">
-									<span class="text-neutral-400 mr-1 text-base">Release:</span>
-									<span class="text-base">{request.release}</span>
-								</div>
-								<div class="flex flex-row">
-									<span class="text-neutral-400 mr-1 text-base">Tag:</span>
-									<span class="text-base">{request.tag}</span>
-								</div>
+						<div class="flex flex-col">
+							<div class="flex flex-row">
+								<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
+								<span class="text-base">{formatTime(build.submitted)}</span>
 							</div>
-							<a
-								href="https://github.com/betaflight/betaflight/releases/tag/{request.release}"
-								target="_blank"
-								class="btn preset-filled-secondary-500 btn-sm"
-							>
-								<span><Icon src={BookOpen} size="1rem" /></span>
-								<span>Changelog</span>
-							</a>
+							<div class="flex flex-row">
+								<span class="text-neutral-400 mr-1 text-base">Elapsed:</span>
+								<span class="text-base">{build.elapsed}</span>
+								<span class="text-neutral-400 mr-1 text-base">ms</span>
+							</div>
 						</div>
-					</div>
-				</section>
-			</div>
-
-			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
-				<header class="card-header text-primary-500 h3 font-bold">Build</header>
-				<section class="text-lg">
-					<div class="flex flex-row items-center w-full justify-between">
-						<div class="flex">
-							<span class="text-neutral-400 mr-1 text-base">Status:</span>
-							<span class="badge preset-filled-success-500">{build.status}</span>
-						</div>
-						<div class="flex gap-2 flex-wrap w-min">
-							<a
-								href="https://build.betaflight.com/api/builds/{build.identifier}/log"
-								target="_blank"
-								class="btn preset-filled-secondary-500 btn-sm"
-							>
-								<span><Icon src={BookOpen} size="1rem" /></span>
-								<span>View Log</span>
-							</a>
-							<a
-								href="https://build.betaflight.com/api/builds/{build.identifier}/hex"
-								target="_blank"
-								class="btn preset-filled-primary-500 btn-sm"
-							>
-								<span><Icon src={Download} size="1rem" /></span>
-								<span>Download .hex</span>
-							</a>
-						</div>
-					</div>
-					<hr class="hr border-surface-500 my-4 border-t-2" />
-					<div class="flex flex-col">
-						<div class="flex flex-row">
-							<span class="text-neutral-400 mr-1 text-base">Submitted:</span>
-							<span class="text-base">{formatTime(build.submitted)}</span>
-						</div>
-						<div class="flex flex-row">
-							<span class="text-neutral-400 mr-1 text-base">Elapsed:</span>
-							<span class="text-base">{build.elapsed}</span>
-							<span class="text-neutral-400 mr-1 text-base">ms</span>
-						</div>
-					</div>
-				</section>
-			</div>
+					</section>
+				</div>
+			{/if}
 
 			{#if problem}
 				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
@@ -246,18 +281,20 @@
 		</div>
 
 		<div class="flex flex-col w-full gap-6">
-			<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
-				<header class="card-header text-primary-500 h3 font-bold">Options</header>
-				<section class="text-lg">
-					<div class="flex gap-2 flex-row flex-wrap">
-						{#each request.options as option, i (i)}
-							<div class="badge preset-tonal-primary">{option}</div>
-						{/each}
-					</div>
-				</section>
-			</div>
+			{#if request?.options && request.options.length > 0}
+				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
+					<header class="card-header text-primary-500 h3 font-bold">Options</header>
+					<section class="text-lg">
+						<div class="flex gap-2 flex-row flex-wrap">
+							{#each request.options as option, i (i)}
+								<div class="badge preset-tonal-primary">{option}</div>
+							{/each}
+						</div>
+					</section>
+				</div>
+			{/if}
 
-			{#if status}
+			{#if status && config}
 				<div class="card preset-tonal-secondary p-4 flex flex-col gap-4">
 					<header class="card-header text-primary-500 h3 font-bold">Hardware</header>
 					<section class="text-lg">

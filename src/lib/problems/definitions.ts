@@ -280,7 +280,7 @@ If your analog OSD is working fine, you don't need to do anything.
 				It can be fixed by using those other versions, or flashing with the <strong>NONCOMPLIANT_SMARTAUDIO</strong> custom define added. If your VTX works fine, you don't need to do anything.`,
 		severity: "warning",
 		check: (data) => {
-			const buildOptions = data.build?.request
+			const buildOptions = data.build?.request?.options
 			if (!buildOptions) return false
 			const isBetaflight452 = data.build?.request?.release?.startsWith("4.5.2") ?? false
 			const includesNoncompliantSmartAudio = data.build?.request.options.includes(

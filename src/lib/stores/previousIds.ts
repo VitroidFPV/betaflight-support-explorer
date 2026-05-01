@@ -9,6 +9,7 @@ type PreviousId = {
 	problemDescription: string
 	options: string[]
 	armDisableFlags: string[]
+	isLocal?: boolean
 }
 
 export const previousIds = persisted<PreviousId[]>("previousIds", [], {

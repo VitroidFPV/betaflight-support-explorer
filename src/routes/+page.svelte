@@ -145,11 +145,14 @@
 						</div>
 					{/if}
 				</section>
-				<section class="card-footer">
+				<section class="card-footer flex justify-between items-center">
 					{#if getSetting("createdAt")}
 						<div class="flex gap-2">
 							<div class="text-neutral-400 text-sm h-fit">{formatDate(id.createdAt)}</div>
 						</div>
+					{/if}
+					{#if getSetting("isLocal") && id.isLocal}
+						<div class="card preset-tonal-warning text-xs px-2 py-1">Local</div>
 					{/if}
 				</section>
 			</div>

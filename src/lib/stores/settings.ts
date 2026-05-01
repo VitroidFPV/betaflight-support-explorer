@@ -41,6 +41,11 @@ const idPreviewCardSettings: IdPreviewCardSetting[] = [
 		title: "Arming Disable Flags",
 		name: "armDisableFlags",
 		value: true
+	},
+	{
+		title: "Local Build Warning",
+		name: "isLocal",
+		value: true
 	}
 ]
 
@@ -55,6 +60,7 @@ const showHideWarning = true
 const showFullText = false
 
 const allSettings = {
+	version: 2,
 	idPreviewCardSettings: idPreviewCardSettings,
 	showDataAnalysis: showDataAnalysis,
 	hiddenProblems: hiddenProblems,
@@ -63,3 +69,14 @@ const allSettings = {
 }
 
 export const settings = persisted("settings", allSettings)
+settings.update((s) => {
+	if (!s.version || s.version < 2) {
+		s.idPreviewCardSettings.push({
+			title: "Local Build Warning",
+			name: "isLocal",
+			value: true
+		})
+		s.version = 2
+	}
+	return s
+})
