@@ -1,0 +1,38 @@
+name: 'Build'
+
+on:
+  workflow_call:
+    inputs:
+      commit_ref:
+        description: 'The git SHA to checkout'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.commit_ref }}
+          persist-credentials: false
+
+      - name: Install node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Build with Cloudflare adapter
+        env:
+          ADAPTER: cloudflare
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: .svelte-kit/cloudflare
