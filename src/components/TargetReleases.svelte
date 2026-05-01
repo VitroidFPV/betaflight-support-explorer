@@ -62,7 +62,7 @@
 		{#snippet panel()}
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
 				{#each releases as release (release.release)}
-					<div class="flex gap-2 card preset-tonal-secondary p-2 justify-between">
+					<div class="flex gap-2 p-2 justify-between">
 						<a
 							href={releaseToUrl(release)}
 							class="text-xl {releaseTypeToColor(

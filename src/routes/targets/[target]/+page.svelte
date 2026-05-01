@@ -3,8 +3,10 @@
 	import { fly } from "svelte/transition"
 	import CodeBlock from "$components/CodeBlock/CodeBlock.svelte"
 	import { Icon } from "@steeze-ui/svelte-icon"
-	import { Github } from "@steeze-ui/lucide-icons"
+	import { Github, Microchip, Rotate3d, Thermometer, Compass } from "@steeze-ui/lucide-icons"
 	import TargetReleases from "$components/TargetReleases.svelte"
+	import { Accordion } from "@skeletonlabs/skeleton-svelte"
+	import DefineListItem from "$components/DefineListItem.svelte"
 	// console.log(page.params.target)
 	const targetName = page.params.target
 
@@ -13,6 +15,9 @@
 	let target = $derived(data.config)
 	let manufacturer = $derived(data.manufacturer)
 	let cloudBuildTarget = $derived(data.cloudBuildTarget)
+	let definesAccordionValue = $state(["defines"])
+
+	const formattedDefines = $derived(data.formattedDefines)
 
 	const title = $derived(`${targetName} - Betaflight Support Explorer`)
 	const description = $derived(`Target config for ${targetName} (${manufacturer.name})`)
@@ -61,6 +66,29 @@
 		</a>
 	</div>
 	<TargetReleases releases={cloudBuildTarget.releases} />
+	<Accordion
+		collapsible
+		value={definesAccordionValue}
+		onValueChange={(details) => (definesAccordionValue = details.value)}
+	>
+		<Accordion.Item
+			classes="card preset-tonal-secondary"
+			controlHover="hover:bg-primary-500/20"
+			value="defines"
+		>
+			{#snippet control()}
+				<header class="h2 font-bold mb-4 mt-3">Defines</header>
+			{/snippet}
+			{#snippet panel()}
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+					<DefineListItem icon={Microchip} name="MCU" value={formattedDefines.MCU} />
+					<DefineListItem icon={Rotate3d} name="IMU" value={formattedDefines.IMU} />
+					<DefineListItem icon={Thermometer} name="BARO" value={formattedDefines.BARO} />
+					<DefineListItem icon={Compass} name="MAG" value={formattedDefines.MAG} />
+				</div>
+			{/snippet}
+		</Accordion.Item>
+	</Accordion>
 	<CodeBlock
 		code={target.content}
 		lang="c"

@@ -1,20 +1,19 @@
 import type { PageLoad } from "./$types"
 import { error } from "@sveltejs/kit"
 import type { CBManufacturer, CBTarget } from "$lib/cloudBuildTypes"
+import {
+	extractBarometers,
+	extractConfigDefines,
+	extractDefineValue,
+	extractImus,
+	extractMagnetometers
+} from "$lib/extractConfigDefines"
 
 export const load: PageLoad = async ({ params, fetch }) => {
 	const { target } = params
 
 	const targetReleasesResponse = await fetch(`https://build.betaflight.com/api/targets/${target}`)
 	const cloudBuildTarget: CBTarget = await targetReleasesResponse.json()
-
-	// log all releases and their unifiedConfig value
-	console.log(
-		cloudBuildTarget.releases.map((release) => ({
-			release: release.release,
-			unifiedConfig: release.unifiedConfig
-		}))
-	)
 
 	// throw an error unless at least one release has unifiedConfig set to false
 	if (cloudBuildTarget.releases.every((release) => release.unifiedConfig)) {
@@ -39,9 +38,21 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		manufacturer = await manufacturerResponse.json()
 	}
 
+	const defines = extractConfigDefines(config.content)
+
+	const formattedDefines = {
+		MCU: extractDefineValue("FC_TARGET_MCU", defines),
+		IMU: extractImus(defines),
+		BARO: extractBarometers(defines),
+		MAG: extractMagnetometers(defines)
+	}
+
+	console.log(formattedDefines)
+
 	return {
 		config,
 		manufacturer,
-		cloudBuildTarget
+		cloudBuildTarget,
+		formattedDefines
 	}
 }
