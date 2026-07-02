@@ -67,7 +67,7 @@
 			return allTargets
 		}
 		return allTargets.filter((target: CBTarget) =>
-			matchesTargetSearch(search, target.target, target.manufacturer)
+			matchesTargetSearch(search, target.target, target.manufacturer || "Unknown")
 		)
 	})
 
