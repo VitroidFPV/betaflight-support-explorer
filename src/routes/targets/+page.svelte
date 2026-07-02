@@ -8,6 +8,7 @@
 	import { browser } from "$app/environment"
 	import TargetListItem from "$components/TargetListItem.svelte"
 	import type { CBTarget } from "$lib/cloudBuildTypes"
+	import { matchesTargetSearch } from "$lib/targetSearch"
 	import { SvelteMap } from "svelte/reactivity"
 
 	const groupOptions = [
@@ -65,9 +66,8 @@
 		if (!search.trim()) {
 			return allTargets
 		}
-		const searchLower = search.toLowerCase()
 		return allTargets.filter((target: CBTarget) =>
-			target.target.toLowerCase().includes(searchLower)
+			matchesTargetSearch(search, target.target, target.manufacturer)
 		)
 	})
 
@@ -239,7 +239,12 @@
 	{#if allFilteredTargets.length > 0}
 		{#each groupedTargets as targetGroup (targetGroup.groupTitle)}
 			<div class="flex flex-col lg:gap-4 gap-2">
-				<h3 class="text-primary-500 h3 font-bold">{targetGroup.groupTitle}</h3>
+				<h3 class="text-primary-500 h3 font-bold flex items-center gap-2">
+					{targetGroup.groupTitle}
+					<span class="text-lg text-surface-400 font-normal"
+						>({targetGroup.groupTargets.length})</span
+					>
+				</h3>
 				<div class="grid lg:grid-cols-3 xl:grid-cols-4 grid-cols-1 gap-2 lg:gap-4">
 					{#each targetGroup.groupTargets as target (target.target)}
 						<TargetListItem {target} />
